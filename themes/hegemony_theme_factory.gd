@@ -79,8 +79,11 @@ static func build() -> Theme:
 
 
 static func _load_font(path: String, _size: int) -> Font:
-	# Exported/web builds remap .ttf → imported FontFile (.fontdata). Prefer ResourceLoader
-	# over load_dynamic_font(), which needs raw TTF bytes and yields tofu glyphs in PCK exports.
+	# HTML5: bundled FontFile often paints tofu hex boxes even when ResourceLoader succeeds.
+	# Use SystemFont (browser-provided families) as the primary face on web so UI is readable.
+	if OS.has_feature("web"):
+		return _web_system_font(path)
+
 	if not ResourceLoader.exists(path):
 		push_warning("Missing font: %s" % path)
 		return null
@@ -94,6 +97,27 @@ static func _load_font(path: String, _size: int) -> Font:
 		return null
 	font.fixed_size = 0
 	return font
+
+
+static func _web_system_font(path: String) -> SystemFont:
+	var sys := SystemFont.new()
+	sys.font_names = _web_font_names_for(path)
+	sys.multichannel_signed_distance_field = false
+	var pl := path.to_lower()
+	if "bold" in pl:
+		sys.font_weight = 700
+	if "italic" in pl:
+		sys.font_italic = true
+	return sys
+
+
+static func _web_font_names_for(path: String) -> PackedStringArray:
+	var p := path.to_lower()
+	if "tinos" in p:
+		return PackedStringArray(["Tinos", "Times New Roman", "Times", "serif"])
+	if "source" in p:
+		return PackedStringArray(["Source Sans 3", "Source Sans Pro", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"])
+	return PackedStringArray(["Public Sans", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"])
 
 
 static func _flat(bg: Color, border: Color, border_w: int, radius: int) -> StyleBoxFlat:
