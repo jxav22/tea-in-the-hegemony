@@ -6,9 +6,9 @@ Godot **4.3**, **Compatibility** renderer (browser-friendly), typed GDScript.
 
 ## Play in browser
 
-**Live (GitHub Pages):** [https://jxav22.github.io/tea-in-the-hegemony/](https://jxav22.github.io/tea-in-the-hegemony/)
+**Play (GitHub Pages):** [https://jxav22.github.io/tea-in-the-hegemony/](https://jxav22.github.io/tea-in-the-hegemony/)
 
-> If that URL 404s, Pages is not enabled yet or the first deploy is still running. See **Publish / Pages** in [HANDOFF.md](HANDOFF.md). Workflow: `.github/workflows/web-pages.yml`.
+> **Not live yet (404).** CI `export-web` succeeds; `deploy-pages` needs the repo owner to set **Settings → Pages → Source: GitHub Actions**, then re-run the workflow. See [HANDOFF.md](HANDOFF.md#play-in-browser-publish).
 
 itch.io-compatible ZIP is produced by CI artifact `tea-in-the-hegemony-web-itch` (or locally via `./tools/export_web.sh`).
 

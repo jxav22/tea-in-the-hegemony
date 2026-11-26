@@ -36,7 +36,8 @@ Do **not** change repo visibility. Do not commit secrets. `builds/` stays gitign
 
 - First visit downloads ~37MB wasm; cold load can take several seconds.
 - Headless Tweener warnings in smoke tests are non-blocking.
-- Pages 404 until source is set to Actions and the first deploy succeeds.
+- Pages 404 / `deploy-pages` fails with 404 until source is set to Actions (after #21: export-web PASS, deploy-pages “Ensure GitHub Pages has been enabled”).
+- Web export must load fonts via `ResourceLoader.load` (imported FontFile); `FontFile.load_dynamic_font` yields tofu glyphs in PCK builds.
 
 ---
 
