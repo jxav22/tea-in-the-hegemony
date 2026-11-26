@@ -269,30 +269,27 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 
 ## Agent E — QA
 
-**Branch:** `cursor/qa-validation-suite-6f2c` | **PR:** https://github.com/jxav22/tea-in-the-hegemony/pull/1  
-**Owns:** `tests/validation/`, `tools/validate_narrative.py`, `tools/simulate_strategies.py`, `tools/save_roundtrip.py`, `tools/run_qa_suite.sh`, `scripts/ci/*`  
-**Reports:** `/cursor/stores/self/internal/qa/`
+**PR #1:** merged (`f401656`). Follow-up: `cursor/qa-postmerge-fixes-6f2c` (typed GDScript fixes missed merge tip).  
+**Reports:** `/cursor/stores/self/internal/qa/` — `final-evidence.md`, `critique.md`, `pass_fail_matrix.md`
 
-### Commands (evidence 2026-11-26T16:00Z)
+### Commands (evidence 2026-11-26T16:03:19Z)
 
 ```bash
-GODOT=~/.local/bin/godot ./tools/run_tests.sh          # PASS — TEST PASS (4 suites) + boot smoke
-QA_SKIP_GODOT=1 python3 -m unittest tests.validation.test_validators -v  # 6/6
-python3 tools/validate_narrative.py --json            # PASS — 88 nodes, 0 errors
-python3 tools/simulate_strategies.py --json           # PASS — 5 unique sigs; 7/7 ending probes
+GODOT=~/.local/bin/godot ./tools/run_tests.sh
+QA_SKIP_GODOT=1 python3 -m unittest tests.validation.test_validators -v
+python3 tools/validate_narrative.py --json
+python3 tools/simulate_strategies.py --json
 python3 tools/save_roundtrip.py --json
-bash tools/run_qa_suite.sh
 ```
 
-### Ending probes (all PASS)
+### Latest results
 
-`cover_burned`, `sera_wins`, `balanced`, `professional_win`, `human_cost`, `connection`, `mixed`
+- validate: **PASS** (100 nodes, 0 errors)
+- strategy sims: **PASS** (5 unique signatures; organic endings → `mixed`; relationship deltas diverge)
+- ending probes: **7/7 PASS**
+- Godot headless: **PASS**
 
-### Integration fixes in this PR
+### Remaining risks
 
-- Narrative effect aliases in `EffectExecutor` (`add_memory`→`memory`, `set_location`→`location`, …)
-- Typed GDScript fix in `evidence_manager.gd` (Systems compile break)
-- Narrative-safe boot smoke + Core test_runner choice driving
-- GameHUD null-safety for headless
-- Validators prefer `content/dialogue/reception/`; ending_priority-aware finale sim
+Organic non-mixed endings rare without terrace sacrifice/race; DialogueRunner should honor `ending_priority` for system choices; triage 72 soft warnings.
 
