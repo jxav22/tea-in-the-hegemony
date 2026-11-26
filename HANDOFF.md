@@ -273,12 +273,12 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 **Owns:** `tests/validation/`, `tools/validate_narrative.py`, `tools/simulate_strategies.py`, `tools/save_roundtrip.py`, `tools/run_qa_suite.sh`, `scripts/ci/*`  
 **Reports:** `/cursor/stores/self/internal/qa/`
 
-### Commands (evidence 2026-11-26T16:00Z)
+### Commands (evidence 2026-11-26T16:02:38Z)
 
 ```bash
 GODOT=~/.local/bin/godot ./tools/run_tests.sh          # PASS — TEST PASS (4 suites) + boot smoke
 QA_SKIP_GODOT=1 python3 -m unittest tests.validation.test_validators -v  # 6/6
-python3 tools/validate_narrative.py --json            # PASS — 88 nodes, 0 errors
+python3 tools/validate_narrative.py --json            # PASS — 100 nodes, 0 errors
 python3 tools/simulate_strategies.py --json           # PASS — 5 unique sigs; 7/7 ending probes
 python3 tools/save_roundtrip.py --json
 bash tools/run_qa_suite.sh

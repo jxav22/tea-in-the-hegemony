@@ -85,7 +85,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_buttons[_index].emit_signal("pressed")
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey and event.pressed and event.keycode >= KEY_1 and event.keycode <= KEY_9:
-		var n := event.keycode - KEY_1
+		var n: int = int(event.keycode) - KEY_1
 		if n < _buttons.size():
 			_buttons[n].emit_signal("pressed")
 			get_viewport().set_input_as_handled()

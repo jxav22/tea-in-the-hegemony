@@ -134,11 +134,11 @@ static func debrief(reveal_raw: bool = false) -> Dictionary:
 
 static func mission_complete_enough() -> bool:
 	if GameState.systems != null:
-		var obtained := GameState.systems.evidence.is_obtained("frag.shipping_delta")
-		var met := FlagStore.get_flag(&"met_maris", false) == true
-		var voss := (
-			FlagStore.get_flag(&"identified_voss", false) == true
-			or FlagStore.get_flag(&"spotted_voss", false) == true
+		var obtained: bool = GameState.systems.evidence.is_obtained("frag.shipping_delta")
+		var met: bool = bool(FlagStore.get_flag(&"met_maris", false))
+		var voss: bool = (
+			bool(FlagStore.get_flag(&"identified_voss", false))
+			or bool(FlagStore.get_flag(&"spotted_voss", false))
 		)
 		return obtained or (met and voss)
 	return (
