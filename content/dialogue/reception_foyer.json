@@ -144,7 +144,7 @@
       "choices": [
         {
           "id": "foyer.pass.salon",
-          "text": "Head toward the salon \u2014 voices, glass, opportunity.",
+          "text": "Salon. Voices. Opportunity.",
           "intent": "explore",
           "next": null,
           "effects": [
@@ -217,7 +217,7 @@
     {
       "id": "foyer.pim",
       "speaker": "pim_orel",
-      "text": "Orth! You look like a man on draft seventeen of his first sentence and still losing. Come on \u2014 Maris is in the salon pretending not to inventory arrivals, which means she has inventoried all of them and is bored by half.",
+      "text": "Orth! You look like draft seventeen of a first sentence. Come \u2014 Maris is in the salon counting arrivals while pretending not to. She's already counted you.",
       "tags": [
         "foyer",
         "pim_orel"
@@ -238,7 +238,7 @@
       "choices": [
         {
           "id": "foyer.pim.go",
-          "text": "Lead on before I invent a seventeenth draft.",
+          "text": "Lead. Before I invent draft eighteen.",
           "intent": "accept",
           "next": null,
           "effects": [
@@ -250,17 +250,12 @@
             {
               "op": "location",
               "id": "salon"
-            },
-            {
-              "op": "set_flag",
-              "flag": "resume_salon_enter",
-              "value": true
             }
           ]
         },
         {
           "id": "foyer.pim.delay",
-          "text": "Give me thirty seconds to become someone who arrives.",
+          "text": "Thirty seconds. Then salon.",
           "intent": "stall",
           "next": null,
           "effects": [
@@ -272,11 +267,6 @@
             {
               "op": "location",
               "id": "salon"
-            },
-            {
-              "op": "set_flag",
-              "flag": "resume_salon_enter",
-              "value": true
             }
           ]
         }

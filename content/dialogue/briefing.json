@@ -5,7 +5,7 @@
     {
       "id": "briefing.exit",
       "speaker": "wren_halden",
-      "text": "Badge says Orth. Foyer at nineteen. If Clerk Moth sniffs a serial mismatch, cite logistics and bore him into mercy. If Sera Kade is there \u2014 she will be \u2014 do not race her in public; race her in competence, quietly, like adults with knives. Go be a person, Cassian. Preferably a quiet one who remembers Maris Quell has her own brief.",
+      "text": "Badge Orth. Foyer at nineteen. Moth eats inconsistencies; feed him boredom. Sera will be there \u2014 race her in competence, not volume. Maris has her own brief. Do not become her obstacle. Go.",
       "tags": [
         "briefing",
         "exit"
@@ -63,7 +63,7 @@
     {
       "id": "briefing.intro",
       "speaker": "wren_halden",
-      "text": "Sit. Don't rearrange the chair \u2014 it isn't a metaphor, and neither are you tonight. You are Cassian Orth: Ministry Trade Liaison, logistics analyst, man with opinions about freight margins and a pulse he treats like a scheduling conflict.",
+      "text": "Sit. Leave the chair alone. Tonight you are Cassian Orth: Trade Liaison, logistics analyst, a man who schedules his own pulse. Cover is clean. Your face is not yet.",
       "tags": [
         "briefing",
         "entry",
@@ -80,7 +80,7 @@
       "choices": [
         {
           "id": "briefing.intro.ready",
-          "text": "Cover's clean. What's the ask?",
+          "text": "Parameters. Now.",
           "intent": "professional",
           "next": "briefing.objectives",
           "effects": [
@@ -93,7 +93,7 @@
         },
         {
           "id": "briefing.intro.dread",
-          "text": "You're about to give me romantic advice, aren't you.",
+          "text": "You're going to brief my manners.",
           "intent": "deflect",
           "next": "briefing.objectives",
           "effects": [
@@ -101,6 +101,11 @@
               "op": "rel",
               "char": "wren_halden",
               "familiarity": 1
+            },
+            {
+              "op": "set_flag",
+              "flag": "dreads_romance_brief",
+              "value": true
             }
           ]
         }
@@ -122,7 +127,7 @@
     {
       "id": "briefing.objectives",
       "speaker": "wren_halden",
-      "text": "Primary: contact Maris Quell \u2014 Observatory Circle, policy advisor, not a vending machine. Secondary: identify Lord Edrin Voss's interest in the east-dock schedules. Tertiary: retrieve the guest-list cipher fragment from the study annex. Maintain cover. Avoid heat. Do not fall in love on company time.",
+      "text": "Contact Maris Quell \u2014 Observatory Circle, policy, not inventory. Identify what Voss wants from the east-dock schedules. Lift the guest-list cipher from the study annex if you can walk out bored. Maintain Orth. Avoid heat. If you develop feelings, do it after the fragment.",
       "tags": [
         "briefing",
         "objectives"
@@ -148,14 +153,13 @@
       "choices": [
         {
           "id": "briefing.obj.ack",
-          "text": "Contact. Identify. Retrieve. Dignity optional.",
+          "text": "Contact. Identify. Retrieve.",
           "intent": "professional",
-          "next": "briefing.romance_protocol",
-          "effects": []
+          "next": "briefing.romance_protocol"
         },
         {
           "id": "briefing.obj.push",
-          "text": "Define 'heat' before you define 'love.'",
+          "text": "Define heat. Then define feelings.",
           "intent": "probe",
           "next": "briefing.romance_protocol",
           "effects": [
@@ -184,7 +188,7 @@
     {
       "id": "briefing.romance_more",
       "speaker": "wren_halden",
-      "text": "Addendum: if talk stalls, ask what Observatory Circle is fighting for this quarter \u2014 then listen as if the answer could reroute a convoy, because it might. If she laughs, do not autopsy the laugh. If she doesn't, do not escalate to tariff humour. I road-tested tariff humour on a mirror. The mirror filed a complaint.",
+      "text": "One more. Observatory Circle is fighting Voss on dock opacity this week \u2014 real stakes, not small talk. If you open with funding like a questionnaire, she will end you politely. If you open like someone who read page four and cared, she might stay.",
       "tags": [
         "briefing",
         "comedy"
@@ -205,14 +209,30 @@
       "choices": [
         {
           "id": "briefing.romance_more.ok",
-          "text": "No tariff humour. The mirror story is worrying.",
+          "text": "Dock opacity. Page four. No questionnaire.",
           "intent": "ack",
           "next": "briefing.exit",
-          "effects": []
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "knows_maris_fight",
+              "value": true
+            },
+            {
+              "op": "memory",
+              "id": "mem_wren_opacity",
+              "summary": "Wren: Maris/Observatory fighting Voss on dock opacity; don't open like a questionnaire.",
+              "salience": 3,
+              "tags": [
+                "briefing",
+                "maris"
+              ]
+            }
+          ]
         },
         {
           "id": "briefing.romance_more.probe",
-          "text": "You road-tested that on a mirror. Which of us was the mirror?",
+          "text": "How do you know what she's fighting this week?",
           "intent": "probe",
           "next": "briefing.exit",
           "effects": [
@@ -220,6 +240,21 @@
               "op": "rel",
               "char": "wren_halden",
               "familiarity": 1
+            },
+            {
+              "op": "set_flag",
+              "flag": "knows_maris_fight",
+              "value": true
+            },
+            {
+              "op": "memory",
+              "id": "mem_wren_opacity",
+              "summary": "Wren knows Maris's opacity fight this week \u2014 sources unspecified.",
+              "salience": 3,
+              "tags": [
+                "briefing",
+                "maris"
+              ]
             }
           ]
         }
@@ -241,7 +276,7 @@
     {
       "id": "briefing.romance_protocol",
       "speaker": "wren_halden",
-      "text": "Romantic protocol, clinical edition. One: smile with the lower third of your face only \u2014 full smiles read as product launches. Two: if she mentions weather, do not produce a barometric correction; you are not a lighthouse. Three: compliment her work, never her collarbones \u2014 collarbones are not policy. Four: if you feel a feeling, name it privately, file it, and keep speaking like someone who has touched grass this calendar year.",
+      "text": "Manners, then \u2014 clinical. Do not correct her if she is wrong about weather; you are not a sensor array. Ask about her work before you invent charm. If silence arrives, inhabit it; do not fill it with freight anecdotes. And Cassian: she can smell a flowchart. If you follow one, she will file you under handled and move on to someone with a pulse.",
       "tags": [
         "briefing",
         "comedy",
@@ -258,7 +293,7 @@
       "choices": [
         {
           "id": "briefing.romance.take_notes",
-          "text": "Lower-third smile. No barometers. Work over collarbones. Filing cabinet heart. Got it.",
+          "text": "Work first. Silence allowed. No flowchart.",
           "intent": "comply",
           "next": "briefing.romance_more",
           "effects": [
@@ -271,7 +306,7 @@
         },
         {
           "id": "briefing.romance.refuse",
-          "text": "I'm not running a courtship flowchart on a live human.",
+          "text": "I'm not running a courtship script on her.",
           "intent": "pushback",
           "next": "briefing.romance_more",
           "effects": [
@@ -283,11 +318,7 @@
             {
               "op": "rel",
               "char": "wren_halden",
-              "respect": -1
-            },
-            {
-              "op": "rel",
-              "char": "wren_halden",
+              "respect": -1,
               "trust": 1
             }
           ]
@@ -296,18 +327,18 @@
       "next": null,
       "faculty_interjections": [
         {
-          "faculty": "Composure",
-          "text": "You can do lower-third. You've been doing lower-third since puberty.",
-          "weight": 1
-        },
-        {
           "faculty": "Empathy",
-          "text": "Imagine receiving protocol four. Then do literally anything else.",
+          "text": "She is a person with a brief. Meet the brief, not the protocol.",
           "weight": 2
         },
         {
+          "faculty": "Insecurity",
+          "text": "She will file you. Everyone files you.",
+          "weight": 1
+        },
+        {
           "faculty": "Improvisation",
-          "text": "Or burn the protocol and invent a human. Riskier. Funnier. Possibly alive.",
+          "text": "Burn the script. Risk looking alive.",
           "weight": 1
         }
       ]
