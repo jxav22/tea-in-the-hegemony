@@ -98,6 +98,40 @@ static func has_evidence(fragment_id: StringName) -> bool:
 	return GameState.has_item(fragment_id)
 
 
+static func evidence_notebook(reveal_raw: bool = false) -> Array:
+	## Player-facing evidence list for intel notebook UI.
+	if GameState.systems != null:
+		var presented: Array[Dictionary] = GameState.systems.present_evidence(reveal_raw)
+		var out: Array = []
+		for e in presented:
+			out.append(e)
+		return out
+	var fallback: Array = []
+	for entry in GameState.inventory:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var e: Dictionary = entry
+		if str(e.get("kind", "")) != "evidence" and not str(e.get("id", "")).begins_with("frag."):
+			continue
+		fallback.append({
+			"id": str(e.get("id", "")),
+			"title": str(e.get("title", e.get("id", ""))),
+			"summary": str(e.get("summary", "")),
+			"verified": bool(e.get("verified", false)),
+			"verification_label": "Verified" if bool(e.get("verified", false)) else "Unconfirmed",
+		})
+	return fallback
+
+
+static func debrief(reveal_raw: bool = false) -> Dictionary:
+	if GameState.systems != null:
+		return GameState.systems.present_debrief("debrief", reveal_raw)
+	return {
+		"title": "Debrief unavailable",
+		"summary": "Systems bridge offline.",
+	}
+
+
 static func mission_complete_enough() -> bool:
 	if GameState.systems != null:
 		var obtained := GameState.systems.evidence.is_obtained("frag.shipping_delta")

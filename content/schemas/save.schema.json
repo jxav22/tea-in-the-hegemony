@@ -15,6 +15,9 @@
     "cover_state": { "type": "object" },
     "objectives": { "type": "object" },
     "beat_index": { "type": "integer" },
-    "timestamp": { "type": "string" }
+    "timestamp": { "type": "string" },
+    "evidence": { "type": "object", "description": "Optional SystemsBridge evidence runtime bag" },
+    "systems_cover": { "type": "object" },
+    "systems_mission": { "type": "object" }
   }
 }

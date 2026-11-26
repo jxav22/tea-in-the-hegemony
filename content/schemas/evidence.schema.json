@@ -6,8 +6,35 @@
   "required": ["id"],
   "properties": {
     "id": { "type": "string" },
-    "claims": { "type": "array", "items": { "type": "string" } },
+    "title": { "type": "string" },
+    "summary": { "type": "string" },
+    "source": { "type": "string" },
+    "location": { "type": "string" },
+    "mission_id": { "type": "string" },
+    "claims": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "about": { "type": "string" },
+              "confidence": { "type": "number" }
+            }
+          }
+        ]
+      }
+    },
     "contradicts": { "type": "array", "items": { "type": "string" } },
-    "verified": { "type": "boolean" }
+    "supports": { "type": "array", "items": { "type": "string" } },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "verified": { "type": "boolean" },
+    "verification_notes": { "type": "string" },
+    "obtained": { "type": "boolean" },
+    "obtained_at_beat": { "type": "string" },
+    "classified": { "type": "boolean" }
   }
 }

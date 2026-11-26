@@ -159,7 +159,8 @@ Data-driven multi-dimension relationships, per-character memories, cover identit
 
 ### Presentation (Agent D)
 
-`GameState.systems.present_character(id)` / `present_cover()` / `present_evidence()` / `present_mission()` / `present_debrief()`
+`GameState.systems.present_character(id)` / `present_cover()` / `present_evidence()` / `present_mission()` / `present_debrief()`  
+Helpers: `RelationshipQuery.present(id)`, `CoverAPI.present()`, `CoverAPI.evidence_notebook()`, `CoverAPI.debrief()` — prefer these over raw heat/rel ints in chrome.
 
 ### Content
 
