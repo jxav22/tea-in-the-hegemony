@@ -116,7 +116,7 @@
     {
       "id": "ending.connection",
       "speaker": "maris_quell",
-      "text": "You didn't audition for the room. You listened while I still had a fight to win. After the toast I'm publishing whether Voss likes it or not. If you want another ninety seconds, find me between the fallout meetings. Hypothesis. Not a promise. Not your mission's property.",
+      "text": "You didn't audition for the room. You listened while I still had a fight. After the toast I publish whether Voss likes it or not. If you want another ninety seconds, find me between fallout meetings \u2014 my calendar, my terms. Not your mission's.",
       "tags": [
         "connection",
         "end",
@@ -386,7 +386,7 @@
     {
       "id": "ending.sera_wins",
       "speaker": "sera_kade",
-      "text": "You were busy being good. I was busy being finished. Tell Wren I said the lower-third smile needs work \u2014 she can practice it while reading my postcard.",
+      "text": "You were busy being good. I was busy being finished. Tell Wren the postcard comes with citations.",
       "tags": [
         "end",
         "ending",
@@ -814,7 +814,7 @@
     {
       "id": "political.pim_assist",
       "speaker": "pim_orel",
-      "text": "Lord Voss! You look underserved by conversation. Come \u2014 I'll explain why your canap\u00e9 budget is a foreign policy and Orth here will look scholarly about freight until you forget I exist.",
+      "text": "Lord Voss! Underserved by conversation. Walk \u2014 I'll talk pastry budgets as foreign policy while Orth looks scholarly until you forget I exist.",
       "tags": [
         "political",
         "pim_orel",

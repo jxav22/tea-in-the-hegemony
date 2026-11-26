@@ -139,7 +139,7 @@ Verified UTC: 2026-11-26T15:48Z (Pacific/Auckland: Fri 27 Nov 2026, 04:48 NZDT).
 
 ### Beats
 
-Briefing (clinical romance protocol) → foyer/Moth → awkward Maris intro → genuine talk → impress backfire → political overhear → study extract → cover inconsistency → sacrifice fork → fragment race → multi-ending finale → dual-rubric debrief.
+Briefing (objectives + clinical manners) → foyer/Moth → salon (Maris opacity fight / genuine test / impress) → terrace politics → study extract / cover → sacrifice → fragment race → endings → dual-column debrief (7 paths).
 
 ### Ending IDs
 
@@ -168,6 +168,12 @@ See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `b
 
 - Cut unfunny protocol/list comedy; Maris scenes tied to dock opacity fight.
 - Cosmetic quip-choices removed or given stakes; sacrifice/endings tightened.
+
+### Final prose (`cursor/reception-final-prose-c9ed`)
+
+- Debrief: seven endings rewritten with concrete ops + interpersonal stakes (no rubric-label / lower-third / flowers leftover mush).
+- Residual salon/Sera/Pim/cloak/ending lines tightened.
+- `docs/narrative-design.md` rewritten to match live boot graphs, Maris rules, playtest paths.
 
 ## Agent C — Systems
 
