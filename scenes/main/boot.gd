@@ -173,7 +173,7 @@ func _build_nav() -> void:
 		var b := Button.new()
 		var info: Dictionary = SceneRouter.get_location(StringName(adj))
 		b.text = str(info.get("display_name", adj))
-		b.custom_minimum_size = Vector2(0, 40)
+		NavChrome.style_button(b, "nav")
 		var target := adj
 		b.pressed.connect(func () -> void:
 			GameState.set_location(StringName(target))
@@ -184,27 +184,27 @@ func _build_nav() -> void:
 		_nav_bar.add_child(b)
 	var talk := Button.new()
 	talk.text = "Talk"
-	talk.custom_minimum_size = Vector2(72, 40)
+	NavChrome.style_button(talk, "quiet")
 	talk.pressed.connect(_start_location_dialogue)
 	_nav_bar.add_child(talk)
 	var dossier := Button.new()
 	dossier.text = "Dossier"
-	dossier.custom_minimum_size = Vector2(88, 40)
+	NavChrome.style_button(dossier, "nav")
 	dossier.pressed.connect(_open_next_dossier)
 	_nav_bar.add_child(dossier)
 	var note := Button.new()
 	note.text = "Notebook"
-	note.custom_minimum_size = Vector2(96, 40)
+	NavChrome.style_button(note, "nav")
 	note.pressed.connect(func (): _ui.open_notebook_from_state())
 	_nav_bar.add_child(note)
 	var deb := Button.new()
 	deb.text = "Debrief"
-	deb.custom_minimum_size = Vector2(88, 40)
+	NavChrome.style_button(deb, "danger")
 	deb.pressed.connect(func (): DialogueRunner.start("debrief"))
 	_nav_bar.add_child(deb)
 	var menu := Button.new()
 	menu.text = "Menu"
-	menu.custom_minimum_size = Vector2(72, 40)
+	NavChrome.style_button(menu, "quiet")
 	menu.pressed.connect(_show_title)
 	_nav_bar.add_child(menu)
 

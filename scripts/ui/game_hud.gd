@@ -29,7 +29,7 @@ signal room_transition_done(location_id: String)
 @onready var hotkey_bar: Label = %HotkeyBar
 @onready var letterbox_top: ColorRect = %LetterboxTop
 @onready var letterbox_bottom: ColorRect = %LetterboxBottom
-@onready var heat_wash: ColorRect = get_node_or_null("%HeatWash") as ColorRect
+@onready var heat_wash: ColorRect = %HeatWash
 
 ## Back-compat alias for scripts that still expect faculty_panel
 var faculty_panel: FacultyStack:
