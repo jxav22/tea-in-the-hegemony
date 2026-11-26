@@ -1,0 +1,258 @@
+{
+  "id": "mission.reception",
+  "title": "The Reception",
+  "chapter_id": "chapter.reception",
+  "status": "inactive",
+  "meta": {
+    "areas": ["foyer", "salon", "terrace", "study_annex", "cloakroom"],
+    "primary_contact": "maris_quell",
+    "political_figure": "edrin_voss",
+    "target_fragment": "frag.shipping_delta",
+    "trade_off_design": {
+      "principle": "Professional success and social/human outcomes are both reachable; maximizing one pressures the other.",
+      "example_paths": [
+        {
+          "id": "path.pro_extract",
+          "label": "Clean professional",
+          "beats": [
+            "Brief with Wren — prioritize fragment over rapport",
+            "Identify Voss via salon observation / guest cipher, minimal chat",
+            "Use Maris as access vector to study annex; keep warmth instrumental",
+            "Obtain frag.shipping_delta; decline terrace honesty beat",
+            "Exit before Taly deep-reads you; maintain cover heat < 30"
+          ],
+          "expected_outcome": "clean_professional",
+          "effects_sketch": [
+            {"op": "objective", "action": "complete", "id": "obj.identify_voss"},
+            {"op": "evidence", "action": "obtain", "id": "frag.shipping_delta"},
+            {"op": "evidence", "action": "verify", "id": "frag.shipping_delta"},
+            {"op": "rel", "char": "maris_quell", "trust": 5, "affection": -5, "suspicion": 5},
+            {"op": "memory", "char": "maris_quell", "id": "felt_used", "summary": "He needed something from the annex, not from her.", "salience": 3, "tags": ["used", "mission"]}
+          ]
+        },
+        {
+          "id": "path.human_first",
+          "label": "Human first",
+          "beats": [
+            "Contact Maris sincerely on terrace; share a non-cover detail",
+            "Defuse Taly with honesty-adjacent humour",
+            "Skip or soft-fail study annex grab when Maris is present",
+            "Optionally warn Maris about Sera Kade circling",
+            "Fragment may stay unconfirmed; cover stays clean"
+          ],
+          "expected_outcome": "human_first",
+          "effects_sketch": [
+            {"op": "objective", "action": "complete", "id": "obj.contact_maris"},
+            {"op": "rel", "char": "maris_quell", "trust": 15, "affection": 20, "comfort": 15, "perceived_authenticity": 12},
+            {"op": "memory", "char": "maris_quell", "id": "shared_something_real", "summary": "He said something that wasn't logistics.", "salience": 4, "tags": ["honest", "personal"]},
+            {"op": "objective", "action": "fail", "id": "obj.obtain_fragment"}
+          ]
+        },
+        {
+          "id": "path.balanced",
+          "label": "Both ledgers",
+          "beats": [
+            "Contact Maris with dry humour; earn familiarity before ask",
+            "Identify Voss with her help without treating her as furniture",
+            "Obtain fragment via study annex while she chooses to look away",
+            "Return with a real answer to her personal question on terrace",
+            "Verify fragment against guest-list cipher; keep heat moderate"
+          ],
+          "expected_outcome": "balanced",
+          "effects_sketch": [
+            {"op": "objective", "action": "complete", "id": "obj.contact_maris"},
+            {"op": "objective", "action": "complete", "id": "obj.identify_voss"},
+            {"op": "evidence", "action": "obtain", "id": "frag.shipping_delta"},
+            {"op": "evidence", "action": "verify", "id": "frag.shipping_delta"},
+            {"op": "rel", "char": "maris_quell", "trust": 12, "affection": 15, "respect": 10, "comfort": 10},
+            {"op": "memory", "char": "maris_quell", "id": "shared_something_real", "summary": "He came back with an answer that cost him something.", "salience": 4, "tags": ["honest", "reciprocity"]}
+          ]
+        },
+        {
+          "id": "path.costly_success",
+          "label": "Costly professional",
+          "beats": [
+            "Push hard in study annex; Clerk Moth notices badge irregularity",
+            "Pim loud-mouths a contradiction you previously stated",
+            "Still get fragment + Voss ID; heat elevated; Maris suspicion up"
+          ],
+          "expected_outcome": "professional_costly",
+          "effects_sketch": [
+            {"op": "evidence", "action": "obtain", "id": "frag.shipping_delta"},
+            {"op": "cover", "action": "slip", "key": "employer", "value": "private consultancy", "witness": "pim_orel", "heat": 18},
+            {"op": "cover", "action": "adjust_heat", "delta": 20, "reason": "clerk_moth_badge"},
+            {"op": "rel", "char": "maris_quell", "suspicion": 15, "perceived_authenticity": -10}
+          ]
+        },
+        {
+          "id": "path.blown",
+          "label": "Cover collapse",
+          "beats": [
+            "Stack inconsistencies across Voss, Taly, and Clerk Moth",
+            "Sera Kade forces a name confrontation",
+            "Heat crosses blow threshold or explicit blow effect"
+          ],
+          "expected_outcome": "blown",
+          "effects_sketch": [
+            {"op": "cover", "action": "blow", "reason": "sera_confrontation"}
+          ]
+        }
+      ]
+    },
+    "trade_off_tags_on_outcome": {
+      "clean_professional": ["mission_over_person", "wren_pleased"],
+      "professional_costly": ["mission_over_person", "high_heat"],
+      "human_first": ["person_over_mission", "wren_displeased"],
+      "balanced": ["both_ledgers"],
+      "blown": ["exfil"],
+      "compromised": ["thin_results"],
+      "partial": ["continue_later"]
+    }
+  },
+  "objectives": [
+    {
+      "id": "obj.contact_maris",
+      "title": "Contact Maris Quell",
+      "description": "Make contact with Maris Quell at the reception without blowing cover.",
+      "notes_player": "Find Maris. Speak like a person, not a briefing.",
+      "status": "active",
+      "category": "social",
+      "required": true,
+      "priority": 1,
+      "related_characters": ["maris_quell"],
+      "complete_when": [
+        {"kind": "flag", "flag": "met_maris", "op": "eq", "value": true}
+      ],
+      "fail_when": [
+        {"kind": "cover", "blown": true}
+      ]
+    },
+    {
+      "id": "obj.identify_voss",
+      "title": "Identify Lord Edrin Voss",
+      "description": "Confirm the political figure Lord Edrin Voss among the guests.",
+      "notes_player": "Put a face — and a pattern — to Voss.",
+      "status": "active",
+      "category": "intel",
+      "required": true,
+      "priority": 2,
+      "related_characters": ["edrin_voss", "pim_orel", "maris_quell"],
+      "complete_when": [
+        {
+          "any": [
+            {"kind": "flag", "flag": "identified_voss", "op": "eq", "value": true},
+            {"kind": "rel", "char": "maris_quell", "knowledge": "identified_voss"},
+            {"kind": "evidence", "fragment": "frag.voss_confirm", "op": "eq"}
+          ]
+        }
+      ],
+      "fail_when": [
+        {"kind": "cover", "blown": true}
+      ]
+    },
+    {
+      "id": "obj.obtain_fragment",
+      "title": "Obtain shipping discrepancy fragment",
+      "description": "Acquire the shipping schedule discrepancy (or guest-list cipher corroboration).",
+      "notes_player": "Get the fragment Wren asked for. Verify it if you can.",
+      "status": "active",
+      "category": "intel",
+      "required": true,
+      "priority": 3,
+      "related_evidence": ["frag.shipping_delta", "frag.guest_cipher"],
+      "complete_when": [
+        {
+          "any": [
+            {"kind": "evidence", "fragment": "frag.shipping_delta"},
+            {
+              "all": [
+                {"kind": "evidence", "fragment": "frag.guest_cipher"},
+                {"kind": "evidence", "fragment": "frag.pim_rumour"}
+              ]
+            }
+          ]
+        }
+      ],
+      "fail_when": [
+        {"kind": "flag", "flag": "fragment_destroyed", "op": "eq", "value": true}
+      ]
+    },
+    {
+      "id": "obj.maintain_cover",
+      "title": "Maintain cover",
+      "description": "Remain Cassian Orth through the evening; avoid undue attention.",
+      "notes_player": "Stay Orth. Don't collect stares.",
+      "status": "active",
+      "category": "cover",
+      "required": true,
+      "priority": 0,
+      "complete_when": [
+        {
+          "all": [
+            {"kind": "flag", "flag": "reception_ending", "op": "eq", "value": true},
+            {"kind": "cover", "blown": false},
+            {"kind": "cover", "heat": 80, "op": "lt"}
+          ]
+        }
+      ],
+      "fail_when": [
+        {"kind": "cover", "blown": true}
+      ]
+    },
+    {
+      "id": "obj.avoid_attention",
+      "title": "Avoid undue attention",
+      "description": "Keep heat from crossing into dangerous social scrutiny.",
+      "notes_player": "Don't become the evening's story.",
+      "status": "optional",
+      "category": "cover",
+      "required": false,
+      "priority": 4,
+      "complete_when": [
+        {
+          "all": [
+            {"kind": "flag", "flag": "reception_ending", "op": "eq", "value": true},
+            {"kind": "cover", "heat": 30, "op": "lt"}
+          ]
+        }
+      ],
+      "fail_when": [
+        {"kind": "cover", "heat": 55, "op": "gte"}
+      ]
+    },
+    {
+      "id": "obj.optional_real_talk",
+      "title": "Say something real",
+      "description": "Optional: share a non-cover truth with Maris.",
+      "notes_player": "Optional — and irreversible.",
+      "status": "hidden",
+      "category": "social",
+      "required": false,
+      "priority": 5,
+      "related_characters": ["maris_quell"],
+      "reveals_when": [
+        {"kind": "flag", "flag": "met_maris", "op": "eq", "value": true}
+      ],
+      "complete_when": [
+        {"kind": "memory", "char": "maris_quell", "memory": "shared_something_real"}
+      ]
+    },
+    {
+      "id": "obj.optional_verify",
+      "title": "Verify the fragment",
+      "description": "Cross-check the shipping discrepancy against another account.",
+      "notes_player": "Optional: make the intel stick.",
+      "status": "hidden",
+      "category": "intel",
+      "required": false,
+      "priority": 6,
+      "related_evidence": ["frag.shipping_delta", "frag.guest_cipher"],
+      "reveals_when": [
+        {"kind": "evidence", "fragment": "frag.shipping_delta"}
+      ],
+      "complete_when": [
+        {"kind": "evidence", "fragment": "frag.shipping_delta", "verified": true}
+      ]
+    }
+  ]
+}

@@ -1,11 +1,27 @@
 # Espionage systems (Agent C)
 
-Core hooks:
+Cover identity, evidence fragments, intel objectives, mission reports.
 
-- `GameState.adjust_heat` / `cover_state`
-- `GameState.add_inventory_item` / `has_item`
-- `GameState.set_objective` / objectives dict
-- Evidence schemas under `content/schemas/evidence.schema.json`
-- Mission stubs under `content/missions/` (yours)
+## Core hooks
 
-Dialogue effects already support `heat`, `item`, `objective`, `memory`.
+- `GameState.systems` (`SystemsBridge`) — bootstrap via `SystemsBootstrap.create_with_reception_content()`
+- `GameStateBinder` mirrors into `cover_state` / `objectives` / `inventory` / `memories` / `relationships`
+- Thin helpers: `CoverAPI` (heat, evidence checks, present)
+- Content: `content/missions/reception.json`, `content/evidence/reception_evidence.json`
+
+## Effects
+
+```json
+{"op":"cover","action":"assert|slip|adjust_heat|repair|blow", "...": "..."}
+{"op":"heat","amount":10}
+{"op":"evidence","action":"obtain|verify|dispute","id":"frag.shipping_delta"}
+{"op":"objective","action":"activate|complete|fail|reveal|evaluate|start_mission","id":"obj.contact_maris"}
+```
+
+## Presentation
+
+`CoverAPI.present()`, `GameState.systems.present_evidence()`, `present_mission()`, `present_debrief()`
+
+## Offline check
+
+`python3 scripts/espionage/simulate_reception_paths.py`
