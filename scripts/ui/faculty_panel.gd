@@ -46,14 +46,16 @@ func show_interjection_styled(faculty: String, text: String, reduce_motion: bool
 		modulate.a = 1.0
 		rotation_degrees = 0.0
 		return
-	# Comic beat: snap-in with slight tilt + short shake
+	# Comic beat: snap-in with slight tilt + short shake (stagger handled by FacultyStack)
 	modulate.a = 0.0
-	rotation_degrees = -2.5 + float(stack_index) * 0.6
-	scale = Vector2(0.94, 0.94)
+	rotation_degrees = -3.0 + float(stack_index) * 0.8
+	scale = Vector2(0.92, 0.92)
+	position.x += 18.0
 	_tween = create_tween().set_parallel(true)
-	_tween.tween_property(self, "modulate:a", 1.0, 0.18)
-	_tween.tween_property(self, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_tween.tween_property(self, "rotation_degrees", float(stack_index % 2) * 0.8 - 0.4, 0.22)
+	_tween.tween_property(self, "modulate:a", 1.0, 0.14)
+	_tween.tween_property(self, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(self, "rotation_degrees", float(stack_index % 2) * 0.9 - 0.45, 0.18)
+	_tween.tween_property(self, "position:x", position.x - 18.0, 0.16).set_trans(Tween.TRANS_SINE)
 	_tween.chain().tween_callback(_micro_shake)
 
 

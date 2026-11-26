@@ -17,6 +17,8 @@ signal restart_requested
 @onready var apply_btn: Button = %ApplyBtn
 @onready var close_btn: Button = %CloseBtn
 @onready var restart_btn: Button = %RestartBtn
+@onready var preset_row: HBoxContainer = get_node_or_null("%PresetRow") as HBoxContainer
+@onready var hint: Label = get_node_or_null("%SpeedHint") as Label
 
 var settings: UISettings
 
@@ -32,9 +34,36 @@ func _ready() -> void:
 	scale_slider.step = 0.05
 	speed_slider.value_changed.connect(_on_speed)
 	scale_slider.value_changed.connect(_on_scale)
+	instant_check.toggled.connect(func (_v): _live_apply())
+	speed_slider.drag_ended.connect(func (_c): _live_apply())
 	apply_btn.pressed.connect(_apply)
 	close_btn.pressed.connect(close)
 	restart_btn.pressed.connect(func (): restart_requested.emit())
+	_ensure_presets()
+
+
+func _ensure_presets() -> void:
+	if preset_row == null:
+		return
+	for c in preset_row.get_children():
+		c.queue_free()
+	_add_preset("Leisurely", 22, false)
+	_add_preset("Brisk", 42, false)
+	_add_preset("Rapid", 78, false)
+	_add_preset("Instant", 120, true)
+
+
+func _add_preset(label: String, cps: int, instant: bool) -> void:
+	var b := Button.new()
+	b.text = label
+	b.custom_minimum_size = Vector2(0, 32)
+	b.pressed.connect(func ():
+		speed_slider.value = cps
+		instant_check.button_pressed = instant
+		_on_speed(cps)
+		_live_apply()
+	)
+	preset_row.add_child(b)
 
 
 func bind(settings_ref: UISettings) -> void:
@@ -48,6 +77,7 @@ func open() -> void:
 
 
 func close() -> void:
+	_apply()
 	visible = false
 	closed.emit()
 
@@ -66,11 +96,28 @@ func _sync_from_settings() -> void:
 
 
 func _on_speed(v: float) -> void:
-	speed_value.text = "%d cps" % int(v)
+	var label := "brisk"
+	if instant_check.button_pressed:
+		label = "instant"
+	elif v < 28:
+		label = "leisurely"
+	elif v > 70:
+		label = "rapid"
+	speed_value.text = "%d · %s" % [int(v), label]
+	if hint:
+		hint.text = "Hold Ctrl while advancing to dump a line instantly. Space skips typing."
 
 
 func _on_scale(v: float) -> void:
 	scale_value.text = "%.0f%%" % (v * 100.0)
+
+
+func _live_apply() -> void:
+	if settings == null:
+		return
+	settings.text_chars_per_second = float(speed_slider.value)
+	settings.instant_text = instant_check.button_pressed
+	settings.changed.emit()
 
 
 func _apply() -> void:

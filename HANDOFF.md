@@ -267,6 +267,13 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 - **Notebook / dossier / brief:** Stronger empty-states, verified counts, affinity/mood copy.
 - **LocationBanner** during room changes; dialogue continue-cue pulse.
 
+### Feel pass (`cursor/presentation-feel-df75`)
+
+- **Text speed:** Leisurely / Brisk / Rapid / Instant presets; live CPS apply; punctuation micro-pauses; Ctrl dumps current line; Space still skips.
+- **Room transitions:** Ink → brass edge wipe, interruptible; location banner scale-in.
+- **Faculty timing:** Staggered release queue (0.11s), dwell dismiss when stack full, repack.
+- **Notebook clarity:** Verified-first sort, All/Verified/Provisional filters, source + verification labels in detail.
+
 ## Agent E — QA
 
 **Branch:** `cursor/qa-validation-suite-6f2c` | **PR:** https://github.com/jxav22/tea-in-the-hegemony/pull/1  

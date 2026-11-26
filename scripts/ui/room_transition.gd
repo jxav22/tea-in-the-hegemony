@@ -11,6 +11,7 @@ signal transition_finished
 var reduce_motion: bool = false
 var _busy: bool = false
 var _current_id: String = ""
+var _tween: Tween
 
 
 func _ready() -> void:
@@ -33,7 +34,11 @@ func set_location_immediate(location_id: String) -> void:
 		under.texture = tex
 		under.visible = tex != null
 	if over:
+		over.texture = null
 		over.modulate.a = 0.0
+	if wipe:
+		wipe.modulate.a = 0.0
+	_busy = false
 
 
 func transition_to(location_id: String) -> void:
@@ -46,7 +51,18 @@ func transition_to(location_id: String) -> void:
 		_current_id = location_id
 		transition_finished.emit()
 		return
-	if reduce_motion or _busy or under == null or under.texture == null:
+	if reduce_motion or under == null:
+		set_location_immediate(location_id)
+		transition_finished.emit()
+		return
+	if _busy:
+		# Interrupt prior transition cleanly
+		if _tween:
+			_tween.kill()
+		set_location_immediate(location_id)
+		transition_finished.emit()
+		return
+	if under.texture == null:
 		set_location_immediate(location_id)
 		transition_finished.emit()
 		return
@@ -55,15 +71,17 @@ func transition_to(location_id: String) -> void:
 	over.modulate.a = 0.0
 	wipe.color = HegemonyPalette.INK_DEEP
 	wipe.modulate.a = 0.0
-	var tw := create_tween()
-	# Brief ink pulse then crossfade into new room
-	tw.tween_property(wipe, "modulate:a", 0.55, 0.12)
-	tw.tween_callback(func ():
+	_tween = create_tween()
+	# Ink dip → reveal new room underneath wipe → soft brass edge fade
+	_tween.tween_property(wipe, "modulate:a", 0.72, 0.14).set_trans(Tween.TRANS_SINE)
+	_tween.tween_callback(func ():
 		under.texture = next
 		over.modulate.a = 0.0
+		wipe.color = HegemonyPalette.BRASS
 	)
-	tw.tween_property(wipe, "modulate:a", 0.0, 0.28)
-	tw.tween_callback(func ():
+	_tween.tween_property(wipe, "modulate:a", 0.18, 0.08)
+	_tween.tween_property(wipe, "modulate:a", 0.0, 0.32).set_trans(Tween.TRANS_SINE)
+	_tween.tween_callback(func ():
 		_current_id = location_id
 		_busy = false
 		transition_finished.emit()
