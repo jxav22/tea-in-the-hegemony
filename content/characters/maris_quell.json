@@ -1,9 +1,21 @@
 {
   "id": "maris_quell",
   "display_name": "Maris Quell",
-  "role": "Policy advisor, Observatory Circle",
-  "silhouette_notes": "Upper-class business-casual; observant; dry humour in the jawline.",
-  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
-  "motivations": ["Observatory Circle influence", "Understand who is playing whom"],
+  "role": "contact",
+  "silhouette_notes": "Upper-class business-casual; posture of someone who has already read the room twice. Fit, composed, dry smile that arrives half a beat late — on purpose.",
+  "default_rel": {
+    "trust": 10,
+    "familiarity": 5,
+    "suspicion": 15,
+    "respect": 20,
+    "affection": 0,
+    "comfort": 10,
+    "perceived_authenticity": 40
+  },
+  "motivations": [
+    "Advance Observatory Circle policy work without becoming anyone's trophy introduction",
+    "Decide whether Cassian Orth is interesting or merely careful",
+    "Keep Taly from performing an autopsy of every conversation"
+  ],
   "portrait_key": "maris_quell"
 }

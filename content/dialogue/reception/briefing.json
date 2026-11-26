@@ -1,0 +1,316 @@
+{
+  "id": "briefing",
+  "start": "briefing.intro",
+  "nodes": [
+    {
+      "id": "briefing.exit",
+      "speaker": "wren_halden",
+      "text": "Badge says Orth. Invitation says foyer at nineteen. If Clerk Moth sniffs an inconsistency, smile with the lower third and cite logistics. If Sera Kade is there \u2014 she will be \u2014 do not race her in public. Race her in competence. Go be a person, Cassian. Preferably a quiet one.",
+      "tags": [
+        "briefing",
+        "exit"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "briefed",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "at_reception",
+          "value": true
+        },
+        {
+          "op": "location",
+          "id": "foyer"
+        },
+        {
+          "op": "objective",
+          "id": "contact_maris",
+          "status": "active",
+          "label": "Make contact with Maris Quell"
+        },
+        {
+          "op": "objective",
+          "id": "identify_voss",
+          "status": "active",
+          "label": "Identify Lord Edrin Voss"
+        },
+        {
+          "op": "objective",
+          "id": "obtain_fragment",
+          "status": "active",
+          "label": "Obtain the shipping discrepancy fragment"
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Sera named early. Rival confirmed. Adjust threat model.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "She said 'be a person.' Hold her to that when the intel starts winning.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "briefing.intro",
+      "speaker": "wren_halden",
+      "text": "Sit. Don't rearrange the chair \u2014 it isn't a metaphor. Tonight you are Cassian Orth, Ministry Trade Liaison, logistics analyst, man who has opinions about freight margins and none about his own pulse.",
+      "tags": [
+        "briefing",
+        "entry",
+        "start"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "briefing_started",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "briefing.intro.ready",
+          "text": "Cover's clean. What's the ask?",
+          "intent": "professional",
+          "next": "briefing.objectives",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "wren_halden",
+              "respect": 1
+            }
+          ]
+        },
+        {
+          "id": "briefing.intro.dread",
+          "text": "You're about to give me romantic advice, aren't you.",
+          "intent": "deflect",
+          "next": "briefing.objectives",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "wren_halden",
+              "familiarity": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "The chair squeaked. She heard the chair squeak.",
+          "weight": 1
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Listen for the objective before she invents feelings as mission parameters.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "briefing.objectives",
+      "speaker": "wren_halden",
+      "text": "Primary: contact Maris Quell \u2014 Observatory Circle, policy advisor, not a vending machine. Secondary: identify Lord Edrin Voss's interest in the east-dock schedules. Tertiary: retrieve the guest-list cipher fragment from the study annex. Maintain cover. Avoid heat. Do not fall in love on company time.",
+      "tags": [
+        "briefing",
+        "objectives"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "obj_contact_maris",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_identify_voss",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_cipher_fragment",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "briefing.obj.ack",
+          "text": "Contact. Identify. Retrieve. Dignity optional.",
+          "intent": "professional",
+          "next": "briefing.romance_protocol",
+          "effects": []
+        },
+        {
+          "id": "briefing.obj.push",
+          "text": "Define 'heat' before you define 'love.'",
+          "intent": "probe",
+          "next": "briefing.romance_protocol",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "wren_halden",
+              "respect": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Three objectives, one evening, zero spare selves.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "She said Maris is not a vending machine. Write that down in permanent ink.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "briefing.romance_more",
+      "speaker": "wren_halden",
+      "text": "Addendum: if conversation stalls, ask an open question about Observatory Circle funding, then listen as if the answer might change shipping lanes \u2014 because it might. If she laughs, do not inventory why. If she doesn't, do not escalate to jokes about tariffs. Tariffs are not charming. I checked.",
+      "tags": [
+        "briefing",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_wren_tariffs",
+          "summary": "Wren confirmed tariffs are not charming.",
+          "salience": 2,
+          "tags": [
+            "comedy",
+            "advice"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "briefing.romance_more.ok",
+          "text": "No tariff jokes. That's... oddly specific.",
+          "intent": "ack",
+          "next": "briefing.exit",
+          "effects": []
+        },
+        {
+          "id": "briefing.romance_more.probe",
+          "text": "You checked. On whom?",
+          "intent": "probe",
+          "next": "briefing.exit",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "wren_halden",
+              "familiarity": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "She tested tariff jokes on someone. That someone was probably you in a mirror.",
+          "weight": 1
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Funding question is cover-compatible and intel-adjacent. Good bait.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "briefing.romance_protocol",
+      "speaker": "wren_halden",
+      "text": "Romantic protocol, clinical edition. One: smile with the lower third of your face only \u2014 full smiles read as sales. Two: if she mentions weather, do not correct the barometric pressure. Three: compliments should reference her work, not her collarbones. Four: if you feel a feeling, label it, file it, and continue speaking like a person who has been outdoors.",
+      "tags": [
+        "briefing",
+        "comedy",
+        "romance_advice"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "romance_protocol_received",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "briefing.romance.take_notes",
+          "text": "Lower-third smile. No barometers. Work over collarbones. Filing cabinet heart. Got it.",
+          "intent": "comply",
+          "next": "briefing.romance_more",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "following_romance_protocol",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "briefing.romance.refuse",
+          "text": "I'm not running a courtship flowchart on a live human.",
+          "intent": "pushback",
+          "next": "briefing.romance_more",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "following_romance_protocol",
+              "value": false
+            },
+            {
+              "op": "rel",
+              "char": "wren_halden",
+              "respect": -1
+            },
+            {
+              "op": "rel",
+              "char": "wren_halden",
+              "trust": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "You can do lower-third. You've been doing lower-third since puberty.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "Imagine being on the receiving end of protocol four. Then don't do that.",
+          "weight": 2
+        },
+        {
+          "faculty": "Improvisation",
+          "text": "Or burn the protocol and invent a human. Riskier. Funnier. Possibly alive.",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

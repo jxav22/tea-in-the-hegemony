@@ -126,7 +126,35 @@ Verified UTC: 2026-11-26T15:48Z (Pacific/Auckland: Fri 27 Nov 2026, 04:48 NZDT).
 
 ## Agent B — Narrative
 
-_(append)_
+**Branch:** `cursor/reception-narrative-c9ed` (PR #2)  
+**Owns:** `content/characters/`, `content/dialogue/` (esp. `content/dialogue/reception/`), `content/chapters/the_reception.json`, `docs/narrative-design.md`
+
+### Shipped
+
+- Full cast character JSON (richer stubs replacing Core placeholders).
+- Nested Reception packs under `content/dialogue/reception/` (preferred load path per Core).
+- Location/boot graph ids also provided / aligned: `briefing`, `reception_*`, `debrief`.
+- Chapter manifest `content/chapters/the_reception.json` (Core aliases this over `reception.json`).
+- Design notes: `docs/narrative-design.md`.
+
+### Beats
+
+Briefing (clinical romance protocol) → foyer/Moth → awkward Maris intro → genuine talk → impress backfire → political overhear → study extract → cover inconsistency → sacrifice fork → fragment race → multi-ending finale → dual-rubric debrief.
+
+### Ending IDs
+
+`cover_burned`, `sera_wins`, `balanced`, `professional_win`, `human_cost`, `connection`, `mixed`
+
+### Engine alignment
+
+- Effects use Core ops: `set_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `location`, `beat`.
+- Flags include Core HUD twins: `got_fragment`, `met_maris`.
+- Graph shape: `{ "id", "start", "nodes": [...] }` where a file is a boot-startable graph; nested beat packs keep `nodes` arrays and are composed via chapter index / location graphs.
+- Play: New Game → briefing → navigate rooms → Talk → Debrief.
+
+### Playtest paths
+
+See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `briefing.intro`.
 
 ## Agent C — Systems
 

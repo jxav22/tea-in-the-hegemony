@@ -1,0 +1,23 @@
+{
+  "chapter_id": "the_reception",
+  "description": "Reception dialogue manifest. Boot/hub loads graph ids via DialogueLoader (reception/<id>.json preferred).",
+  "packs": [
+    {"file": "briefing.json", "id": "briefing", "start": "briefing.intro", "beats": ["briefing"]},
+    {"file": "reception_foyer.json", "id": "reception_foyer", "start": "foyer.arrival", "beats": ["foyer_arrival"]},
+    {"file": "reception_salon.json", "id": "reception_salon", "start": "salon.enter", "beats": ["awkward_intro", "genuine_talk", "impress_attempt"]},
+    {"file": "reception_terrace.json", "id": "reception_terrace", "start": "terrace.enter", "beats": ["political_overhear", "sacrifice_choice", "fragment_race", "finale"]},
+    {"file": "reception_study.json", "id": "reception_study", "start": "study.enter", "beats": ["study_extract", "cover_inconsistency"]},
+    {"file": "reception_cloakroom.json", "id": "reception_cloakroom", "start": "cloak.enter", "beats": ["cloakroom", "moth"]},
+    {"file": "debrief.json", "id": "debrief", "start": "debrief.intro", "beats": ["debrief"]}
+  ],
+  "load_order_note": "DialogueLoader: content/dialogue/reception/<id>.json then content/dialogue/<id>.json. Hub Talk uses reception_<location>.",
+  "ending_ids": [
+    "cover_burned",
+    "sera_wins",
+    "balanced",
+    "professional_win",
+    "human_cost",
+    "connection",
+    "mixed"
+  ]
+}

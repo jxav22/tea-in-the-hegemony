@@ -3,147 +3,1196 @@
   "start": "salon.enter",
   "nodes": [
     {
+      "id": "impress.backfire_charm",
+      "speaker": "edrin_voss",
+      "text": "Porcelain and guest lists. How vivid. I do collect both \u2014 though only one of them breaks when dropped in conversation. You must be Orth. The memoranda man.",
+      "tags": [
+        "salon",
+        "edrin_voss",
+        "backfire"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "met_voss",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "impress_backfired",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "edrin_voss",
+          "familiarity": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "comfort": -1
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "respect": -1
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.charm.own",
+          "text": "I aimed for wit and hit the host. Apologies \u2014 and admiration, awkwardly ordered.",
+          "intent": "own_it",
+          "next": "impress.voss_amused",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "edrin_voss",
+              "respect": 1
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
+          ]
+        },
+        {
+          "id": "impress.charm.double",
+          "text": "Only the conversational drops are free. The porcelain has insurance.",
+          "intent": "double_down",
+          "next": "impress.voss_cool",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "edrin_voss",
+              "suspicion": 1
+            },
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "respect": -1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "You compared the host to a broken plate. In his house.",
+          "weight": 2
+        },
+        {
+          "faculty": "Composure",
+          "text": "Own the miss. Hosts respect clean falls.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "impress.backfire_intel",
+      "speaker": "sera_kade",
+      "text": "Schedule variance? How specialized. I didn't realize trade liaisons moonlighted as dock auditors. Maris \u2014 is this the entertaining one, or the careful one?",
+      "tags": [
+        "salon",
+        "sera_kade",
+        "backfire",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "sera_intervened",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "impress_backfired",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "sera_kade",
+          "familiarity": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "suspicion": 2
+        },
+        {
+          "op": "rel",
+          "char": "edrin_voss",
+          "suspicion": 1
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.intel.recover",
+          "text": "Auditing is a hobby. Like collecting people, I'm told.",
+          "intent": "parry",
+          "next": "impress.sera_parry",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "sera_kade",
+              "respect": 1
+            }
+          ]
+        },
+        {
+          "id": "impress.intel.retreat",
+          "text": "I misspoke. Margins, not manifests.",
+          "intent": "cover",
+          "next": "impress.weak_cover",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": -5
+            },
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "suspicion": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Sera was waiting for that word. You gift-wrapped it.",
+          "weight": 2
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Heat rising. Deflect to social, not deeper intel.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "impress.sera_parry",
+      "speaker": "sera_kade",
+      "text": "Collecting people \u2014 careful. Some of us collect counterexamples. Enjoy the salon, Orth. Try not to audit it out loud.",
+      "tags": [
+        "salon",
+        "sera_kade"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "sera_rivalry_open",
+          "value": true
+        },
+        {
+          "op": "memory",
+          "id": "mem_sera_warning",
+          "summary": "Sera publicly needled your dock-audit slip.",
+          "salience": 4,
+          "tags": [
+            "sera",
+            "heat"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.sera.next",
+          "text": "Noted. I'll audit quietly.",
+          "intent": "cool",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_political_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "She marked you. Accelerate study annex before she does.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "impress.skip_ok",
+      "speaker": "maris_quell",
+      "text": "A man who can refuse a stupid window. Mark the calendar. Taly, don't look so disappointed \u2014 he'll embarrass himself later, surely.",
+      "tags": [
+        "salon",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_skipped_impress",
+          "summary": "You declined a showy impress attempt; Maris approved.",
+          "salience": 3,
+          "tags": [
+            "maris",
+            "restraint"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.skip.next",
+          "text": "I schedule embarrassment for after coffee.",
+          "intent": "playful",
+          "next": null,
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 1
+            },
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_political_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Idealism",
+          "text": "Choosing not to perform is still a choice. A good one.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "impress.voss_amused",
+      "speaker": "edrin_voss",
+      "text": "Awkward admiration is still admiration. Walk with me later if you can discuss docks without breaking the china. For now \u2014 enjoy my guests. They so rarely enjoy each other.",
+      "tags": [
+        "salon",
+        "edrin_voss"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "voss_invite_later",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "edrin_voss",
+          "familiarity": 1
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.voss_amused.next",
+          "text": "I'll keep the china intact.",
+          "intent": "ack",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_political_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Invite later = access. Also leash.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "impress.voss_cool",
+      "speaker": "edrin_voss",
+      "text": "Insurance. How practical. Do keep your metaphors underwritten.",
+      "tags": [
+        "salon",
+        "edrin_voss"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "voss_cooled",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.voss_cool.next",
+          "text": "Understood, my lord.",
+          "intent": "defer",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_political_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "Exit the joke. Survivors quit while behind.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "impress.weak_cover",
+      "speaker": "maris_quell",
+      "text": "Margins, not manifests. Of course. The room will pretend that was smooth.",
+      "tags": [
+        "salon"
+      ],
+      "conditions": [],
+      "effects": [],
+      "choices": [
+        {
+          "id": "impress.weak.next",
+          "text": "I'll take pretend. It's a popular currency.",
+          "intent": "deflect",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_political_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "She covered for you with sarcasm. That's almost affection. Or pity.",
+          "weight": 1
+        }
+      ]
+    },
+    {
       "id": "salon.enter",
       "speaker": "narrator",
-      "text": "The salon is a constellation of glassware and careful laughs. Maris Quell stands near a tall window, dry humour already loaded.",
-      "tags": ["location", "salon"],
-      "effects": [{ "op": "set_flag", "flag": "seen_salon", "value": true }],
+      "text": "The salon is a carefully engineered accident of proximity: policy, money, and people who can afford to look bored. Maris Quell stands near a tall window, glass half-full, expression half-elsewhere.",
+      "tags": [
+        "salon",
+        "arrival"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "location",
+          "id": "salon"
+        }
+      ],
       "choices": [
         {
-          "id": "c_approach",
-          "text": "Approach Maris.",
-          "intent": "contact",
-          "next": "salon.maris_hello",
+          "id": "salon.enter.approach",
+          "text": "Approach Maris before your faculties form a committee.",
+          "intent": "direct",
+          "next": "salon.intro_awkward",
           "effects": []
         },
         {
-          "id": "c_voss_spot",
-          "text": "Sweep for Voss first.",
-          "intent": "mission",
-          "next": "salon.voss_spot",
+          "id": "salon.enter.taly_first",
+          "text": "The woman beside her is already measuring you. Address that.",
+          "intent": "cautious",
+          "next": "salon.taly_intercept",
           "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Window exit, two conversational clusters, one dead zone by the ferns. Ferns are always guilty.",
+          "weight": 1
         },
         {
-          "id": "c_leave",
-          "text": "Not yet — back to the foyer.",
-          "intent": "explore",
-          "next": "salon.leave",
-          "effects": []
+          "faculty": "Insecurity",
+          "text": "She has seen you. Or she is looking at the window. Or both. Both is worse.",
+          "weight": 1
         }
       ]
     },
     {
-      "id": "salon.maris_hello",
+      "id": "salon.genuine_deflect",
       "speaker": "maris_quell",
-      "text": "You're the trade liaison. Orth, yes? You look like someone who rehearsed this doorway.",
-      "tags": ["maris", "contact"],
-      "effects": [
-        { "op": "set_flag", "flag": "met_maris", "value": true },
-        { "op": "objective", "id": "contact_maris", "status": "complete", "label": "Make contact with Maris Quell" },
-        { "op": "rel", "char": "maris_quell", "familiarity": 2 }
+      "text": "Logistics as moral philosophy. Cute armor. Keep it if you need it \u2014 just know I can see the hinges.",
+      "tags": [
+        "salon"
       ],
-      "faculty_interjections": [
-        { "faculty": "Insecurity", "text": "She clocked the rehearsal. Abort? No. Recover.", "weight": 2 },
-        { "faculty": "Composure", "text": "Own it. Honesty as cover. Rare and effective.", "weight": 1.5 }
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "maris_saw_armor",
+          "value": true
+        }
       ],
       "choices": [
         {
-          "id": "c_honest",
-          "text": "I did. Doorways are structurally important.",
-          "intent": "awkward_charm",
-          "next": "salon.maris_laugh",
+          "id": "salon.deflect.soft",
+          "text": "Hinges noted. I'll try a door next time.",
+          "intent": "recover",
+          "next": "salon.impress_hook",
           "effects": [
-            { "op": "rel", "char": "maris_quell", "affection": 1, "perceived_authenticity": 2 },
-            { "op": "set_flag", "flag": "maris_amused", "value": true }
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": 3
+            }
           ]
-        },
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
         {
-          "id": "c_cover",
-          "text": "Only the freight schedules. Everything else is improvisation.",
-          "intent": "professional",
-          "next": "salon.maris_work",
-          "effects": [
-            { "op": "rel", "char": "maris_quell", "respect": 1 },
-            { "op": "set_flag", "flag": "maris_professional", "value": true }
-          ]
+          "faculty": "Idealism",
+          "text": "She offered a second chance. Don't invoice it.",
+          "weight": 1
         }
       ]
     },
     {
-      "id": "salon.maris_laugh",
+      "id": "salon.genuine_joke",
       "speaker": "maris_quell",
-      "text": "Structurally important. I'll steal that. Observatory Circle lives on doorways — who enters, who leaves, who pretends not to listen.",
-      "faculty_interjections": [
-        { "faculty": "Idealism", "text": "She's funny. That's not in the brief. Update the brief.", "weight": 1 }
+      "text": "Something about container ships and emotional baggage. It died in committee. Some jokes deserve the dock.",
+      "tags": [
+        "salon",
+        "comedy"
       ],
-      "next": "salon.maris_work"
-    },
-    {
-      "id": "salon.maris_work",
-      "speaker": "maris_quell",
-      "text": "If you're hunting policy rather than canapés, Voss holds court on the terrace later. The study annex is locked to everyone but people who look harmless. You look… almost harmless.",
+      "conditions": [],
       "effects": [
-        { "op": "memory", "id": "mem_maris_tip", "summary": "Maris: Voss on terrace later; study for the harmless-looking.", "tags": ["tip", "voss", "study"] },
-        { "op": "set_flag", "flag": "maris_hint_study", "value": true }
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "comfort": 1
+        }
       ],
       "choices": [
         {
-          "id": "c_thank",
-          "text": "Almost is my brand. Thank you.",
+          "id": "salon.joke.next",
+          "text": "I'll file it under classified kindness.",
           "intent": "warm",
-          "next": null,
-          "effects": [{ "op": "rel", "char": "maris_quell", "comfort": 1 }]
-        },
+          "next": "salon.impress_hook",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
         {
-          "id": "c_probe",
-          "text": "Harmless enough to ask who keeps the annex key?",
-          "intent": "tradecraft",
-          "next": "salon.maris_key",
-          "effects": [{ "op": "rel", "char": "maris_quell", "suspicion": 1 }, { "op": "heat", "amount": 5 }]
+          "faculty": "Improvisation",
+          "text": "Do not revive the joke. Let the corpse rest.",
+          "weight": 1
         }
       ]
     },
     {
-      "id": "salon.maris_key",
+      "id": "salon.genuine_offer",
       "speaker": "maris_quell",
-      "text": "Clerk Moth. He treats keys like scripture. I'd bring a better excuse than curiosity.",
-      "next": null
-    },
-    {
-      "id": "salon.voss_spot",
-      "speaker": "narrator",
-      "text": "Across the room: Lord Edrin Voss, collecting people like porcelain. He hasn't noticed you. Yet.",
-      "effects": [
-        { "op": "set_flag", "flag": "spotted_voss", "value": true },
-        { "op": "objective", "id": "identify_voss", "status": "complete", "label": "Identify Lord Edrin Voss" }
+      "text": "Taly's going to fetch something that claims to be champagne. You have ninety seconds of unsupervised honesty. Use them poorly or well \u2014 I'm curious which.",
+      "tags": [
+        "salon",
+        "genuine"
       ],
-      "faculty_interjections": [
-        { "faculty": "Tradecraft", "text": "Do not stare. Stare adjacent. Collect silhouette.", "weight": 1.5 }
+      "conditions": [
+        {
+          "flag": "met_maris",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "taly_away",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "familiarity": 1
+        }
       ],
       "choices": [
         {
-          "id": "c_back_maris",
-          "text": "File him. Return to Maris.",
-          "intent": "balance",
-          "next": "salon.maris_hello",
-          "conditions": [{ "flag": "met_maris", "op": "eq", "value": false }],
-          "effects": []
+          "id": "salon.genuine.honest",
+          "text": "I overprepared for this conversation and underprepared for being seen.",
+          "intent": "vulnerable",
+          "next": "salon.genuine_seen",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "trust": 2
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": 8
+            },
+            {
+              "op": "set_flag",
+              "flag": "genuine_with_maris",
+              "value": true
+            }
+          ]
         },
         {
-          "id": "c_done_spot",
-          "text": "Enough for now.",
-          "intent": "exit",
-          "next": null,
-          "effects": []
+          "id": "salon.genuine.work_soft",
+          "text": "Your Observatory brief on port opacity \u2014 I disagreed with page four and respected page four.",
+          "intent": "respectful_work",
+          "next": "salon.genuine_work",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": 3
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 1
+            },
+            {
+              "op": "set_flag",
+              "flag": "genuine_with_maris",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "salon.genuine.deflect",
+          "text": "Honesty is a luxury good. I work in logistics.",
+          "intent": "deflect",
+          "next": "salon.genuine_deflect",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": -1
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "suspicion": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "She handed you a window. Climb through or wallpaper over it.",
+          "weight": 2
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Unsupervised honesty is still a performance. Choose which kind.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "Ninety seconds of real is worth more than an evening of correct.",
+          "weight": 1
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "She will notice if you use a line. She has a museum of lines.",
+          "weight": 1
         }
       ]
     },
     {
-      "id": "salon.leave",
-      "speaker": "narrator",
-      "text": "You step back toward the foyer before the room invents a role for you.",
-      "effects": [{ "op": "location", "id": "foyer" }],
-      "next": null
+      "id": "salon.genuine_seen",
+      "speaker": "maris_quell",
+      "text": "That's either the truth or a very expensive imitation. I'll allow both until evidence arrives. For what it's worth \u2014 I overprepared a joke about freight and abandoned it. You're welcome.",
+      "tags": [
+        "salon",
+        "genuine",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_maris_freight_joke",
+          "summary": "Maris almost joked about freight, then didn't.",
+          "salience": 4,
+          "tags": [
+            "maris",
+            "genuine"
+          ]
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "comfort": 2
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.seen.thanks",
+          "text": "Mercy noted. I'll try to deserve the ninety seconds.",
+          "intent": "warm",
+          "next": "salon.impress_hook",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 1
+            }
+          ]
+        },
+        {
+          "id": "salon.seen.ask",
+          "text": "What was the joke?",
+          "intent": "curious",
+          "next": "salon.genuine_joke",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "familiarity": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "She matched your vulnerability with wit. Steady.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.genuine_work",
+      "speaker": "maris_quell",
+      "text": "Page four was meant to annoy the right people. Congratulations \u2014 you're the right people. Disagreeing respectfully is rarer than agreement with flowers.",
+      "tags": [
+        "salon",
+        "genuine"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_maris_page_four",
+          "summary": "Maris respects disagreement on her port opacity brief.",
+          "salience": 4,
+          "tags": [
+            "maris",
+            "respect"
+          ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "maris_respects_mind",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.work_soft.next",
+          "text": "I can bring more disagreement. Fresh, seasonal.",
+          "intent": "playful",
+          "next": "salon.impress_hook",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "She wants a sparring partner, not a mirror.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.impress_hook",
+      "speaker": "taly_renn",
+      "text": "I'm back. The champagne is a rumor with bubbles. Orth \u2014 Voss is circulating. If you're going to impress anyone, now's the stupid window.",
+      "tags": [
+        "salon",
+        "impress"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "taly_away",
+          "value": false
+        },
+        {
+          "op": "set_flag",
+          "flag": "voss_nearby",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "impress.attempt.smart",
+          "text": "Drop an insight about east-dock schedule variance \u2014 casually, brilliantly.",
+          "intent": "impress",
+          "next": "impress.backfire_intel",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "tried_impress_intel",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "impress.attempt.charm",
+          "text": "Attempt charm: witty parallel between porcelain collecting and guest lists.",
+          "intent": "impress",
+          "next": "impress.backfire_charm",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "tried_impress_charm",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "impress.attempt.skip",
+          "text": "Decline the stupid window. Stay with the conversation you already have.",
+          "intent": "restraint",
+          "next": "impress.skip_ok",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": 2
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            },
+            {
+              "op": "set_flag",
+              "flag": "skipped_impress",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "Impress them or become furniture. Furniture is safe. Furniture is death.",
+          "weight": 1
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "East-dock variance is mission-shaped. Saying it aloud is a flare.",
+          "weight": 2
+        },
+        {
+          "faculty": "Composure",
+          "text": "Restraint is also a performance. Sometimes the winning one.",
+          "weight": 1
+        },
+        {
+          "faculty": "Improvisation",
+          "text": "Or invent something dazzling and wrong. Legacy option.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.intro_awkward",
+      "speaker": "maris_quell",
+      "text": "Cassian Orth. Ministry Trade. I've read two of your memoranda \u2014 the short ones. You write like someone who is afraid of adjectives.",
+      "tags": [
+        "salon",
+        "maris_quell",
+        "awkward_intro"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "met_maris",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "familiarity": 2
+        },
+        {
+          "op": "objective",
+          "id": "contact_maris",
+          "status": "complete",
+          "label": "Make contact with Maris Quell"
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.intro.protocol",
+          "text": "Adjectives inflate risk. I prefer verbs that ship.",
+          "intent": "protocol",
+          "next": "salon.intro_protocol_response",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "used_romance_protocol",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": 1
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 0
+            }
+          ]
+        },
+        {
+          "id": "salon.intro.fluster",
+          "text": "That... might be the kindest autopsy I've ever received.",
+          "intent": "human",
+          "next": "salon.intro_human_response",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 2
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": 5
+            }
+          ]
+        },
+        {
+          "id": "salon.intro.work",
+          "text": "How is Observatory Circle funding looking this quarter?",
+          "intent": "intel_bait",
+          "next": "salon.intro_work_response",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "suspicion": 1
+            },
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "suspicion": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "She read your memos. She knows you are allergic to beauty.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "That was almost a compliment. Reciprocate without a spreadsheet.",
+          "weight": 2
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Funding question is on-script. Also obvious. Calibrate.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "She led with your work, not your cover charm. Meet her there as a person.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.intro_human_response",
+      "speaker": "maris_quell",
+      "text": "Good. Most people try to un-autopsy themselves in the next sentence. You left the body on the table. Refreshing \u2014 or suspicious. I'm collecting data.",
+      "tags": [
+        "salon"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 1
+        },
+        {
+          "op": "memory",
+          "id": "mem_maris_autopsy",
+          "summary": "Maris called your self-awareness refreshing or suspicious.",
+          "salience": 3,
+          "tags": [
+            "maris",
+            "intro"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.human.next",
+          "text": "Collect away. I'll try not to contaminate the sample.",
+          "intent": "playful",
+          "next": "salon.genuine_offer",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "She's running her own assessment. You are not the only spy in the metaphor.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.intro_protocol_response",
+      "speaker": "maris_quell",
+      "text": "Verbs that ship. You sound like a briefing note that learned to stand upright. Taly, he's house-trained.",
+      "tags": [
+        "salon",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "familiarity": 1
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.protocol.next",
+          "text": "I'll take house-trained over decorative.",
+          "intent": "recover",
+          "next": "salon.genuine_offer",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "She noticed the protocol. Soften or she'll file you under 'handled.'",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.intro_work_maris",
+      "speaker": "maris_quell",
+      "text": "Funding is looking like a conversation for people who have already survived small talk. We haven't. Try again without the briefcase.",
+      "tags": [
+        "salon"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "perceived_authenticity": -5
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.work.retry",
+          "text": "Fair. What's the least boring thing in this room that isn't politics?",
+          "intent": "recover",
+          "next": "salon.genuine_offer",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "Briefcase energy. Lethal.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "She asked for a person. Supply one.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "salon.intro_work_response",
+      "speaker": "taly_renn",
+      "text": "He went straight to funding. Maris, your admirers are getting efficient.",
+      "tags": [
+        "salon",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [],
+      "choices": [],
+      "next": "salon.intro_work_maris",
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Too fast. You smelled like an agenda.",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "salon.taly_intercept",
+      "speaker": "taly_renn",
+      "text": "Before you invent a weather opener: I'm Taly Renn. She's Maris. You're hovering like a man who has been briefed on hovering. Spit out a name and we'll decide if you're interesting.",
+      "tags": [
+        "salon",
+        "taly_renn",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "familiarity": 1
+        },
+        {
+          "op": "set_flag",
+          "flag": "met_taly",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "salon.taly.name",
+          "text": "Cassian Orth. Trade liaison. I hover professionally.",
+          "intent": "cover",
+          "next": "salon.intro_awkward",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "respect": 1
+            }
+          ]
+        },
+        {
+          "id": "salon.taly.honest",
+          "text": "Cassian. I'm worse at first sentences than at freight.",
+          "intent": "vulnerable",
+          "next": "salon.intro_awkward",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "trust": 1
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "She clocked the briefing. Do not confirm it with posture.",
+          "weight": 1
+        },
+        {
+          "faculty": "Improvisation",
+          "text": "Lean into the hover. Own the hover. Become the hover.",
+          "weight": 1
+        }
+      ]
     }
   ]
 }

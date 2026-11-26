@@ -1,0 +1,265 @@
+{
+  "id": "reception_cloakroom",
+  "start": "cloak.enter",
+  "nodes": [
+    {
+      "id": "cloak.enter",
+      "speaker": "narrator",
+      "text": "Cloakroom corridor: coats hang like unused alibis. Clerk Moth's lamp is a tiny sun of bureaucracy. Somewhere a seating card is rehearsing its grievance.",
+      "tags": ["location", "cloakroom"],
+      "effects": [{"op": "set_flag", "flag": "seen_cloakroom", "value": true}],
+      "faculty_interjections": [
+        {"faculty": "Composure", "text": "Do not joke about badges. He laminates joy.", "weight": 2},
+        {"faculty": "Tradecraft", "text": "Coats, tickets, exits. Also: Moth hears tone as evidence.", "weight": 1}
+      ],
+      "choices": [
+        {
+          "id": "c_maris",
+          "text": "Maris is here, adjusting an earring like it insulted her.",
+          "intent": "social",
+          "next": "cloakroom.detour",
+          "conditions": [{"flag": "met_maris", "op": "eq", "value": true}]
+        },
+        {
+          "id": "c_moth_heat",
+          "text": "Moth is holding two cards like a verdict.",
+          "intent": "tradecraft",
+          "next": "cloak.moth_serial",
+          "conditions": [{"flag": "cover_inconsistency_raised", "op": "eq", "value": true}]
+        },
+        {
+          "id": "c_moth_casual",
+          "text": "Present badge. Smile with the lower third only.",
+          "intent": "comply",
+          "next": "cloak.moth_soft"
+        },
+        {
+          "id": "c_joke",
+          "text": "Joke that the badge is shy.",
+          "intent": "humour",
+          "next": "cloak.moth_angry"
+        }
+      ]
+    },
+    {
+      "id": "cloak.moth_soft",
+      "speaker": "clerk_moth",
+      "text": "Badge visible. Acceptable. Do not rearrange coats. Coats have jurisdiction. Ticket stubs are not confetti.",
+      "effects": [
+        {"op": "rel", "char": "clerk_moth", "respect": 1},
+        {"op": "set_flag", "flag": "moth_soft_pass", "value": true}
+      ],
+      "faculty_interjections": [
+        {"faculty": "Analysis", "text": "Compliance purchased silence. Spend it elsewhere.", "weight": 1}
+      ],
+      "choices": [
+        {
+          "id": "c_soft_done",
+          "text": "Understood. Coats remain sovereign.",
+          "intent": "exit",
+          "next": null
+        },
+        {
+          "id": "c_soft_study",
+          "text": "Ask — carefully — about annex quiet hours.",
+          "intent": "probe",
+          "next": "cloak.moth_annex",
+          "conditions": [{"flag": "intel_cipher_hint", "op": "eq", "value": true}]
+        }
+      ]
+    },
+    {
+      "id": "cloak.moth_annex",
+      "speaker": "clerk_moth",
+      "text": "Study annex is for authorised quiet people. You may be quiet. Authorisation is a different religion. Bring a host signature or leave the furniture alone.",
+      "effects": [
+        {"op": "set_flag", "flag": "moth_refused_key", "value": true},
+        {"op": "memory", "id": "mem_moth_key", "summary": "Moth: study needs host signature.", "salience": 3, "tags": ["cloakroom", "moth"]}
+      ],
+      "faculty_interjections": [
+        {"faculty": "Improvisation", "text": "Signature, distraction, or looking harmless. Pick one.", "weight": 1}
+      ],
+      "next": null
+    },
+    {
+      "id": "cloak.moth_angry",
+      "speaker": "clerk_moth",
+      "text": "Humour is not a credential. Heat noted. Metaphorically. Also on the incident log. Pencil can become ink.",
+      "effects": [
+        {"op": "heat", "amount": 15},
+        {"op": "set_flag", "flag": "moth_annoyed", "value": true},
+        {"op": "rel", "char": "clerk_moth", "suspicion": 2}
+      ],
+      "faculty_interjections": [
+        {"faculty": "Insecurity", "text": "You made a joke at the laminator. Bold. Fatal.", "weight": 2}
+      ],
+      "choices": [
+        {
+          "id": "c_angry_recover",
+          "text": "Apologies. Cassian Orth. As printed.",
+          "intent": "recover",
+          "next": "cloak.moth_soft",
+          "effects": [{"op": "rel", "char": "clerk_moth", "suspicion": -1}]
+        }
+      ]
+    },
+    {
+      "id": "cloak.moth_serial",
+      "speaker": "clerk_moth",
+      "text": "Invitation serial versus seating card. Discrepancy. Explain in complete sentences without metaphors, humor, or logistics poetry.",
+      "tags": ["cover", "comedy"],
+      "effects": [
+        {"op": "set_flag", "flag": "moth_confrontation", "value": true},
+        {"op": "rel", "char": "clerk_moth", "suspicion": 3},
+        {"op": "heat", "amount": 5}
+      ],
+      "faculty_interjections": [
+        {"faculty": "Tradecraft", "text": "Memo numbers calm bureaucrats. Invent precisely.", "weight": 2},
+        {"faculty": "Composure", "text": "Lower third. Boredom is camouflage.", "weight": 1}
+      ],
+      "choices": [
+        {
+          "id": "c_cite",
+          "text": "Reprint batch B-17. Liaison office. I can cite the memo number.",
+          "intent": "tradecraft",
+          "next": "cloak.moth_pass",
+          "effects": [
+            {"op": "set_flag", "flag": "cover_held", "value": true},
+            {"op": "rel", "char": "clerk_moth", "respect": 2, "suspicion": -2}
+          ]
+        },
+        {
+          "id": "c_pim",
+          "text": "Pim Orel can vouch — he seated me by the ferns.",
+          "intent": "social",
+          "next": "cloak.moth_pim",
+          "effects": [{"op": "set_flag", "flag": "called_pim_vouch", "value": true}]
+        },
+        {
+          "id": "c_break",
+          "text": "The card is wrong. Re-laminate reality.",
+          "intent": "aggression",
+          "next": "cloak.moth_fail",
+          "effects": [
+            {"op": "set_flag", "flag": "cover_compromised", "value": true},
+            {"op": "set_flag", "flag": "heat_high", "value": true},
+            {"op": "heat", "amount": 25}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloak.moth_pass",
+      "speaker": "clerk_moth",
+      "text": "B-17 is… plausible. Plausible is not vindicated. You are provisional. Do not make me upgrade you to ink.",
+      "effects": [{"op": "set_flag", "flag": "moth_provisional", "value": true}],
+      "next": null
+    },
+    {
+      "id": "cloak.moth_pim",
+      "speaker": "pim_orel",
+      "text": "I vouch! He is Orth, he is dull in the correct way, and the ferns love him. Clerk Moth — if you eject him, eject me, and then who will explain canapés to Voss?",
+      "effects": [
+        {"op": "set_flag", "flag": "cover_held", "value": true},
+        {"op": "set_flag", "flag": "pim_risked_for_you", "value": true},
+        {"op": "rel", "char": "pim_orel", "trust": 2, "affection": 1},
+        {"op": "rel", "char": "clerk_moth", "suspicion": -1}
+      ],
+      "faculty_interjections": [
+        {"faculty": "Empathy", "text": "He risked lamination for you. Remember.", "weight": 2}
+      ],
+      "next": null
+    },
+    {
+      "id": "cloak.moth_fail",
+      "speaker": "clerk_moth",
+      "text": "Ink. You are inked. Security will smile at you soon. Until then — stay visible, stay boring, stay away from annex doors.",
+      "tags": ["heat", "ending"],
+      "effects": [
+        {"op": "set_flag", "flag": "cover_compromised", "value": true},
+        {"op": "set_flag", "flag": "annex_watched", "value": true},
+        {"op": "set_flag", "flag": "ending_id", "value": "cover_burned"}
+      ],
+      "next": null
+    },
+    {
+      "id": "cloakroom.detour",
+      "speaker": "narrator",
+      "text": "Maris adjusts an earring like it filed a complaint. The corridor suddenly has better air than the salon.",
+      "tags": ["cloakroom"],
+      "effects": [{"op": "set_flag", "flag": "cloak_saw_maris", "value": true}],
+      "choices": [
+        {
+          "id": "cloak.ask",
+          "text": "You looked like you needed a corridor more than a salon.",
+          "intent": "empathy",
+          "next": "cloak.maris",
+          "effects": [{"op": "rel", "char": "maris_quell", "comfort": 2}]
+        }
+      ],
+      "faculty_interjections": [
+        {"faculty": "Empathy", "text": "She's not a side quest. Still — the study clock ticks.", "weight": 1}
+      ]
+    },
+    {
+      "id": "cloak.maris",
+      "speaker": "maris_quell",
+      "text": "I needed air that hadn't been approved by a seating chart. You're either considerate or strategically considerate. Both are rare. Don't make me late for my own patience.",
+      "tags": ["cloakroom", "maris_quell"],
+      "effects": [
+        {"op": "set_flag", "flag": "cloakroom_with_maris", "value": true},
+        {"op": "rel", "char": "maris_quell", "trust": 1}
+      ],
+      "choices": [
+        {
+          "id": "cloak.next_study",
+          "text": "I won't. I have a stupid errand — then I'd like to continue this.",
+          "intent": "honest",
+          "next": null,
+          "effects": [
+            {"op": "rel", "char": "maris_quell", "perceived_authenticity": 3},
+            {"op": "location", "id": "study"},
+            {"op": "set_flag", "flag": "resume_study_approach", "value": true}
+          ]
+        },
+        {
+          "id": "cloak.stay",
+          "text": "The errand can wait sixty seconds. What are you actually escaping?",
+          "intent": "curious",
+          "next": "cloak.maris_more",
+          "effects": [{"op": "rel", "char": "maris_quell", "comfort": 2, "affection": 1}]
+        }
+      ],
+      "faculty_interjections": [
+        {"faculty": "Idealism", "text": "Tell her you'll come back — then do it.", "weight": 1},
+        {"faculty": "Tradecraft", "text": "Sixty seconds is a luxury. Budget it.", "weight": 1}
+      ]
+    },
+    {
+      "id": "cloak.maris_more",
+      "speaker": "maris_quell",
+      "text": "Voss collects people. Observatory Circle collects outcomes. Tonight I'm trying not to be either. If you're Orth the liaison, fine. If you're someone who notices corridors — rarer. Don't make me regret the hypothesis.",
+      "effects": [
+        {"op": "set_flag", "flag": "genuine_with_maris", "value": true},
+        {"op": "memory", "id": "mem_cloak_hypothesis", "summary": "Maris: not wanting to be collected; called noticing corridors rare.", "salience": 5, "tags": ["maris", "genuine"]},
+        {"op": "rel", "char": "maris_quell", "perceived_authenticity": 5, "trust": 1}
+      ],
+      "faculty_interjections": [
+        {"faculty": "Idealism", "text": "Hypothesis. Hold it like evidence that matters.", "weight": 1},
+        {"faculty": "Insecurity", "text": "She can still file you under operator. Don't prove her right.", "weight": 1}
+      ],
+      "choices": [
+        {
+          "id": "c_more_go",
+          "text": "I won't. Stupid errand — then I find you again.",
+          "intent": "warm",
+          "next": null,
+          "effects": [
+            {"op": "location", "id": "study"},
+            {"op": "rel", "char": "maris_quell", "affection": 1}
+          ]
+        }
+      ]
+    }
+  ]
+}

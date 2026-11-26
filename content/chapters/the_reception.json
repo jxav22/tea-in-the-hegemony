@@ -1,0 +1,125 @@
+{
+  "id": "the_reception",
+  "title": "The Reception",
+  "synopsis": "Under cover as Cassian Orth, infiltrate Lord Voss's reception: contact Maris Quell, identify Voss's dock interest, secure a guest-list cipher fragment, and decide what you're willing to sacrifice when a person needs you more than a win.",
+  "start_node": "briefing.intro",
+  "start_location": "safehouse_briefing",
+  "locations": [
+    "foyer",
+    "salon",
+    "terrace",
+    "study",
+    "cloakroom"
+  ],
+  "objectives": [
+    {
+      "id": "contact_maris",
+      "label": "Make contact with Maris Quell",
+      "flag_done": "met_maris"
+    },
+    {
+      "id": "identify_voss",
+      "label": "Identify Lord Edrin Voss",
+      "flag_done": "obj_identify_voss_done"
+    },
+    {
+      "id": "obtain_fragment",
+      "label": "Obtain the shipping discrepancy fragment",
+      "flag_done": "got_fragment"
+    },
+    {
+      "id": "maintain_cover",
+      "label": "Maintain cover as Cassian Orth",
+      "flag_fail": "cover_compromised"
+    }
+  ],
+  "dialogue_files": [
+    "content/dialogue/reception/briefing.json",
+    "content/dialogue/reception/reception_foyer.json",
+    "content/dialogue/reception/reception_salon.json",
+    "content/dialogue/reception/reception_terrace.json",
+    "content/dialogue/reception/reception_study.json",
+    "content/dialogue/reception/reception_cloakroom.json",
+    "content/dialogue/reception/debrief.json"
+  ],
+  "beat_order": [
+    "briefing",
+    "foyer_arrival",
+    "awkward_intro",
+    "genuine_talk",
+    "impress_attempt",
+    "political_overhear",
+    "study_extract",
+    "cover_inconsistency",
+    "sacrifice_choice",
+    "fragment_race",
+    "finale",
+    "debrief"
+  ],
+  "ending_ids": [
+    "cover_burned",
+    "sera_wins",
+    "balanced",
+    "professional_win",
+    "human_cost",
+    "connection",
+    "mixed"
+  ],
+  "ending_priority": [
+    "cover_burned",
+    "sera_wins",
+    "balanced",
+    "professional_win",
+    "human_cost",
+    "connection",
+    "mixed"
+  ],
+  "faculties": [
+    "Analysis",
+    "Tradecraft",
+    "Composure",
+    "Empathy",
+    "Improvisation",
+    "Idealism",
+    "Insecurity"
+  ],
+  "characters_present": [
+    "cassian_vale",
+    "maris_quell",
+    "wren_halden",
+    "edrin_voss",
+    "taly_renn",
+    "sera_kade",
+    "pim_orel",
+    "clerk_moth"
+  ],
+  "flags_initialized": {
+    "briefed": false,
+    "met_maris": false,
+    "has_cipher_fragment": false,
+    "cover_compromised": false,
+    "helped_taly": false,
+    "abandoned_taly": false,
+    "genuine_with_maris": false,
+    "impress_backfired": false,
+    "chapter_complete": false
+  },
+  "assumptions": [
+    "DialogueLoader prefers content/dialogue/reception/<id>.json over flat content/dialogue/<id>.json.",
+    "Boot/hub starts briefing then reception_<location>; debrief via menu.",
+    "Effects: set_flag, add_flag, toggle_flag, rel, memory, heat, objective, item, beat, location.",
+    "got_fragment twin of has_cipher_fragment for Core HUD.",
+    "Cross-room flow uses location effects + player nav / Talk here; graphs are self-contained."
+  ],
+  "start_dialogue": "briefing",
+  "characters": [
+    "cassian_vale",
+    "maris_quell",
+    "wren_halden",
+    "edrin_voss",
+    "taly_renn",
+    "sera_kade",
+    "pim_orel",
+    "clerk_moth"
+  ]
+}

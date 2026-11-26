@@ -1,0 +1,1464 @@
+{
+  "id": "reception_terrace",
+  "start": "terrace.enter",
+  "nodes": [
+    {
+      "id": "terrace.enter",
+      "speaker": "narrator",
+      "text": "Night air over stone. Glasses glitter. Somewhere a toast is being rehearsed like a threat.",
+      "tags": [
+        "location",
+        "terrace"
+      ],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "seen_terrace",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "c_listen",
+          "text": "Drift toward the ferns \u2014 Voss is mid-sentence.",
+          "intent": "tradecraft",
+          "next": "political.hook"
+        },
+        {
+          "id": "c_sac",
+          "text": "Something is wrong on the stair \u2014 Taly.",
+          "intent": "empathy",
+          "next": "sacrifice.hook",
+          "conditions": [
+            {
+              "flag": "taly_in_trouble",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "c_toast",
+          "text": "The toast is close. Resolve the evening.",
+          "intent": "finale",
+          "next": "finale.router",
+          "conditions": [
+            {
+              "any": [
+                {
+                  "flag": "helped_taly",
+                  "op": "eq",
+                  "value": true
+                },
+                {
+                  "flag": "abandoned_taly",
+                  "op": "eq",
+                  "value": true
+                },
+                {
+                  "flag": "has_cipher_fragment",
+                  "op": "eq",
+                  "value": true
+                },
+                {
+                  "flag": "got_fragment",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ending.balanced",
+      "speaker": "narrator",
+      "text": "Fragment secured. Taly still has a career. Maris finds you after the toast, dry as ever: 'You managed both kinds of logistics. Don't get addicted.' It isn't praise. It might be a beginning.",
+      "tags": [
+        "balanced",
+        "end",
+        "ending"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "balanced"
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "familiarity": 2
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "Both ledgers breathing. Rare night.",
+          "weight": 1
+        },
+        {
+          "faculty": "Composure",
+          "text": "Accept almost-praise without inventing a wedding.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "ending.connection",
+      "speaker": "maris_quell",
+      "text": "You didn't perform for the room. You talked to me. Whatever else you came for \u2014 and I suspect there is an else \u2014 I'd take another ninety seconds sometime. Not a promise. A hypothesis.",
+      "tags": [
+        "connection",
+        "end",
+        "ending",
+        "maris_quell"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "connection"
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "affection": 3
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "perceived_authenticity": 10
+        },
+        {
+          "op": "memory",
+          "id": "mem_ending_connection",
+          "summary": "Maris offered another ninety seconds \u2014 a hypothesis, not a promise.",
+          "salience": 7,
+          "tags": [
+            "ending",
+            "maris"
+          ]
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "Hypothesis. Hold it gently.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "This is the point. Try not to brief it to death.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "ending.cover_burned",
+      "speaker": "clerk_moth",
+      "text": "Security requests your company. Bring your badge. Leave your metaphors.",
+      "tags": [
+        "burned",
+        "comedy",
+        "end",
+        "ending"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "cover_burned"
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "extracted_hot",
+          "value": true
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Burned is recoverable. Pride is optional cargo.",
+          "weight": 1
+        },
+        {
+          "faculty": "Composure",
+          "text": "Walk. Do not run. Running confirms ink.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "ending.default_mixed",
+      "speaker": "narrator",
+      "text": "The evening ends in mixed weather: some intel, some bruises, some looks you can't classify. You leave with enough to justify a debrief and not enough to justify pride.",
+      "tags": [
+        "end",
+        "ending",
+        "mixed"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "mixed"
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Mixed is the median spy ending. Honest, if unflattering.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "ending.human_cost",
+      "speaker": "sera_kade",
+      "text": "Cute rescue. I took the annex while you took the moral high ground. Don't worry \u2014 I'll send Wren a postcard.",
+      "tags": [
+        "end",
+        "ending",
+        "human_cost",
+        "sera_kade"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "human_cost"
+        },
+        {
+          "op": "set_flag",
+          "flag": "has_cipher_fragment",
+          "value": false
+        },
+        {
+          "op": "set_flag",
+          "flag": "sera_has_fragment",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "affection": 2
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Fragment lost. Rival scored. Anticipate Wren's clinical disappointment.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "ending.human_cost_maris",
+      "speaker": "maris_quell",
+      "text": "Taly told me. You chose a person over a win. I don't know what you came here for \u2014 but I know what you did. That's data I'll keep.",
+      "tags": [
+        "end",
+        "ending",
+        "maris_quell"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_ending_human",
+          "summary": "Lost the fragment to Sera; gained Maris's measured respect.",
+          "salience": 7,
+          "tags": [
+            "ending",
+            "maris"
+          ]
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Idealism",
+          "text": "Data she'll keep. That's more than a mission stamp.",
+          "weight": 1
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "Wren will not keep that data warmly.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "ending.professional_win",
+      "speaker": "narrator",
+      "text": "You have the fragment. Cover holds. The toast tastes like victory and something metallic. Across the room Maris does not look at you \u2014 or looks once, files you under solved, and turns away.",
+      "tags": [
+        "end",
+        "ending",
+        "professional"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "professional_win"
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Mission green. Human ledger red. Wren will clap once.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "You optimized the wrong variable.",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "ending.sera_wins",
+      "speaker": "sera_kade",
+      "text": "You were busy being good. I was busy being finished. Smile with the lower third for your handler \u2014 she'll need the practice.",
+      "tags": [
+        "end",
+        "ending",
+        "sera_wins"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "sera_wins"
+        },
+        {
+          "op": "set_flag",
+          "flag": "has_cipher_fragment",
+          "value": false
+        },
+        {
+          "op": "set_flag",
+          "flag": "sera_has_fragment",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "chapter_complete",
+          "value": true
+        }
+      ],
+      "choices": [],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Delay cost the race. Help was real; so was the invoice.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "finale.branch",
+      "speaker": "narrator",
+      "text": "The room lifts glasses. Somewhere a cipher either sits in your pocket, Sera's, or nowhere useful.",
+      "tags": [
+        "finale"
+      ],
+      "conditions": [],
+      "effects": [],
+      "choices": [
+        {
+          "id": "finale.to.professional",
+          "text": "[If fragment held, cover stable, low human cost]",
+          "intent": "ending",
+          "next": "ending.professional_win",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "has_cipher_fragment",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "cover_compromised",
+              "op": "neq",
+              "value": true
+            },
+            {
+              "flag": "abandoned_taly",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "finale.to.balanced",
+          "text": "[If fragment held and you helped Taly / split]",
+          "intent": "ending",
+          "next": "ending.balanced",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "has_cipher_fragment",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "helped_taly",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "finale.to.human",
+          "text": "[If you helped Taly and lost fragment race]",
+          "intent": "ending",
+          "next": "ending.human_cost",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "helped_taly",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "has_cipher_fragment",
+              "op": "neq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "finale.to.burned",
+          "text": "[If cover compromised]",
+          "intent": "ending",
+          "next": "ending.cover_burned",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "cover_compromised",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "finale.to.sera",
+          "text": "[If Sera took advantage of delay]",
+          "intent": "ending",
+          "next": "ending.sera_wins",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "sera_gained_time",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "fragment_risk",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "finale.to.connection",
+          "text": "[If genuine with Maris and mission mixed]",
+          "intent": "ending",
+          "next": "ending.connection",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "genuine_with_maris",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "skipped_impress",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": "ending.default_mixed",
+      "faculty_interjections": [
+        {
+          "faculty": "Improvisation",
+          "text": "Engine resolves priority: burned > sera race > balanced > professional > human > connection > mixed.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "finale.router",
+      "speaker": "narrator",
+      "text": "The toast is three minutes out. Choices congeal into an ending.",
+      "tags": [
+        "finale",
+        "router"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "finale_started",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "finale.route.compute",
+          "text": "See what you've made of the evening.",
+          "intent": "proceed",
+          "next": "finale.branch",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Weigh fragment, cover, Maris, heat. Pick the future you can live inside.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "political.aide",
+      "speaker": "narrator",
+      "text": "The aide murmurs assent. Something about a ciphered guest addendum \u2014 names that aren't names \u2014 and then they drift apart like nothing happened except the shape of the evening.",
+      "tags": [
+        "political",
+        "intel"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "intel_cipher_hint",
+          "value": true
+        },
+        {
+          "op": "memory",
+          "id": "mem_cipher_hint",
+          "summary": "Guest addendum may carry ciphered names tied to the dock discrepancy.",
+          "salience": 5,
+          "tags": [
+            "intel",
+            "cipher"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "political.after.study",
+          "text": "Study annex. Before the toast. Before Sera.",
+          "intent": "mission",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "study"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_study_approach",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "political.after.maris",
+          "text": "Check on Maris first \u2014 human continuity matters.",
+          "intent": "social",
+          "next": null,
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            },
+            {
+              "op": "location",
+              "id": "cloakroom"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_cloakroom_detour",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Cipher + schedule = fragment target. Move.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "You can move and still be a person. Sequence carefully.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "political.hook",
+      "speaker": "narrator",
+      "text": "A pocket of quieter air near the terrace doors: Voss and a ministry aide speaking like people who believe ferns don't have ears.",
+      "tags": [
+        "political",
+        "terrace"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "location",
+          "id": "terrace"
+        }
+      ],
+      "choices": [
+        {
+          "id": "political.listen",
+          "text": "Linger by the ferns. Listen.",
+          "intent": "tradecraft",
+          "next": "political.overhear",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "listened_voss",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "political.distract",
+          "text": "Send Pim in as a conversational torpedo, then catch the aftermath.",
+          "intent": "improv",
+          "next": "political.pim_assist",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "used_pim_distract",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "pim_orel",
+              "trust": 1
+            }
+          ]
+        },
+        {
+          "id": "political.skip",
+          "text": "Skip the eavesdrop \u2014 head for the study annex while the salon is loud.",
+          "intent": "mission",
+          "next": null,
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "skipped_overhear",
+              "value": true
+            },
+            {
+              "op": "location",
+              "id": "study"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_study_approach",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Ferns are cover. Use the guilty ferns.",
+          "weight": 1
+        },
+        {
+          "faculty": "Analysis",
+          "text": "Aide's posture says east docks. Confirm.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "Or go be useful elsewhere before you become a listening device.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "political.overhear",
+      "speaker": "edrin_voss",
+      "text": "...the east-dock window closes Friday if the discrepancy stays unreconciled. I want the revised schedule in my study before the toast. Quietly. Porcelain doesn't like panic.",
+      "tags": [
+        "political",
+        "intel"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "intel_voss_friday",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_identify_voss_done",
+          "value": true
+        },
+        {
+          "op": "memory",
+          "id": "mem_voss_friday",
+          "summary": "Voss needs east-dock schedule revised before the toast; discrepancy unresolved.",
+          "salience": 5,
+          "tags": [
+            "intel",
+            "voss",
+            "docks"
+          ]
+        },
+        {
+          "op": "objective",
+          "id": "identify_voss",
+          "status": "complete",
+          "label": "Identify Lord Edrin Voss"
+        }
+      ],
+      "choices": [],
+      "next": "political.aide",
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Deadline: toast. Location: study. Objective just grew teeth.",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "political.pim_assist",
+      "speaker": "pim_orel",
+      "text": "Lord Voss! Have you met my theory about canap\u00e9s as soft power? No? Wonderful \u2014 walk with me while I ruin both our reputations.",
+      "tags": [
+        "political",
+        "pim_orel",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "edrin_voss",
+          "familiarity": 1
+        },
+        {
+          "op": "set_flag",
+          "flag": "pim_distracted_voss",
+          "value": true
+        }
+      ],
+      "choices": [],
+      "next": "political.pim_intel",
+      "faculty_interjections": [
+        {
+          "faculty": "Improvisation",
+          "text": "Pim is a wrecking ball with a guest pass. Bless him.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "political.pim_intel",
+      "speaker": "narrator",
+      "text": "In the vacuum Pim creates, the aide drops a folio edge \u2014 east-dock revision stamps, toast-timed. You catch the phrase 'guest cipher, annex' before dignity returns to the hallway.",
+      "tags": [
+        "political",
+        "intel"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "intel_voss_friday",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "intel_cipher_hint",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_identify_voss_done",
+          "value": true
+        },
+        {
+          "op": "memory",
+          "id": "mem_pim_assist_intel",
+          "summary": "Via Pim's chaos: dock revision before toast; cipher in annex.",
+          "salience": 5,
+          "tags": [
+            "intel",
+            "pim"
+          ]
+        },
+        {
+          "op": "objective",
+          "id": "identify_voss",
+          "status": "complete",
+          "label": "Identify Lord Edrin Voss"
+        }
+      ],
+      "choices": [
+        {
+          "id": "political.pim.next",
+          "text": "Annex. Quietly. Before Pim invents a second theory.",
+          "intent": "mission",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "study"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_study_approach",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Debt to Pim logged. Pay it somehow that isn't betrayal.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "race.check",
+      "speaker": "narrator",
+      "text": "Between the terrace and the toast, the annex corridor tells the truth about who was faster.",
+      "tags": [
+        "race"
+      ],
+      "conditions": [],
+      "effects": [],
+      "choices": [
+        {
+          "id": "race.to.steal",
+          "text": "[Delayed \u2014 Sera had a minute]",
+          "intent": "system",
+          "next": "race.sera_stole",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "fragment_risk",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "has_cipher_fragment",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "soft_extract",
+              "op": "neq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "race.to.held_soft",
+          "text": "[Soft extract \u2014 copy remains yours even if paper moved]",
+          "intent": "system",
+          "next": "race.held",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "has_cipher_fragment",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "soft_extract",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "race.to.held",
+          "text": "[Fragment secure]",
+          "intent": "system",
+          "next": "race.held",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "has_cipher_fragment",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "flag": "fragment_risk",
+              "op": "neq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "race.to.none",
+          "text": "[Never secured fragment]",
+          "intent": "system",
+          "next": "race.none",
+          "effects": [],
+          "conditions": [
+            {
+              "flag": "has_cipher_fragment",
+              "op": "neq",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": "race.held",
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Race resolution. No speeches.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "race.held",
+      "speaker": "narrator",
+      "text": "The fragment \u2014 or its copy \u2014 remains yours. The toast can wait one more corridor.",
+      "tags": [
+        "race"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "fragment_secured_final",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "race.held.next",
+          "text": "Continue to the toast.",
+          "intent": "proceed",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "Don't touch your pocket in public.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "race.none",
+      "speaker": "narrator",
+      "text": "No fragment. Only the evening's other consequences, lining up for the toast.",
+      "tags": [
+        "race"
+      ],
+      "conditions": [],
+      "effects": [],
+      "choices": [
+        {
+          "id": "race.none.next",
+          "text": "Continue to the toast.",
+          "intent": "proceed",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": []
+    },
+    {
+      "id": "race.sera_stole",
+      "speaker": "narrator",
+      "text": "Your pocket is lighter \u2014 or the folio is gone. Sera passes in the hall with a smile that has already finished the job. The physical fragment is hers; any soft copy you never took does not exist.",
+      "tags": [
+        "race",
+        "sera_kade"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "has_cipher_fragment",
+          "value": false
+        },
+        {
+          "op": "set_flag",
+          "flag": "sera_has_fragment",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_cipher_fragment_done",
+          "value": false
+        },
+        {
+          "op": "memory",
+          "id": "mem_sera_stole",
+          "summary": "Sera took the physical cipher fragment during your delay helping Taly.",
+          "salience": 6,
+          "tags": [
+            "sera",
+            "loss"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "race.stole.next",
+          "text": "Continue to the toast.",
+          "intent": "proceed",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Physical extract + delay = loss. Soft extract would have survived.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "Invoice paid. Still paid for a person.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "sacrifice.abandon",
+      "speaker": "narrator",
+      "text": "You pass like a professional weather system. Behind you, the fixer's voice sharpens. Ahead, the fragment path stays clear \u2014 clearer than your stomach.",
+      "tags": [
+        "sacrifice"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_abandoned_taly",
+          "summary": "You prioritized the mission over helping Taly.",
+          "salience": 6,
+          "tags": [
+            "taly",
+            "cost"
+          ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "mission_path_clear",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.abandon.next",
+          "text": "Keep walking. Finish the job.",
+          "intent": "mission",
+          "next": "race.check",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Insecurity",
+          "text": "Maris saw. Or will hear. Same damage.",
+          "weight": 1
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Clean path. Cold win available.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "sacrifice.help_aftermath",
+      "speaker": "taly_renn",
+      "text": "You just volunteered for paperwork hell. Either you're decent or playing a long game so elaborate I almost respect it. Maris \u2014 your liaison has dimensions.",
+      "tags": [
+        "sacrifice",
+        "taly_renn"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "memory",
+          "id": "mem_helped_taly",
+          "summary": "You took blame to shield Taly from a fixer.",
+          "salience": 6,
+          "tags": [
+            "taly",
+            "sacrifice"
+          ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "sera_gained_time",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.help.next",
+          "text": "Dimensions are accidental. I should go be late for something important.",
+          "intent": "humble",
+          "next": "race.check",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "fragment_risk",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Sera just got a free minute. Assume she used it.",
+          "weight": 2
+        },
+        {
+          "faculty": "Idealism",
+          "text": "Worth it. Argue with Wren later.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "sacrifice.help_taly",
+      "speaker": "cassian_vale",
+      "text": "The remark was mine \u2014 misheard, misfiled. I was explaining freight variance and used an ugly metaphor. Log it against Orth, not Renn.",
+      "tags": [
+        "sacrifice"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "took_blame_for_taly",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "trust": 3
+        },
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "respect": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "affection": 2
+        },
+        {
+          "op": "rel",
+          "char": "clerk_moth",
+          "suspicion": 1
+        }
+      ],
+      "choices": [],
+      "next": "sacrifice.help_aftermath",
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "Deliver blame like a memo. Bored, precise, done.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "sacrifice.hook",
+      "speaker": "narrator",
+      "text": "Near the terrace stair: Taly, pale under party lighting. A ministry fixer has her cornered over a mis-attributed remark \u2014 the kind that ends careers if it hardens into minutes.",
+      "tags": [
+        "sacrifice",
+        "moral"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "taly_in_trouble",
+          "value": true
+        },
+        {
+          "op": "location",
+          "id": "terrace"
+        }
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.help",
+          "text": "Intervene. Burn time, maybe heat, maybe the clean exit with the fragment.",
+          "intent": "idealism",
+          "next": "sacrifice.help_taly",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "helped_taly",
+              "value": true
+            },
+            {
+              "op": "set_flag",
+              "flag": "mission_delayed",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "sacrifice.mission",
+          "text": "Keep moving. Fragment first. People survive gossip.",
+          "intent": "mission",
+          "next": "sacrifice.abandon",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "abandoned_taly",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "trust": -3
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": -2
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": -1
+            }
+          ]
+        },
+        {
+          "id": "sacrifice.half",
+          "text": "Signal Maris \u2014 she can extract Taly while you still move.",
+          "intent": "split",
+          "next": "sacrifice.split",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "signaled_maris_help",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "trust": 1
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Idealism",
+          "text": "This is the test Wren hoped you'd fail professionally and pass as a person.",
+          "weight": 2
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Intervention is visible. Visibility is heat. Heat eats exits.",
+          "weight": 2
+        },
+        {
+          "faculty": "Empathy",
+          "text": "Taly clocked you all night. She still deserves a corridor.",
+          "weight": 2
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "If Maris sees you walk away, you become another operator. Accurate. Fatal.",
+          "weight": 1
+        },
+        {
+          "faculty": "Analysis",
+          "text": "Split option: share risk, share credit, share failure modes.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "sacrifice.split",
+      "speaker": "maris_quell",
+      "text": "I see it. Go. I'll take Taly \u2014 and later you'll explain why you trusted me with the human part of your evening.",
+      "tags": [
+        "sacrifice",
+        "maris_quell"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "helped_taly",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "maris_handled_taly",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "respect": 2
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 2
+        },
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "trust": 2
+        },
+        {
+          "op": "memory",
+          "id": "mem_split_help",
+          "summary": "You signaled Maris to extract Taly while you continued the mission.",
+          "salience": 5,
+          "tags": [
+            "maris",
+            "taly"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.split.next",
+          "text": "Because the human part was never optional.",
+          "intent": "warm",
+          "next": "race.check",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 2
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "Partnership without dumping. Rare.",
+          "weight": 1
+        },
+        {
+          "faculty": "Analysis",
+          "text": "Mission path mostly intact. Social ledger improved.",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}
