@@ -262,16 +262,16 @@ func open_profile(char_id: String) -> void:
 		flags.append("Met in person")
 	if hostile:
 		flags.append("Reading: wary of you")
-	# Prefer qualitative bands for the dimension rows when Systems is live
-	var band_rels: Dictionary = {}
 	var dims: Dictionary = presented.get("dimensions", {})
-	if not dims.is_empty():
-		for dim_key in dims.keys():
-			var entry: Dictionary = dims[dim_key]
-			# Encode band as a small int for the existing bar UI fallback
-			var band := str(entry.get("band", "neutral"))
-			band_rels[str(dim_key)] = _band_to_tick(band)
-			flags.append("%s: %s" % [str(entry.get("label", dim_key)), str(entry.get("band_label", band))])
+	var dim_rows: Array = []
+	for dim_key in dims.keys():
+		var entry: Dictionary = dims[dim_key]
+		dim_rows.append({
+			"id": str(dim_key),
+			"label": str(entry.get("label", dim_key)),
+			"band_label": str(entry.get("band_label", entry.get("band", ""))),
+			"band": str(entry.get("band", "neutral")),
+		})
 	var mems: Array = presented.get("notable_memories", [])
 	if mems.is_empty():
 		mems = RelationshipQuery.memories_tagged(char_id)
@@ -281,12 +281,13 @@ func open_profile(char_id: String) -> void:
 		"display_name": registry.display_name(sid),
 		"role": str(def.get("role", "")),
 		"expression": "suspicious" if hostile else "neutral",
-		"rels": band_rels if not band_rels.is_empty() else rel,
+		"rels": rel,
+		"dimension_rows": dim_rows,
 		"knowledge_flags": flags,
 		"memories": mems,
 		"affinity": affinity,
 		"mood_line": mood,
-		"qualitative": not dims.is_empty(),
+		"qualitative": not dim_rows.is_empty(),
 	})
 
 

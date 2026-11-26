@@ -46,25 +46,51 @@ func open_profile(data: Dictionary) -> void:
 
 	for child in rel_box.get_children():
 		child.queue_free()
-	var rel: Dictionary = data.get("rels", data.get("relationship", {}))
-	var dims := ["trust", "familiarity", "suspicion", "respect", "affection", "comfort", "perceived_authenticity"]
-	for dim in dims:
-		if not rel.has(dim):
-			continue
-		var row := HBoxContainer.new()
-		var lab := Label.new()
-		lab.text = dim.replace("_", " ")
-		lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		lab.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
-		lab.add_theme_font_size_override("font_size", 13)
-		var val := Label.new()
-		var v := int(rel[dim])
-		val.text = _bar(v)
-		val.add_theme_color_override("font_color", HegemonyPalette.VERMILLION if dim == "suspicion" and v > 0 else HegemonyPalette.BRASS)
-		val.add_theme_font_size_override("font_size", 13)
-		row.add_child(lab)
-		row.add_child(val)
-		rel_box.add_child(row)
+	var dim_rows: Array = data.get("dimension_rows", [])
+	if not dim_rows.is_empty():
+		for entry in dim_rows:
+			if typeof(entry) != TYPE_DICTIONARY:
+				continue
+			var er: Dictionary = entry
+			var row := HBoxContainer.new()
+			var lab := Label.new()
+			lab.text = str(er.get("label", er.get("id", "")))
+			lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			lab.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
+			lab.add_theme_font_size_override("font_size", 13)
+			var val := Label.new()
+			val.text = str(er.get("band_label", er.get("band", "")))
+			var band := str(er.get("band", "neutral"))
+			var col := HegemonyPalette.BRASS
+			if band in ["hostile", "intimate"] and str(er.get("id", "")) == "suspicion":
+				col = HegemonyPalette.VERMILLION
+			elif band in ["warm", "close", "intimate"]:
+				col = HegemonyPalette.JADE
+			val.add_theme_color_override("font_color", col)
+			val.add_theme_font_size_override("font_size", 13)
+			row.add_child(lab)
+			row.add_child(val)
+			rel_box.add_child(row)
+	else:
+		var rel: Dictionary = data.get("rels", data.get("relationship", {}))
+		var dims := ["trust", "familiarity", "suspicion", "respect", "affection", "comfort", "perceived_authenticity"]
+		for dim in dims:
+			if not rel.has(dim):
+				continue
+			var row2 := HBoxContainer.new()
+			var lab2 := Label.new()
+			lab2.text = dim.replace("_", " ")
+			lab2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			lab2.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
+			lab2.add_theme_font_size_override("font_size", 13)
+			var val2 := Label.new()
+			var v := int(rel[dim])
+			val2.text = _bar(v)
+			val2.add_theme_color_override("font_color", HegemonyPalette.VERMILLION if dim == "suspicion" and v > 0 else HegemonyPalette.BRASS)
+			val2.add_theme_font_size_override("font_size", 13)
+			row2.add_child(lab2)
+			row2.add_child(val2)
+			rel_box.add_child(row2)
 
 	var flags: Array = data.get("knowledge_flags", data.get("discovered", []))
 	var parts: PackedStringArray = []
