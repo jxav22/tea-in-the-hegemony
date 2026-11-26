@@ -138,7 +138,14 @@
   },
   "path_flag_sync": {
     "api": "GameState.systems.sync_path_flags(force_ending=false) / present_debrief()",
-    "triggers": ["set_flag reception_ending", "present_debrief", "end without explicit ending_id"],
+    "triggers": [
+      "set_flag debrief_started (soft — live debrief.json intro)",
+      "set_flag reception_ending (force)",
+      "set_flag start_debrief / debrief_ready",
+      "present_debrief()",
+      "end without explicit ending_id"
+    ],
+    "preserves_narrative_ending_id": true,
     "see": "HANDOFF.md Agent C — Path flags"
   }
 }

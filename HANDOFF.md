@@ -195,7 +195,7 @@ See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `b
 
 ## Agent C — Systems
 
-**Branch:** `cursor/systems-harden-cover-memory-b2e0` (prior: `cursor/systems-balance-followup-b2e0`, `cursor/social-espionage-systems-b2e0`)  
+**Landed on main:** #5 systems, #8 balance, #13 cover/path-flag harden  
 **Paths:** `scripts/social/`, `scripts/espionage/`, `content/missions/`, `content/evidence/`
 
 ### What landed
@@ -208,14 +208,14 @@ Data-driven multi-dimension relationships, per-character memories, cover identit
 
 - `GameState.systems` — `SystemsBootstrap.create_with_reception_content()` on ready / new game
 - `EffectExecutor` routes `rel`, `memory`, `heat`, `objective`, `cover`, `evidence`, `knowledge` through `GameState.apply_systems_effect`
-- Save/load: `GameState.to_save_dict` / `load_from_save_dict` sync systems bag (`evidence` optional key)
+- Save/load: `GameState.to_save_dict` / `load_from_save_dict` sync systems bag (`evidence` optional key); reload also re-syncs cover FlagStore keys
 
 ### Effect ops (Systems)
 
 | op | shape |
 |----|--------|
 | `rel` | `{"op":"rel","char":"maris_quell","trust":1,"suspicion":-1}` (+ optional `knowledge`) |
-| `memory` | `{"op":"memory","id":"...","summary":"...","tags":["maris"]}` — `char` optional (inferred from tags/id); also Core flat `GameState.memories` |
+| `memory` | `{"op":"memory","id":"...","summary":"...","tags":["maris"]}` — `char` optional (inferred from tags/id/summary); also Core flat `GameState.memories` |
 | `item` | Inventory pickup; mapped ids like `shipping_discrepancy` → `frag.shipping_delta` evidence obtain |
 | `cover` | `{"op":"cover","action":"assert\|slip\|adjust_heat\|repair\|blow\|escalate",...}` |
 | `heat` | Core shorthand → `cover.adjust_heat` (auto-syncs `heat_high` / `cover_blown` flags) |
@@ -234,7 +234,16 @@ Helpers: `RelationshipQuery.present(id)`, `CoverAPI.present()`, `CoverAPI.eviden
 - `content/evidence/reception_evidence.json`
 - `content/missions/reception_effect_cookbook.json`
 - `content/missions/systems_data_schema.json`
-- Simulator: `python3 scripts/espionage/simulate_reception_paths.py` (five outcomes OK)
+
+### Offline checks (keep green)
+
+```bash
+python3 scripts/espionage/simulate_reception_paths.py
+python3 scripts/espionage/test_cover_chains.py
+python3 scripts/espionage/test_memory_inference.py
+python3 scripts/espionage/test_path_flags.py
+python3 scripts/espionage/validate_systems_content.py
+```
 
 ### Objective id mapping
 
@@ -244,29 +253,51 @@ Mission file uses `obj.*` ids; GameState seeds Core ids (`contact_maris`, …). 
 
 - **Professional without romance:** `path.pro_extract` / `path.pro_cold` → `clean_professional` (lukewarm affection OK; genuine memories not required)
 - **Human without full intel:** `path.human_first` → `human_first` (genuine connection; fragment can fail)
-- Narrative memories without `char` infer speaker via tags/id (`mem_maris_*`, tags `maris`/`moth`/…); topic tags `intel`/`cipher` → `cassian_vale` mission log
+- Narrative memories without `char` infer speaker via tags/id/summary (`mem_maris_*`, tags `maris`/`moth`/…); topic tags `intel`/`cipher` → `cassian_vale` mission log
 - Cover assert/slip hardened (empty key/value, blown no-ops, inconsistency dedupe, repair cools only when not ignoring blown)
 
 ### Path flags (Narrative debrief router)
 
-Debrief (`content/dialogue/debrief.json`) routes on FlagStore keys. Systems syncs these via `PathFlagSync` / `GameState.systems.sync_path_flags()` / `present_debrief()`.
+**Consumer:** `content/dialogue/debrief.json` → `debrief.router` (bracket choices auto-picked by Core).  
+**Producer:** Narrative `set_flag` mid-Reception **or** Systems `PathFlagSync` / `CoverFlagSync` at debrief entry.
 
-| Flag | Meaning / set when |
-|------|--------------------|
-| `ending_id` | `cover_burned` \| `sera_wins` \| `balanced` \| `professional_win` \| `human_cost` \| `connection` \| `mixed` |
-| `got_fragment` | `frag.shipping_delta` obtained or inventory `shipping_discrepancy` |
-| `helped_taly` | memory `mem_helped_taly` (or Narrative set_flag) |
-| `abandoned_taly` | memory `mem_abandoned_taly` |
-| `genuine_with_maris` | genuine connection memories/tags / report.genuine_connection |
-| `skipped_impress` | memory `mem_skipped_impress` |
-| `sera_has_fragment` | memory `mem_sera_stole` |
-| `heat_high` | cover heat ≥ 55 |
-| `cover_strained` | heat ≥ 30 and not blown |
-| `cover_compromised` / `cover_blown` | blown or heat ≥ 80 |
-| `cover_held` | heat < 30 and not blown |
-| `reception_ending` | debrief sync / mission close |
+#### Sync API / triggers
 
-**Mission report → ending_id map:** `blown`→`cover_burned`; `balanced`→`balanced`; `clean_professional`/`professional_costly`→`professional_win`; `human_first`→`human_cost`; else heuristics on flags above → `connection` / `mixed`.
+| Call | When |
+|------|------|
+| `GameState.systems.sync_path_flags(force=false)` | soft fill |
+| `GameState.systems.sync_path_flags(true)` / `present_debrief()` | derive `ending_id` if empty/`mixed`/cover burned |
+| `EffectExecutor` `set_flag debrief_started` | soft sync (live `debrief.json` intro) |
+| `EffectExecutor` `set_flag reception_ending` | force sync |
+| `EffectExecutor` `set_flag start_debrief` / `debrief_ready` | soft sync |
+| `EffectExecutor` `end` without explicit ending | force sync |
+| Cover heat/blow/repair | `CoverFlagSync` only (heat bands + `cover_blown`) |
+
+`ending_id` already set by Narrative (terrace/cloakroom) is **kept** on soft sync unless empty/`mixed`, or cover is blown (`cover_burned` wins). Force sync (reception end / present_debrief) may re-derive when empty/`mixed`.
+
+#### Flag catalog
+
+| Flag | Systems source | Narrative twin |
+|------|----------------|----------------|
+| `ending_id` | mission report + heuristics (`PathFlagSync`) | terrace/cloakroom `set_flag` |
+| `got_fragment` | evidence `frag.shipping_delta` **or** inventory `shipping_discrepancy` / `frag.shipping_delta` | terrace/study flags |
+| `helped_taly` | memory `mem_helped_taly` | terrace `set_flag` |
+| `abandoned_taly` | memory `mem_abandoned_taly` | terrace `set_flag` |
+| `genuine_with_maris` | report.genuine_connection / genuine memories/tags | salon/cloakroom flags |
+| `skipped_impress` | memory `mem_skipped_impress` | salon flag |
+| `sera_has_fragment` | memory `mem_sera_stole` | terrace flag |
+| `heat_high` | cover heat ≥ 55 (`CoverFlagSync`) | cloakroom conditions |
+| `cover_strained` | heat ≥ 30 ∧ ¬blown | — |
+| `cover_compromised` | blown ∨ heat ≥ 80 | cloakroom/terrace conditions |
+| `cover_blown` | `cover.blown` | — |
+| `cover_held` | heat < 30 ∧ ¬blown | cloakroom |
+| `reception_ending` | set true on path sync | cookbook `debrief.close` |
+
+#### `ending_id` derivation (Systems)
+
+Priority: `cover_blown`/`outcome blown` → `cover_burned` → sera stole ∧ ¬fragment → `sera_wins` → report outcomes (`balanced` / `professional_win` / `human_cost`) → twin heuristics (`got_fragment`+`helped_taly` → `balanced`, +`abandoned_taly` → `professional_win`, helped∧¬fragment → `human_cost`, genuine → `connection`) → `mixed`.
+
+Debrief router also accepts twin-flag fallbacks when `ending_id` is unset (same pairs as above); `[Mixed]` is the default catch-all.
 
 ### Cover slip → repair → blown chain
 

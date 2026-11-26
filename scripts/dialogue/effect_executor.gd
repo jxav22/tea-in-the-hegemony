@@ -51,9 +51,15 @@ static func apply(effect: Dictionary) -> void:
 				GameState.systems.mission.evaluate_all(str(effect.get("beat", "")))
 				GameStateBinder.push_to_game_state(GameState.systems, GameState)
 				# Entering debrief / reception end → sync path flags for ending router.
+				# debrief.json sets debrief_started on intro — soft sync fills twins without
+				# clobbering a Narrative ending_id already set on terrace/cloakroom.
 				var flag_name := str(effect.get("flag", ""))
-				if flag_name in ["reception_ending", "start_debrief", "debrief_ready"] \
-					or (flag_name == "ending_id" and str(effect.get("value", "")) == ""):
+				if flag_name in [
+					"reception_ending",
+					"start_debrief",
+					"debrief_ready",
+					"debrief_started",
+				] or (flag_name == "ending_id" and str(effect.get("value", "")) == ""):
 					GameState.systems.sync_path_flags(false)
 				if flag_name == "reception_ending" and bool(effect.get("value", true)):
 					GameState.systems.sync_path_flags(true)
