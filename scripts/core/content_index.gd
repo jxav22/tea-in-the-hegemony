@@ -18,6 +18,12 @@ static func list_characters() -> PackedStringArray:
 static func load_chapter(chapter_id: String) -> Dictionary:
 	var path: String = "res://content/chapters/%s.json" % chapter_id
 	if not FileAccess.file_exists(path):
+		# Alias: "reception" ↔ "the_reception"
+		if chapter_id == "reception":
+			path = "res://content/chapters/the_reception.json"
+		elif chapter_id == "the_reception":
+			path = "res://content/chapters/reception.json"
+	if not FileAccess.file_exists(path):
 		return {}
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	return data as Dictionary if typeof(data) == TYPE_DICTIONARY else {}

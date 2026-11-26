@@ -19,15 +19,30 @@ static func load_graph(path: String) -> Dictionary:
 
 
 static func load_by_id(graph_id: String) -> Dictionary:
-	var path: String = "%s/%s.json" % [CONTENT_ROOT, graph_id]
+	## Resolution order (Agent B nests under reception/):
+	## 1) content/dialogue/reception/<id>.json
+	## 2) content/dialogue/<id>.json
+	## 3) recursive basename search
+	var candidates: PackedStringArray = PackedStringArray([
+		"%s/reception/%s.json" % [CONTENT_ROOT, graph_id],
+		"%s/%s.json" % [CONTENT_ROOT, graph_id],
+	])
+	for path: String in candidates:
+		if FileAccess.file_exists(path):
+			return load_graph(path)
+	var found: String = _find_by_id(graph_id)
+	if found.is_empty():
+		push_error("DialogueLoader: graph id not found: %s" % graph_id)
+		return {}
+	return load_graph(found)
+
+
+static func load_chapter_index(chapter_folder: String = "reception") -> Dictionary:
+	var path: String = "%s/%s/index.json" % [CONTENT_ROOT, chapter_folder]
 	if not FileAccess.file_exists(path):
-		# Allow nested folders: content/dialogue/<chapter>/<id>.json
-		var found: String = _find_by_id(graph_id)
-		if found.is_empty():
-			push_error("DialogueLoader: graph id not found: %s" % graph_id)
-			return {}
-		path = found
-	return load_graph(path)
+		return {}
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return data as Dictionary if typeof(data) == TYPE_DICTIONARY else {}
 
 
 static func normalize_graph(parsed: Variant, source: String = "") -> Dictionary:

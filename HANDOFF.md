@@ -53,9 +53,15 @@ See `content/schemas/dialogue_node.schema.json` and sprint contracts. Graph file
 { "id": "briefing", "start": "briefing.intro", "nodes": [ /* DialogueNode */ ] }
 ```
 
+**Load order for `DialogueRunner.start(id)`:**  
+`content/dialogue/reception/<id>.json` → `content/dialogue/<id>.json` → recursive basename search.  
+Chapter manifests: `content/chapters/the_reception.json` preferred, else `reception.json`.
+
 **Effects:** `set_flag`, `add_flag`, `toggle_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `beat`, `location` (soft — updates `GameState.current_location` without tearing down UI).
 
 **Conditions:** `{flag, op, value}` plus `{all:[…]}` / `{any:[…]}`.
+
+**Extra APIs:** `CharacterRegistry`, `RelationshipQuery`, `CoverAPI`, `DialogueOverlay` (`scenes/main/dialogue_overlay.tscn`) for Agent D.
 
 ### Save payload
 

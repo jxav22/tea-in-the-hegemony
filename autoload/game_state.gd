@@ -54,6 +54,11 @@ func reset_to_new_game() -> void:
 	relationships.clear()
 	beat_index = 0
 	_seed_defaults()
+	# Prefer Agent B chapter manifests when present.
+	if FileAccess.file_exists("res://content/chapters/the_reception.json"):
+		ContentIndex.bootstrap_chapter(&"the_reception")
+	elif FileAccess.file_exists("res://content/chapters/reception.json"):
+		ContentIndex.bootstrap_chapter(&"reception")
 	chapter_changed.emit(chapter_id)
 
 
