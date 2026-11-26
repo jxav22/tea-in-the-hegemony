@@ -1,6 +1,6 @@
 extends RefCounted
 class_name CoverAPI
-## Thin cover/heat helpers for Agent C. Storage remains on GameState.
+## Thin cover/heat helpers. Storage remains on GameState; rich logic via SystemsBridge.
 
 
 static func heat() -> int:
@@ -15,8 +15,46 @@ static func cover_name() -> String:
 	return str(GameState.cover_state.get("name", ""))
 
 
+static func heat_band() -> String:
+	if GameState.systems != null:
+		return GameState.systems.cover.cover.heat_band()
+	if is_blown():
+		return "blown"
+	var h := heat()
+	if h >= 80:
+		return "critical"
+	if h >= 55:
+		return "high"
+	if h >= 30:
+		return "elevated"
+	if h >= 10:
+		return "low"
+	return "clear"
+
+
+static func present(reveal_raw: bool = false) -> Dictionary:
+	if GameState.systems != null:
+		return GameState.systems.present_cover(reveal_raw)
+	return {
+		"cover_name": cover_name(),
+		"heat_band": heat_band(),
+		"blown": is_blown(),
+		"attention_line": "Cover state unavailable.",
+	}
+
+
 static func raise_heat(amount: int, reason: String = "") -> int:
-	var next: int = GameState.adjust_heat(amount)
+	var next: int
+	if GameState.systems != null:
+		GameState.apply_systems_effect({
+			"op": "cover",
+			"action": "adjust_heat",
+			"delta": amount,
+			"reason": reason,
+		})
+		next = heat()
+	else:
+		next = GameState.adjust_heat(amount)
 	if not reason.is_empty():
 		GameState.add_memory({
 			"id": "heat_%d_%d" % [GameState.beat_index, next],
@@ -27,11 +65,48 @@ static func raise_heat(amount: int, reason: String = "") -> int:
 	return next
 
 
+static func assert_fact(key: String, value: String, beat: String = "", witness: String = "") -> Dictionary:
+	if GameState.systems == null:
+		return {}
+	return GameState.apply_systems_effect({
+		"op": "cover",
+		"action": "assert",
+		"key": key,
+		"value": value,
+		"beat": beat,
+		"witness": witness,
+	})
+
+
+static func slip(key: String, value: String, beat: String = "", witness: String = "", heat_delta: int = 15) -> Dictionary:
+	if GameState.systems == null:
+		return {}
+	return GameState.apply_systems_effect({
+		"op": "cover",
+		"action": "slip",
+		"key": key,
+		"value": value,
+		"beat": beat,
+		"witness": witness,
+		"heat": heat_delta,
+	})
+
+
 static func has_evidence(fragment_id: StringName) -> bool:
+	if GameState.systems != null and GameState.systems.evidence.is_obtained(str(fragment_id)):
+		return true
 	return GameState.has_item(fragment_id)
 
 
 static func mission_complete_enough() -> bool:
+	if GameState.systems != null:
+		var obtained := GameState.systems.evidence.is_obtained("frag.shipping_delta")
+		var met := FlagStore.get_flag(&"met_maris", false) == true
+		var voss := (
+			FlagStore.get_flag(&"identified_voss", false) == true
+			or FlagStore.get_flag(&"spotted_voss", false) == true
+		)
+		return obtained or (met and voss)
 	return (
 		FlagStore.get_flag(&"got_fragment", false) == true
 		or (

@@ -1,7 +1,8 @@
 extends RefCounted
 class_name EffectExecutor
-## Applies dialogue effect ops to GameState / FlagStore.
-## Supported ops: set_flag, add_flag, toggle_flag, rel, memory, heat, objective, item, beat
+## Applies dialogue effect ops to GameState / FlagStore / SystemsBridge.
+## Core ops: set_flag, add_flag, toggle_flag, rel, memory, heat, objective, item, beat, location
+## Systems ops: cover, evidence, knowledge (+ rich objective actions)
 
 
 static func apply_all(effects: Array) -> void:
@@ -15,39 +16,30 @@ static func apply(effect: Dictionary) -> void:
 	match op:
 		"set_flag":
 			FlagStore.set_flag(StringName(str(effect.get("flag", ""))), effect.get("value", true))
+			if GameState.systems != null:
+				GameState.systems.mission.evaluate_all(str(effect.get("beat", "")))
+				GameStateBinder.push_to_game_state(GameState.systems, GameState)
 		"add_flag":
 			FlagStore.add_flag(StringName(str(effect.get("flag", ""))), int(effect.get("amount", effect.get("value", 1))))
 		"toggle_flag":
 			FlagStore.toggle_flag(StringName(str(effect.get("flag", ""))))
-		"rel":
-			var char_id: StringName = StringName(str(effect.get("char", effect.get("character", ""))))
-			var deltas: Dictionary = {}
-			for key: Variant in effect.keys():
-				var k: String = str(key)
-				if k in GameState.REL_DIMENSIONS:
-					deltas[k] = int(effect[key])
-			if effect.has("deltas") and typeof(effect["deltas"]) == TYPE_DICTIONARY:
-				for dk: Variant in (effect["deltas"] as Dictionary).keys():
-					deltas[str(dk)] = int((effect["deltas"] as Dictionary)[dk])
-			GameState.apply_rel_effects(char_id, deltas)
-		"memory":
-			var mem: Dictionary = {
-				"id": str(effect.get("id", "")),
-				"summary": str(effect.get("summary", "")),
-				"salience": int(effect.get("salience", 1)),
-				"tags": effect.get("tags", []),
-			}
-			if mem["id"] == "":
-				mem["id"] = "mem_auto_%d" % GameState.memories.size()
-			GameState.add_memory(mem)
+		"rel", "memory", "cover", "evidence", "knowledge":
+			GameState.apply_systems_effect(effect)
 		"heat":
-			GameState.adjust_heat(int(effect.get("amount", effect.get("value", 0))))
+			# Core shorthand → systems cover heat when available.
+			var amount := int(effect.get("amount", effect.get("value", effect.get("delta", 0))))
+			if GameState.systems != null:
+				GameState.apply_systems_effect({
+					"op": "cover",
+					"action": "adjust_heat",
+					"delta": amount,
+					"reason": str(effect.get("reason", "heat_effect")),
+					"beat": str(effect.get("beat", "")),
+				})
+			else:
+				GameState.adjust_heat(amount)
 		"objective":
-			GameState.set_objective(
-				StringName(str(effect.get("id", ""))),
-				str(effect.get("status", "active")),
-				str(effect.get("label", ""))
-			)
+			_apply_objective(effect)
 		"item":
 			GameState.add_inventory_item(StringName(str(effect.get("id", ""))), effect.get("meta", {}) as Dictionary)
 		"beat":
@@ -58,4 +50,55 @@ static func apply(effect: Dictionary) -> void:
 		"":
 			pass
 		_:
-			push_warning("EffectExecutor: unknown op '%s'" % op)
+			# Forward unknown ops to systems if it recognizes them.
+			if GameState.systems != null:
+				var result: Dictionary = GameState.apply_systems_effect(effect)
+				if result.get("error", "") == "unknown_op":
+					push_warning("EffectExecutor: unknown op '%s'" % op)
+			else:
+				push_warning("EffectExecutor: unknown op '%s'" % op)
+
+
+static func _apply_objective(effect: Dictionary) -> void:
+	## Support Core {id,status,label} and Systems {action,id}.
+	if effect.has("action") and GameState.systems != null:
+		GameState.apply_systems_effect(effect)
+		# Also mirror Core-style status when action maps cleanly.
+		var action := str(effect.get("action", ""))
+		var oid := str(effect.get("id", effect.get("objective", "")))
+		var core_id := GameStateBinder.core_objective_id(oid)
+		match action:
+			"complete":
+				GameState.set_objective(StringName(core_id), "complete", str(effect.get("label", "")))
+			"fail", "abandon":
+				GameState.set_objective(StringName(core_id), "failed", str(effect.get("label", "")))
+			"activate", "reveal":
+				GameState.set_objective(StringName(core_id), "active", str(effect.get("label", "")))
+			_:
+				pass
+		return
+	GameState.set_objective(
+		StringName(str(effect.get("id", ""))),
+		str(effect.get("status", "active")),
+		str(effect.get("label", ""))
+	)
+	if GameState.systems != null:
+		var status := str(effect.get("status", "active"))
+		var sys_id := GameStateBinder.systems_objective_id(str(effect.get("id", "")))
+		var mapped_action := "activate"
+		match status:
+			"complete", "completed":
+				mapped_action = "complete"
+			"failed", "fail":
+				mapped_action = "fail"
+			"hidden":
+				mapped_action = "reveal"
+			_:
+				mapped_action = "activate"
+		GameState.systems.mission.apply_effect({
+			"op": "objective",
+			"action": mapped_action,
+			"id": sys_id,
+			"beat": str(effect.get("beat", "")),
+		})
+		GameStateBinder.push_to_game_state(GameState.systems, GameState)

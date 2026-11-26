@@ -31,10 +31,14 @@ var objectives: Dictionary = {} ## id -> {id, status, label}
 var memories: Array = [] ## Memory dicts
 var relationships: Dictionary = {} ## char_id -> dimension dict
 var beat_index: int = 0
+## Agent C social/espionage bridge — mirrors into fields above (no forked save keys).
+var systems: SystemsBridge
 
 
 func _ready() -> void:
+	_init_systems()
 	_seed_defaults()
+	_sync_systems_out()
 
 
 func reset_to_new_game() -> void:
@@ -53,13 +57,60 @@ func reset_to_new_game() -> void:
 	memories.clear()
 	relationships.clear()
 	beat_index = 0
+	_init_systems()
 	_seed_defaults()
+	_sync_systems_out()
 	# Prefer Agent B chapter manifests when present.
 	if FileAccess.file_exists("res://content/chapters/the_reception.json"):
 		ContentIndex.bootstrap_chapter(&"the_reception")
 	elif FileAccess.file_exists("res://content/chapters/reception.json"):
 		ContentIndex.bootstrap_chapter(&"reception")
 	chapter_changed.emit(chapter_id)
+
+
+func _init_systems() -> void:
+	systems = SystemsBootstrap.create_with_reception_content()
+	systems.bind_flag_provider(Callable(self, "_flag_bag"))
+	if systems.mission.status == "inactive":
+		systems.mission.start_mission()
+
+
+func _flag_bag() -> Dictionary:
+	return FlagStore.to_dict()
+
+
+func _sync_systems_out() -> void:
+	if systems == null:
+		return
+	GameStateBinder.push_to_game_state(systems, self)
+
+
+func _sync_systems_in(save_data: Dictionary = {}) -> void:
+	if systems == null:
+		_init_systems()
+	GameStateBinder.pull_into_systems(systems, self, save_data)
+
+
+## DialogueRunner / EffectExecutor entry for Systems ops (rel, memory, cover, evidence, …).
+func apply_systems_effect(effect: Dictionary) -> Dictionary:
+	if systems == null:
+		_init_systems()
+	var op := str(effect.get("op", ""))
+	# Keep FlagStore as source of truth for set_flag.
+	if op == "set_flag":
+		FlagStore.set_flag(StringName(str(effect.get("flag", ""))), effect.get("value", true))
+		systems.mission.evaluate_all(str(effect.get("beat", "")))
+		_sync_systems_out()
+		return {"flag": effect.get("flag"), "value": effect.get("value", true)}
+	var result: Dictionary = systems.apply_effect(effect)
+	_sync_systems_out()
+	return result
+
+
+func check_systems_condition(cond: Dictionary) -> bool:
+	if systems == null:
+		return false
+	return systems.check_condition(cond)
 
 
 func set_chapter(id: StringName) -> void:
@@ -89,6 +140,8 @@ func adjust_rel(char_id: StringName, dimension: StringName, delta: int) -> int:
 	var rel: Dictionary = ensure_relationship(char_id)
 	var next: int = clampi(int(rel.get(dimension, 0)) + delta, -100, 100)
 	rel[dimension] = next
+	if systems != null:
+		systems.relationships.set_dim(str(char_id), str(dimension), next)
 	relationship_changed.emit(char_id, dimension, next)
 	return next
 
@@ -96,6 +149,8 @@ func adjust_rel(char_id: StringName, dimension: StringName, delta: int) -> int:
 func set_rel(char_id: StringName, dimension: StringName, value: int) -> void:
 	var rel: Dictionary = ensure_relationship(char_id)
 	rel[dimension] = clampi(value, -100, 100)
+	if systems != null:
+		systems.relationships.set_dim(str(char_id), str(dimension), int(rel[dimension]))
 	relationship_changed.emit(char_id, dimension, int(rel[dimension]))
 
 
@@ -115,7 +170,17 @@ func add_memory(memory: Dictionary) -> void:
 		memory["salience"] = 1
 	if not memory.has("tags"):
 		memory["tags"] = []
+	# Dedupe by id.
+	for i in range(memories.size()):
+		if typeof(memories[i]) == TYPE_DICTIONARY and str((memories[i] as Dictionary).get("id", "")) == str(memory["id"]):
+			memories[i] = memory
+			memory_added.emit(memory)
+			if systems != null and memory.has("char"):
+				systems.relationships.add_memory(str(memory["char"]), memory)
+			return
 	memories.append(memory)
+	if systems != null and str(memory.get("char", "")) != "":
+		systems.relationships.add_memory(str(memory["char"]), memory)
 	memory_added.emit(memory)
 
 
@@ -156,6 +221,10 @@ func get_objective_status(objective_id: StringName) -> String:
 
 
 func adjust_heat(delta: int) -> int:
+	if systems != null:
+		systems.cover.adjust_heat(delta, "game_state.adjust_heat")
+		_sync_systems_out()
+		return int(cover_state.get("heat", 0))
 	cover_state["heat"] = clampi(int(cover_state.get("heat", 0)) + delta, 0, 100)
 	if int(cover_state["heat"]) >= 80:
 		cover_state["blown"] = true
@@ -168,7 +237,8 @@ func advance_beat() -> void:
 
 
 func to_save_dict() -> Dictionary:
-	return {
+	_sync_systems_out()
+	var payload := {
 		"save_version": SaveService.SAVE_VERSION,
 		"chapter_id": String(chapter_id),
 		"current_location": String(current_location),
@@ -180,6 +250,11 @@ func to_save_dict() -> Dictionary:
 		"objectives": objectives.duplicate(true),
 		"beat_index": beat_index,
 	}
+	if systems != null:
+		payload["evidence"] = systems.evidence.to_save()
+		payload["systems_cover"] = systems.cover.to_save()
+		payload["systems_mission"] = systems.mission.to_save()
+	return payload
 
 
 func load_from_save_dict(data: Dictionary) -> void:
@@ -192,18 +267,35 @@ func load_from_save_dict(data: Dictionary) -> void:
 	cover_state = (data.get("cover_state", cover_state) as Dictionary).duplicate(true)
 	objectives = (data.get("objectives", {}) as Dictionary).duplicate(true)
 	beat_index = int(data.get("beat_index", 0))
+	if systems == null:
+		_init_systems()
+	_sync_systems_in(data)
+	if data.has("systems_cover") and typeof(data["systems_cover"]) == TYPE_DICTIONARY:
+		systems.cover.load_save(data["systems_cover"])
+	if data.has("systems_mission") and typeof(data["systems_mission"]) == TYPE_DICTIONARY:
+		systems.mission.load_save(data["systems_mission"])
+	_sync_systems_out()
 	chapter_changed.emit(chapter_id)
 	cover_changed.emit(cover_state)
 
 
 func _seed_defaults() -> void:
-	ensure_relationship(&"maris_quell")
-	ensure_relationship(&"wren_halden")
-	ensure_relationship(&"edrin_voss")
-	ensure_relationship(&"taly_renn")
-	ensure_relationship(&"sera_kade")
-	ensure_relationship(&"pim_orel")
-	ensure_relationship(&"clerk_moth")
+	# Prefer SystemsBootstrap character seeds when available.
+	if systems != null:
+		for char_id in systems.relationships.all_character_ids():
+			ensure_relationship(StringName(char_id))
+			var state: RelationshipState = systems.relationships.get_state(char_id)
+			var blank: Dictionary = relationships[StringName(char_id)]
+			for dim in REL_DIMENSIONS:
+				blank[dim] = state.get_dim(dim)
+	else:
+		ensure_relationship(&"maris_quell")
+		ensure_relationship(&"wren_halden")
+		ensure_relationship(&"edrin_voss")
+		ensure_relationship(&"taly_renn")
+		ensure_relationship(&"sera_kade")
+		ensure_relationship(&"pim_orel")
+		ensure_relationship(&"clerk_moth")
 	set_objective(&"contact_maris", "active", "Make contact with Maris Quell")
 	set_objective(&"identify_voss", "active", "Identify Lord Edrin Voss")
 	set_objective(&"obtain_fragment", "active", "Obtain the shipping discrepancy fragment")
