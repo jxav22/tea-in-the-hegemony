@@ -3,7 +3,7 @@
 **Godot 4.3** · Compatibility renderer (`gl_compatibility`) · typed GDScript · browser-friendly  
 **Repo:** https://github.com/jxav22/tea-in-the-hegemony  
 **Sprint start:** 2026-11-26T15:38:54Z  
-**Main tip verified through:** PR #19 (`add00b3`) + follow-ups through #18/#17/#16/#15/#14 as merged
+**Main tip verified through:** PR #20 (`7300b46`) · suite green after #19 typed-audit + HANDOFF finalize
 
 Playable chapter: **The Reception** — social-espionage under cover as Cassian Orth.
 
@@ -69,16 +69,16 @@ python3 tools/save_roundtrip.py --json   # if present
 bash tools/run_qa_suite.sh
 ```
 
-### Evidence stamp (tip `add00b3` / post-#19)
+### Evidence stamp (tip `7300b46` / post-#20)
 
 | Check | Result | When (UTC) |
 |-------|--------|------------|
-| Core test_runner (4 suites) | **PASS** | 2026-11-26T16:13Z |
-| Boot smoke briefing→foyer→debrief | **PASS** | 2026-11-26T16:13Z |
-| validate_narrative | **PASS** | 2026-11-26T16:13Z |
+| Core test_runner (4 suites) + boot smoke | **PASS** | 2026-11-26T16:15:30Z |
+| `run_qa_suite` (validate / sims / save / godot load) | **PASS** 4/4 | 2026-11-26T16:15:18Z |
+| Ending probes (7) | **PASS** | 2026-11-26T16:15Z |
 | simulate_reception_paths | Distinct outcomes incl. pro-without-romance + human-without-full-intel | 2026-11-26T16:13Z |
 
-Pacific/Auckland: Fri 27 Nov 2026, **05:13 NZDT**.
+Pacific/Auckland: Fri 27 Nov 2026, **05:15 NZDT**. Store: `/cursor/stores/self/internal/qa/final-evidence.md`.
 
 ---
 
