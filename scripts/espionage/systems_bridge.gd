@@ -166,7 +166,15 @@ func present_mission(reveal_raw: bool = false) -> Dictionary:
 
 func present_debrief(beat: String = "debrief", reveal_raw: bool = false) -> Dictionary:
 	var report := mission.build_report(beat)
-	return report.present(reveal_raw)
+	var flags := PathFlagSync.sync_from_report(report, self, true)
+	var out := report.present(reveal_raw)
+	out["path_flags"] = flags
+	return out
+
+
+## Push Systems state into Narrative debrief FlagStore keys (got_fragment, ending_id, …).
+func sync_path_flags(force_ending: bool = false) -> Dictionary:
+	return PathFlagSync.sync_from_systems(self, force_ending)
 
 
 func to_save() -> Dictionary:
@@ -190,6 +198,8 @@ func load_save(data: Dictionary) -> void:
 		mission.load_save(data["objectives"])
 	if data.has("flags"):
 		flags = data["flags"].duplicate(true)
+	# Restore Narrative cover/path flags after load (FlagStore may be empty).
+	CoverFlagSync.sync_from_manager(cover)
 
 
 ## Load Reception (or other) content packs.

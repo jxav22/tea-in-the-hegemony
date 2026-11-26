@@ -22,7 +22,10 @@ func record(character_id: String, memory_data: Dictionary) -> MemoryEntry:
 func apply_effect(effect: Dictionary) -> MemoryEntry:
 	var entry := relationships.apply_memory_effect(effect)
 	if entry != null:
-		memory_recorded.emit(str(effect.get("char", "")), entry.id)
+		var char_id := str(effect.get("char", effect.get("character", "")))
+		if char_id == "":
+			char_id = RelationshipManager.infer_memory_character(effect)
+		memory_recorded.emit(char_id, entry.id)
 	return entry
 
 

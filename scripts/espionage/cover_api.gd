@@ -43,6 +43,33 @@ static func present(reveal_raw: bool = false) -> Dictionary:
 	}
 
 
+static func escalate(delta: int = 10, reason: String = "escalate", slip: Dictionary = {}) -> Dictionary:
+	if GameState.systems == null:
+		raise_heat(delta, reason)
+		return {"heat": heat(), "blown": is_blown()}
+	var effect := {
+		"op": "cover",
+		"action": "escalate",
+		"delta": delta,
+		"reason": reason,
+	}
+	if not slip.is_empty():
+		effect["slip"] = slip
+	return GameState.apply_systems_effect(effect)
+
+
+static func repair(delta: int = -8, reason: String = "repair", force_unblow: bool = false) -> Dictionary:
+	if GameState.systems == null:
+		return {"heat": GameState.adjust_heat(delta if delta < 0 else -abs(delta))}
+	return GameState.apply_systems_effect({
+		"op": "cover",
+		"action": "repair",
+		"delta": delta,
+		"reason": reason,
+		"force_unblow": force_unblow,
+	})
+
+
 static func raise_heat(amount: int, reason: String = "") -> int:
 	var next: int
 	if GameState.systems != null:

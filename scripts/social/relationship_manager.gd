@@ -132,7 +132,14 @@ static func infer_memory_character(effect: Dictionary) -> String:
 		"sera": "sera_kade",
 		"pim": "pim_orel",
 		"voss": "edrin_voss",
+		"cassian": "cassian_vale",
+		"orth": "cassian_vale",
 	}
+	# Topic tags that belong on the player tradecraft / mission log.
+	var player_log_tags := [
+		"intel", "cipher", "advice", "comedy", "cloakroom", "ending", "loss", "heat",
+		"fragment", "mission", "cover", "tradecraft", "protocol", "briefing",
+	]
 	for t in tags:
 		var ts := str(t).to_lower()
 		if tag_map.has(ts):
@@ -143,6 +150,29 @@ static func infer_memory_character(effect: Dictionary) -> String:
 	for key in tag_map.keys():
 		if mid.contains(str(key)):
 			return str(tag_map[key])
+	# Summary text can name a character when tags/id omit them.
+	var summary := str(effect.get("summary", "")).to_lower()
+	var name_hints := {
+		"maris": "maris_quell",
+		"moth": "clerk_moth",
+		"wren": "wren_halden",
+		"taly": "taly_renn",
+		"sera": "sera_kade",
+		"pim": "pim_orel",
+		"voss": "edrin_voss",
+	}
+	for key in name_hints.keys():
+		if summary.contains(str(key)):
+			return str(name_hints[key])
+	# cipher / intel memories without a face → Cassian's mission log
+	for t in tags:
+		if str(t).to_lower() in player_log_tags:
+			return "cassian_vale"
+	if mid.contains("cipher") or mid.contains("intel") or mid.contains("got_") \
+		or mid.contains("fragment") or mid.contains("cover"):
+		return "cassian_vale"
+	if mid.contains("wren") or mid.contains("tariff"):
+		return "wren_halden"
 	# Player/mission log default — still lands in flat GameState.memories via binder.
 	return "cassian_vale"
 

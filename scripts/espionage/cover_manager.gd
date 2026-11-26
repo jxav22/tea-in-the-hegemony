@@ -12,14 +12,18 @@ extends RefCounted
 signal heat_changed(new_heat: int, band: String, reason: String)
 signal inconsistency_recorded(key: String, detail: Dictionary)
 signal cover_blown(reason: String)
+signal cover_repaired(new_heat: int, still_blown: bool)
 
 ## Aligned with Core GameState.adjust_heat blow threshold.
 const HEAT_BLOW_THRESHOLD := 80
+const HEAT_HIGH_THRESHOLD := 55
+const HEAT_STRAINED_THRESHOLD := 30
 
 var cover: CoverIdentity
 ## Optional hook: RelationshipManager for witness suspicion bumps.
 var relationships: RelationshipManager
 var _presentation: EspionagePresentation
+var _sync_flags: bool = true
 
 
 func _init(initial: CoverIdentity = null) -> void:
@@ -41,18 +45,61 @@ func apply_effect(effect: Dictionary) -> Dictionary:
 		"adjust_heat":
 			return adjust_heat(int(effect.get("delta", 0)), str(effect.get("reason", "adjust")))
 		"repair":
-			# Explicit repair may cool heat even after a scare; does not un-blow.
-			var repair_delta := int(effect.get("delta", -5))
-			if repair_delta > 0:
-				repair_delta = -repair_delta
-			return adjust_heat(repair_delta, "repair:%s" % str(effect.get("reason", effect.get("beat", ""))))
+			return repair(effect)
 		"blow":
 			return blow(str(effect.get("reason", "explicit")))
+		"escalate":
+			## Chain helper: slip-or-heat then auto-evaluate blow.
+			return _escalate(effect)
 		"set_fact":
 			return _assert_fact(effect)
 		_:
 			push_warning("Unknown cover action: %s" % action)
 			return {}
+
+
+func repair(effect: Dictionary = {}) -> Dictionary:
+	## Explicit repair cools heat. Never silently un-blows; use force_unblow.
+	var repair_delta := int(effect.get("delta", -5))
+	if repair_delta > 0:
+		repair_delta = -repair_delta
+	var reason := "repair:%s" % str(effect.get("reason", effect.get("beat", "")))
+	var out := adjust_heat(repair_delta, reason)
+	if bool(effect.get("force_unblow", false)) and cover.blown and cover.heat < HEAT_BLOW_THRESHOLD:
+		cover.blown = false
+		out["unblown"] = true
+		_emit_flag_sync()
+	cover_repaired.emit(cover.heat, cover.blown)
+	out["repaired"] = true
+	out["blown"] = cover.blown
+	return out
+
+
+func _escalate(effect: Dictionary) -> Dictionary:
+	## Typical chain: optional slip, then heat bump, sync flags, maybe blow.
+	var results: Array = []
+	if effect.has("key") or str(effect.get("slip", "")) != "":
+		var slip_effect := effect.duplicate(true)
+		slip_effect["action"] = "slip"
+		if effect.has("slip") and typeof(effect["slip"]) == TYPE_DICTIONARY:
+			for k in effect["slip"].keys():
+				slip_effect[k] = effect["slip"][k]
+		results.append(_slip(slip_effect))
+	var delta := int(effect.get("delta", effect.get("heat", 10)))
+	results.append(adjust_heat(delta, str(effect.get("reason", "escalate"))))
+	return {
+		"ok": true,
+		"action": "escalate",
+		"heat": cover.heat,
+		"band": cover.heat_band(),
+		"blown": cover.blown,
+		"steps": results,
+	}
+
+
+func _emit_flag_sync() -> void:
+	if _sync_flags:
+		CoverFlagSync.sync_from_manager(self)
 
 
 func _assert_fact(effect: Dictionary) -> Dictionary:
@@ -98,6 +145,8 @@ func _assert_fact(effect: Dictionary) -> Dictionary:
 			adjust_heat(heat_delta, "inconsistency:%s" % key)
 			_bump_witness_suspicion(witness, int(effect.get("suspicion", 8)))
 			result["inconsistency"] = detail
+			result["heat"] = cover.heat
+			result["blown"] = cover.blown
 			return result
 		# Same value restated — refresh beat/witnesses only.
 		var witnesses_same: Array = prior.get("witnesses", []).duplicate()
@@ -143,9 +192,30 @@ func _slip(effect: Dictionary) -> Dictionary:
 		"witness": witness,
 		"kind": "slip",
 	}
+	# If we previously asserted this key, a different slip value is a hard contradiction.
+	if cover.stated_facts.has(key):
+		var prior_value := str(cover.stated_facts[key].get("value", ""))
+		if prior_value != "" and value != "" and prior_value != value:
+			detail["prior"] = prior_value
+			detail["kind"] = "slip_contradiction"
 	cover.inconsistencies.append(detail)
 	inconsistency_recorded.emit(key, detail)
+	# Record the slip as the new (broken) stated fact so later asserts can catch it.
+	if value != "":
+		var witnesses: Array = []
+		if cover.stated_facts.has(key):
+			witnesses = cover.stated_facts[key].get("witnesses", []).duplicate()
+		if witness != "" and witness not in witnesses:
+			witnesses.append(witness)
+		cover.stated_facts[key] = {
+			"value": value,
+			"beat": beat,
+			"witnesses": witnesses,
+			"slipped": true,
+		}
 	var heat_delta := int(effect.get("heat", 15))
+	if detail.get("kind", "") == "slip_contradiction":
+		heat_delta = maxi(heat_delta, int(effect.get("contradiction_heat", heat_delta + 5)))
 	adjust_heat(heat_delta, "slip:%s" % key)
 	_bump_witness_suspicion(witness, int(effect.get("suspicion", 12)))
 	if relationships != null and witness != "":
@@ -160,11 +230,13 @@ func _slip(effect: Dictionary) -> Dictionary:
 			"beat": beat,
 		})
 	detail["ok"] = true
+	detail["heat"] = cover.heat
+	detail["blown"] = cover.blown
 	return detail
 
 
 func adjust_heat(delta: int, reason: String = "") -> Dictionary:
-	if cover.blown and delta < 0 and not bool(reason.begins_with("repair")):
+	if cover.blown and delta < 0 and not reason.begins_with("repair"):
 		# Cooling while blown is a no-op unless explicit repair.
 		return {
 			"before": cover.heat,
@@ -188,15 +260,30 @@ func adjust_heat(delta: int, reason: String = "") -> Dictionary:
 	if cover.heat >= HEAT_BLOW_THRESHOLD and not cover.blown:
 		blow("heat_threshold")
 		out["blown"] = true
+	else:
+		_emit_flag_sync()
 	return out
 
 
 func blow(reason: String = "") -> Dictionary:
 	if cover.blown:
+		_emit_flag_sync()
 		return {"blown": true, "reason": reason, "heat": cover.heat, "already": true}
 	cover.blown = true
 	cover.heat = maxi(cover.heat, HEAT_BLOW_THRESHOLD)
 	cover_blown.emit(reason)
+	_emit_flag_sync()
+	# Fail maintain_cover objective when systems mission is bound via GameState.
+	if Engine.get_main_loop() != null:
+		var gs := Engine.get_main_loop().root.get_node_or_null("/root/GameState")
+		if gs != null and gs.get("systems") != null:
+			gs.systems.mission.apply_effect({
+				"op": "objective",
+				"action": "fail",
+				"id": "obj.maintain_cover",
+				"beat": reason,
+			})
+			GameStateBinder.push_to_game_state(gs.systems, gs)
 	return {"blown": true, "reason": reason, "heat": cover.heat}
 
 
@@ -263,3 +350,4 @@ func to_save() -> Dictionary:
 
 func load_save(data: Dictionary) -> void:
 	cover.from_dict(data)
+	_emit_flag_sync()
