@@ -63,6 +63,16 @@ func _ready() -> void:
 	save_load.delete_requested.connect(func (s): delete_slot.emit(s))
 
 	_set_letterbox(false)
+	get_viewport().size_changed.connect(_on_viewport_resized)
+	_on_viewport_resized()
+
+
+func _on_viewport_resized() -> void:
+	var vs := get_viewport().get_visible_rect().size
+	if dialogue_box:
+		dialogue_box.offset_top = -ResponsiveLayout.dialogue_height(vs)
+	if mission_panel:
+		mission_panel.offset_right = mission_panel.offset_left + ResponsiveLayout.mission_width(vs)
 
 
 func set_background(location_id: String) -> void:

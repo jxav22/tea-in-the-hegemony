@@ -1,7 +1,7 @@
 extends Control
 class_name DialogueOverlay
-## Presentation hook for Agent D. Core boot embeds a simpler copy;
-## swap this scene in when UI polish lands. Binds DialogueRunner signals.
+## Thin Core stub. Full presentation lives in scenes/ui/game_hud.tscn
+## (Agent D) — prefer GameHUD / CoreUIController for playable UI.
 
 signal choice_picked(choice_id: String)
 signal continue_pressed()
