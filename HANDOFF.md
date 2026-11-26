@@ -9,6 +9,37 @@ Playable chapter: **The Reception** — social-espionage under cover as Cassian 
 
 ---
 
+## Play in browser (publish)
+
+**Public URL:** https://jxav22.github.io/tea-in-the-hegemony/
+
+| Item | Status |
+|------|--------|
+| Web preset | `export_presets.cfg` → `builds/web/index.html` |
+| Threads | **Single-threaded** (`variant/thread_support=false`) — works on GitHub Pages without COOP/COEP |
+| Renderer | Compatibility (`gl_compatibility`) |
+| CI | `.github/workflows/web-pages.yml` — installs Godot 4.3 + export templates, exports Web, deploys Pages, uploads itch ZIP artifact |
+| Local export | `./tools/export_web.sh` (needs templates in `~/.local/share/godot/export_templates/4.3.stable/`) |
+| itch ZIP | `builds/itch/tea-in-the-hegemony-web.zip` (CI artifact `tea-in-the-hegemony-web-itch`) |
+
+### Enable GitHub Pages (manual if API lacks admin)
+
+1. Repo **Settings → Pages**.
+2. **Build and deployment → Source:** GitHub Actions.
+3. Ensure Actions can write Pages: **Settings → Actions → General → Workflow permissions** → Read and write (or allow `pages: write` via the workflow `permissions:` block).
+4. Push/merge to `main` (or run **Web export + GitHub Pages** → *Run workflow*).
+5. Wait for the `deploy-pages` job; then open https://jxav22.github.io/tea-in-the-hegemony/
+
+Do **not** change repo visibility. Do not commit secrets. `builds/` stays gitignored — CI produces artifacts.
+
+### Known publish defects
+
+- First visit downloads ~37MB wasm; cold load can take several seconds.
+- Headless Tweener warnings in smoke tests are non-blocking.
+- Pages 404 until source is set to Actions and the first deploy succeeds.
+
+---
+
 ## How to run
 
 ```bash
@@ -16,11 +47,13 @@ Playable chapter: **The Reception** — social-espionage under cover as Cassian 
 godot --path .                    # or ./.bin/godot --path .
 # UI chrome only (no full chapter loop)
 godot --path . res://scenes/ui/ui_showcase.tscn
+# Browser build (after export)
+python3 -m http.server 8080 --directory builds/web
 ```
 
 - **Main scene:** `res://scenes/main/boot.tscn`  
 - **Renderer:** Project uses Compatibility only — do not switch to Forward+/Mobile.  
-- **Export:** `export_presets.cfg` (Web + Linux).  
+- **Export:** `export_presets.cfg` (Web single-threaded + Linux).  
 - First editor open regenerates `.godot/` class cache; if you see missing `class_name` errors, run once with `--editor --quit-after 2`.
 
 ---
