@@ -1,0 +1,24 @@
+{
+  "id": "reception_ops",
+  "title": "The Reception",
+  "objectives": [
+    {"id": "contact_maris", "status": "active"},
+    {"id": "id_voss", "status": "active"},
+    {"id": "obtain_fragment", "status": "active"},
+    {"id": "maintain_cover", "status": "active"}
+  ],
+  "fragments": [
+    {
+      "id": "shipping_discrepancy",
+      "claims": ["manifest_a_mismatch"],
+      "contradicts": [],
+      "verified": false
+    },
+    {
+      "id": "guest_list_cipher",
+      "claims": ["cipher_partial"],
+      "contradicts": ["shipping_discrepancy"],
+      "verified": false
+    }
+  ]
+}

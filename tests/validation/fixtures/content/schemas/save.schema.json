@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TeaInTheHegemonySave",
+  "type": "object",
+  "required": [
+    "save_version",
+    "chapter_id",
+    "flags",
+    "rels",
+    "memories",
+    "inventory",
+    "cover_state",
+    "objectives"
+  ],
+  "properties": {
+    "save_version": {"type": "integer"},
+    "chapter_id": {"type": "string"},
+    "flags": {"type": "object"},
+    "rels": {"type": "object"},
+    "memories": {"type": "array"},
+    "inventory": {"type": "array"},
+    "cover_state": {"type": "string"},
+    "objectives": {"type": "object"}
+  }
+}

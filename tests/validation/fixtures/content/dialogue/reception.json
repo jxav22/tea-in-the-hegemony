@@ -1,0 +1,277 @@
+{
+  "chapter": "the_reception",
+  "nodes": [
+    {
+      "id": "briefing.intro",
+      "speaker": "wren_halden",
+      "text": "You are Cassian Orth tonight. Logistics analyst. Do try not to fall in love with the target.",
+      "tags": ["briefing", "entry", "start"],
+      "effects": [{"op": "set_flag", "flag": "briefed", "value": true}],
+      "faculty_interjections": [
+        {"faculty": "Insecurity", "text": "She will notice your shoes.", "weight": 1},
+        {"faculty": "Tradecraft", "text": "Cover first. Feelings are a side channel.", "weight": 1}
+      ],
+      "choices": [
+        {
+          "id": "c_prof",
+          "text": "Understood. Mission parameters only.",
+          "intent": "professional",
+          "next": "foyer.arrive",
+          "effects": [{"op": "rel", "char": "wren_halden", "respect": 1}]
+        },
+        {
+          "id": "c_awk",
+          "text": "I am not going to— that is not— fine.",
+          "intent": "awkward",
+          "next": "foyer.arrive",
+          "effects": [{"op": "rel", "char": "wren_halden", "respect": -1}, {"op": "set_flag", "flag": "nervous", "value": true}]
+        },
+        {
+          "id": "c_charm",
+          "text": "Please. I am devastatingly professional.",
+          "intent": "charm",
+          "next": "foyer.arrive",
+          "effects": [{"op": "set_flag", "flag": "self_myth", "value": true}]
+        }
+      ]
+    },
+    {
+      "id": "foyer.arrive",
+      "speaker": "narrator",
+      "text": "The foyer smells like citrus polish and quiet money.",
+      "tags": ["explore"],
+      "choices": [
+        {
+          "id": "scan",
+          "text": "Map exits, cameras, and who watches whom.",
+          "intent": "investigate",
+          "next": "salon.scan",
+          "effects": [{"op": "set_flag", "flag": "mapped_foyer", "value": true}, {"op": "complete_objective", "objective": "id_voss"}]
+        },
+        {
+          "id": "find_maris",
+          "text": "Look for Maris before your courage evaporates.",
+          "intent": "personal",
+          "next": "salon.maris",
+          "effects": [{"op": "set_objective", "objective": "contact_maris", "status": "active"}]
+        },
+        {
+          "id": "blend",
+          "text": "Blend. Sip. Become furniture with a badge.",
+          "intent": "professional",
+          "next": "salon.blend",
+          "effects": [{"op": "add_heat", "value": -1}]
+        },
+        {
+          "id": "improv_badge",
+          "text": "Your badge is upside down. Own it as a fashion statement.",
+          "intent": "improv",
+          "next": "salon.improv",
+          "effects": [{"op": "set_flag", "flag": "badge_bit", "value": true}]
+        }
+      ]
+    },
+    {
+      "id": "salon.scan",
+      "speaker": "cassian_vale",
+      "text": "Voss holds court by the sculpture. Sera Kade is already smiling at him.",
+      "tags": ["intel"],
+      "effects": [{"op": "add_evidence", "id": "voss_position"}, {"op": "set_flag", "flag": "saw_sera", "value": true}],
+      "choices": [
+        {
+          "id": "approach_voss",
+          "text": "Approach Voss under cover of trade chatter.",
+          "intent": "professional",
+          "next": "ending.mission_clean",
+          "effects": [{"op": "complete_objective", "objective": "obtain_fragment"}, {"op": "add_evidence", "id": "shipping_discrepancy"}]
+        },
+        {
+          "id": "still_maris",
+          "text": "Intel noted. Now find Maris anyway.",
+          "intent": "personal",
+          "next": "salon.maris",
+          "effects": []
+        },
+        {
+          "id": "probe_sera",
+          "text": "Probe Sera — rival or coincidence?",
+          "intent": "suspicious",
+          "next": "ending.cover_frayed",
+          "effects": [{"op": "add_heat", "value": 2}, {"op": "rel", "char": "sera_kade", "suspicion": 2}]
+        }
+      ]
+    },
+    {
+      "id": "salon.maris",
+      "speaker": "maris_quell",
+      "text": "You are staring at the sculpture like it owes you money. Or is it me?",
+      "tags": ["talk"],
+      "effects": [{"op": "set_flag", "flag": "met_maris", "value": true}, {"op": "complete_objective", "objective": "contact_maris"}],
+      "faculty_interjections": [
+        {"faculty": "Empathy", "text": "She is teasing. Or testing. Possibly both.", "weight": 1},
+        {"faculty": "Analysis", "text": "Probability of detection rising with every blink.", "weight": 1}
+      ],
+      "choices": [
+        {
+          "id": "sincere",
+          "text": "I was trying to look like I belonged. It is going poorly.",
+          "intent": "sincere",
+          "next": "ending.personal_win",
+          "effects": [
+            {"op": "rel", "char": "maris_quell", "affection": 2, "trust": 2, "perceived_authenticity": 2},
+            {"op": "fail_objective", "objective": "obtain_fragment"},
+            {"op": "set_flag", "flag": "chose_person", "value": true}
+          ]
+        },
+        {
+          "id": "cover_lie",
+          "text": "Trade liaison. Manifest anomalies are my love language.",
+          "intent": "deceptive",
+          "next": "ending.mission_clean",
+          "effects": [
+            {"op": "rel", "char": "maris_quell", "suspicion": 1, "familiarity": 1},
+            {"op": "complete_objective", "objective": "obtain_fragment"},
+            {"op": "add_evidence", "id": "guest_list_cipher"}
+          ]
+        },
+        {
+          "id": "flirt_deflect",
+          "text": "If I said yes, would you believe me?",
+          "intent": "charm",
+          "next": "ending.ambiguous",
+          "effects": [
+            {"op": "rel", "char": "maris_quell", "affection": 1, "perceived_authenticity": -1},
+            {"op": "set_flag", "flag": "flirted", "value": true}
+          ]
+        },
+        {
+          "id": "investigate_her",
+          "text": "Observatory Circle keeps interesting hours. Coincidence?",
+          "intent": "investigate",
+          "next": "ending.cover_frayed",
+          "effects": [
+            {"op": "rel", "char": "maris_quell", "suspicion": 2, "respect": 1},
+            {"op": "add_heat", "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "salon.blend",
+      "speaker": "narrator",
+      "text": "You become excellently boring. The night proceeds without you.",
+      "tags": ["explore"],
+      "choices": [
+        {
+          "id": "later_intel",
+          "text": "Slip to the study annex for the fragment.",
+          "intent": "professional",
+          "next": "ending.mission_clean",
+          "effects": [
+            {"op": "complete_objective", "objective": "obtain_fragment"},
+            {"op": "add_evidence", "id": "shipping_discrepancy"},
+            {"op": "set_flag", "flag": "never_met_maris", "value": true}
+          ]
+        },
+        {
+          "id": "regret_maris",
+          "text": "Abandon the perfect cover. Find her.",
+          "intent": "personal",
+          "next": "salon.maris",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "salon.improv",
+      "speaker": "pim_orel",
+      "text": "Your badge is upside down. Bold! Or disastrous. I love it.",
+      "tags": ["talk"],
+      "effects": [{"op": "add_heat", "value": 1}],
+      "choices": [
+        {
+          "id": "lean_in",
+          "text": "It is a new Ministry protocol. Very exclusive.",
+          "intent": "improv",
+          "next": "ending.ambiguous",
+          "effects": [
+            {"op": "set_flag", "flag": "pim_ally", "value": true},
+            {"op": "rel", "char": "maris_quell", "familiarity": 1}
+          ]
+        },
+        {
+          "id": "recover_prof",
+          "text": "Correct it silently and walk away with dignity.",
+          "intent": "professional",
+          "next": "salon.blend",
+          "effects": [{"op": "add_heat", "value": -1}]
+        },
+        {
+          "id": "use_chaos",
+          "text": "Use the laughter as cover to pocket a guest list page.",
+          "intent": "opportunistic",
+          "next": "ending.mission_messy",
+          "effects": [
+            {"op": "complete_objective", "objective": "obtain_fragment"},
+            {"op": "add_evidence", "id": "guest_list_cipher"},
+            {"op": "set_cover", "value": "frayed"},
+            {"op": "add_heat", "value": 2}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ending.mission_clean",
+      "speaker": "wren_halden",
+      "text": "Fragment acquired. Cover intact. Romance optional and, tonight, omitted.",
+      "tags": ["ending", "debrief"],
+      "effects": [
+        {"op": "end", "ending": "mission_clean"},
+        {"op": "complete_objective", "objective": "maintain_cover"}
+      ],
+      "choices": []
+    },
+    {
+      "id": "ending.personal_win",
+      "speaker": "maris_quell",
+      "text": "You are a terrible spy of feelings. That might be why I am still talking to you.",
+      "tags": ["ending", "debrief"],
+      "effects": [
+        {"op": "end", "ending": "personal_win"},
+        {"op": "set_cover", "value": "compromised_soft"}
+      ],
+      "choices": []
+    },
+    {
+      "id": "ending.ambiguous",
+      "speaker": "narrator",
+      "text": "You leave with half a cipher and a conversation you will overanalyze for weeks.",
+      "tags": ["ending"],
+      "effects": [{"op": "end", "ending": "ambiguous"}],
+      "choices": []
+    },
+    {
+      "id": "ending.cover_frayed",
+      "speaker": "sera_kade",
+      "text": "Careful, Orth. Someone here is collecting more than porcelain.",
+      "tags": ["ending"],
+      "effects": [
+        {"op": "end", "ending": "cover_frayed"},
+        {"op": "set_cover", "value": "frayed"},
+        {"op": "fail_objective", "objective": "maintain_cover"}
+      ],
+      "choices": []
+    },
+    {
+      "id": "ending.mission_messy",
+      "speaker": "wren_halden",
+      "text": "You got the page. You also got noticed. We will call that creative.",
+      "tags": ["ending", "debrief"],
+      "effects": [
+        {"op": "end", "ending": "mission_messy"},
+        {"op": "set_cover", "value": "frayed"}
+      ],
+      "choices": []
+    }
+  ]
+}
