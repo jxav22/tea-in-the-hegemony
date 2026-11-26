@@ -67,10 +67,13 @@ func open_profile(data: Dictionary) -> void:
 		rel_box.add_child(row)
 
 	var flags: Array = data.get("knowledge_flags", data.get("discovered", []))
-	if flags.is_empty():
+	var parts: PackedStringArray = []
+	var mood := str(data.get("mood_line", ""))
+	if not mood.is_empty():
+		parts.append("[color=#c4a574][i]%s[/i][/color]" % mood)
+	if flags.is_empty() and parts.is_empty():
 		knowledge.text = "[color=#9a9286][i]Nothing confirmed. Watch longer.[/i][/color]"
 	else:
-		var parts: PackedStringArray = []
 		for fl in flags:
 			parts.append("• %s" % str(fl))
 		knowledge.text = "\n".join(parts)

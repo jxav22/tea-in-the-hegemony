@@ -154,24 +154,33 @@ func _on_restart() -> void:
 
 func refresh_objectives() -> void:
 	var items: Array = []
-	for key in GameState.objectives.keys():
-		var o: Dictionary = GameState.objectives[key]
-		items.append({
-			"id": str(o.get("id", key)),
-			"text": str(o.get("label", o.get("id", key))),
-			"status": str(o.get("status", "active")),
-		})
+	if GameState.systems != null:
+		var mission: Dictionary = GameState.systems.present_mission(false)
+		for o in mission.get("objectives", []):
+			if typeof(o) != TYPE_DICTIONARY:
+				continue
+			var od: Dictionary = o
+			items.append({
+				"id": str(od.get("id", "")),
+				"text": str(od.get("title", od.get("description", od.get("id", "")))),
+				"status": str(od.get("status", "active")),
+			})
+	if items.is_empty():
+		for key in GameState.objectives.keys():
+			var o: Dictionary = GameState.objectives[key]
+			items.append({
+				"id": str(o.get("id", key)),
+				"text": str(o.get("label", o.get("id", key))),
+				"status": str(o.get("status", "active")),
+			})
 	hud.set_objectives(items)
 
 
 func refresh_cover() -> void:
 	if hud == null or hud.mission_panel == null:
 		return
-	var heat := CoverAPI.heat()
-	var blown := CoverAPI.is_blown()
-	var name := CoverAPI.cover_name()
-	var mission_ok := CoverAPI.mission_complete_enough()
-	hud.mission_panel.set_cover_status(name, heat, blown, mission_ok)
+	var presented := CoverAPI.present(false)
+	hud.mission_panel.set_cover_present(presented)
 
 
 func refresh_save_summaries() -> void:
@@ -191,49 +200,46 @@ func refresh_save_summaries() -> void:
 
 func open_notebook_from_state() -> void:
 	var fragments: Array = []
-	for entry in GameState.inventory:
-		if typeof(entry) != TYPE_DICTIONARY:
-			continue
-		var e: Dictionary = entry
-		var fid := str(e.get("id", ""))
+	if GameState.systems != null:
+		for e in GameState.systems.present_evidence(false):
+			if typeof(e) != TYPE_DICTIONARY:
+				continue
+			var ed: Dictionary = e
+			fragments.append({
+				"id": str(ed.get("id", "")),
+				"title": str(ed.get("title", ed.get("id", ""))),
+				"summary": str(ed.get("summary", "")),
+				"claims": ed.get("claims", []),
+				"contradicts": [],
+				"verified": bool(ed.get("verified", false)),
+				"source": str(ed.get("source", "")),
+				"verification_label": str(ed.get("verification_label", "")),
+			})
+	if fragments.is_empty():
+		for entry in GameState.inventory:
+			if typeof(entry) != TYPE_DICTIONARY:
+				continue
+			var e: Dictionary = entry
+			var fid := str(e.get("id", ""))
+			fragments.append({
+				"id": fid,
+				"title": str(e.get("title", e.get("id", "fragment"))),
+				"summary": str(e.get("summary", e.get("label", ""))),
+				"claims": e.get("claims", []),
+				"contradicts": e.get("contradicts", []),
+				"verified": CoverAPI.has_evidence(StringName(fid)) or bool(e.get("verified", false)),
+			})
+	# Cover attention as soft intel note
+	var cover := CoverAPI.present(false)
+	var attention := str(cover.get("attention_line", ""))
+	if not attention.is_empty():
 		fragments.append({
-			"id": fid,
-			"title": str(e.get("title", e.get("id", "fragment"))),
-			"summary": str(e.get("summary", e.get("label", ""))),
-			"claims": e.get("claims", []),
-			"contradicts": e.get("contradicts", []),
-			"verified": CoverAPI.has_evidence(StringName(fid)) or bool(e.get("verified", false)),
-		})
-	for m in GameState.memories:
-		if typeof(m) != TYPE_DICTIONARY:
-			continue
-		var mem: Dictionary = m
-		fragments.append({
-			"id": str(mem.get("id", "")),
-			"title": "Memory",
-			"summary": str(mem.get("summary", "")),
-			"claims": [],
+			"id": "cover_attention",
+			"title": "Room temperature",
+			"summary": attention,
+			"claims": [str(cover.get("heat_label", ""))],
 			"contradicts": [],
-			"verified": true,
-		})
-	var seen: Dictionary = {}
-	for f in fragments:
-		seen[str(f.get("id", ""))] = true
-	for m in RelationshipQuery.memories_tagged("heat"):
-		if typeof(m) != TYPE_DICTIONARY:
-			continue
-		var hm: Dictionary = m
-		var hid := str(hm.get("id", ""))
-		if seen.has(hid):
-			continue
-		seen[hid] = true
-		fragments.append({
-			"id": hid,
-			"title": "Cover stress",
-			"summary": str(hm.get("summary", "")),
-			"claims": [],
-			"contradicts": [],
-			"verified": true,
+			"verified": false,
 		})
 	hud.open_notebook(fragments)
 
@@ -241,36 +247,64 @@ func open_notebook_from_state() -> void:
 func open_profile(char_id: String) -> void:
 	var sid := StringName(char_id)
 	var def := registry.get_character(sid)
+	var presented := RelationshipQuery.present(sid, false)
 	var rel := RelationshipQuery.snapshot(sid)
 	var affinity := RelationshipQuery.score_affinity(sid)
 	var hostile := RelationshipQuery.is_hostile(sid)
 	var flags: Array = []
+	var mood := str(presented.get("mood_line", ""))
+	if not mood.is_empty():
+		flags.append(mood)
+	for hint in presented.get("knowledge_hints", []):
+		flags.append(str(hint).replace("_", " "))
 	if FlagStore.get_flag(StringName("met_%s" % char_id), false):
 		flags.append("Met in person")
 	if hostile:
-		flags.append("Reading: hostile / high suspicion")
-	flags.append("Affinity composite: %.1f" % affinity)
-	for key in FlagStore.to_dict().keys():
-		var ks := str(key)
-		if ks.begins_with(char_id) or ks.find(char_id) >= 0:
-			if ks not in flags:
-				flags.append(ks)
-	var mems: Array = RelationshipQuery.memories_tagged(char_id)
+		flags.append("Reading: wary of you")
+	# Prefer qualitative bands for the dimension rows when Systems is live
+	var band_rels: Dictionary = {}
+	var dims: Dictionary = presented.get("dimensions", {})
+	if not dims.is_empty():
+		for dim_key in dims.keys():
+			var entry: Dictionary = dims[dim_key]
+			# Encode band as a small int for the existing bar UI fallback
+			var band := str(entry.get("band", "neutral"))
+			band_rels[str(dim_key)] = _band_to_tick(band)
+			flags.append("%s: %s" % [str(entry.get("label", dim_key)), str(entry.get("band_label", band))])
+	var mems: Array = presented.get("notable_memories", [])
 	if mems.is_empty():
-		for m in GameState.memories:
-			if typeof(m) == TYPE_DICTIONARY:
-				mems.append(m)
+		mems = RelationshipQuery.memories_tagged(char_id)
 	var portrait_key := str(def.get("portrait_key", char_id))
 	hud.open_profile({
 		"id": portrait_key,
 		"display_name": registry.display_name(sid),
 		"role": str(def.get("role", "")),
 		"expression": "suspicious" if hostile else "neutral",
-		"rels": rel,
+		"rels": band_rels if not band_rels.is_empty() else rel,
 		"knowledge_flags": flags,
 		"memories": mems,
 		"affinity": affinity,
+		"mood_line": mood,
+		"qualitative": not dims.is_empty(),
 	})
+
+
+func _band_to_tick(band: String) -> int:
+	match band:
+		"hostile":
+			return -5
+		"cold":
+			return -2
+		"neutral":
+			return 0
+		"warm":
+			return 2
+		"close":
+			return 4
+		"intimate":
+			return 5
+		_:
+			return 0
 
 
 func sync_background(location_id: String, animate: bool = true) -> void:

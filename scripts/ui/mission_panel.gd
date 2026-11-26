@@ -20,16 +20,47 @@ func _ready() -> void:
 
 
 func set_cover_status(cover_name: String, heat: int, blown: bool, mission_ok: bool) -> void:
+	## Legacy numeric path — prefer set_cover_present().
+	var band := "clear"
+	if blown:
+		band = "blown"
+	elif heat >= 80:
+		band = "critical"
+	elif heat >= 55:
+		band = "high"
+	elif heat >= 30:
+		band = "elevated"
+	elif heat >= 10:
+		band = "low"
+	set_cover_present({
+		"cover_name": cover_name,
+		"heat_band": band,
+		"heat_label": "Cover blown" if blown else ("holding" if mission_ok else "active"),
+		"blown": blown,
+		"attention_line": "",
+	})
+
+
+func set_cover_present(data: Dictionary) -> void:
+	## Qualitative cover chrome — no raw heat dump.
 	if cover_label == null:
 		return
+	var band := str(data.get("heat_band", "clear"))
 	var heat_col := HegemonyPalette.JADE
-	if heat >= 50:
-		heat_col = HegemonyPalette.AMBER
-	if heat >= 80 or blown:
-		heat_col = HegemonyPalette.VERMILLION
+	match band:
+		"elevated", "low":
+			heat_col = HegemonyPalette.AMBER
+		"high", "critical", "blown":
+			heat_col = HegemonyPalette.VERMILLION
 	cover_label.add_theme_color_override("font_color", heat_col)
-	var flag := "BLOWN" if blown else ("brief met" if mission_ok else "active")
-	cover_label.text = "%s · heat %d · %s" % [cover_name, heat, flag]
+	var name := str(data.get("cover_name", "—"))
+	var label := str(data.get("heat_label", band))
+	var attention := str(data.get("attention_line", ""))
+	if attention.is_empty():
+		cover_label.text = "%s · %s" % [name, label]
+	else:
+		cover_label.text = "%s · %s\n%s" % [name, label, attention]
+		cover_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 
 func set_objectives(objectives: Array) -> void:
