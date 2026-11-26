@@ -28,8 +28,10 @@ func announce(location_id: String, display_name: String = "", reduce_motion: boo
 		modulate.a = 0.0
 		return
 	modulate.a = 0.0
-	_tween = create_tween()
-	_tween.tween_property(self, "modulate:a", 1.0, 0.18)
-	_tween.tween_interval(0.7)
-	_tween.tween_property(self, "modulate:a", 0.0, 0.35)
+	scale = Vector2(0.96, 0.96)
+	_tween = create_tween().set_parallel(true)
+	_tween.tween_property(self, "modulate:a", 1.0, 0.16)
+	_tween.tween_property(self, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_tween.chain().tween_interval(0.55)
+	_tween.tween_property(self, "modulate:a", 0.0, 0.3)
 	_tween.tween_callback(func (): visible = false)

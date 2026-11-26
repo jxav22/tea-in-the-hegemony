@@ -67,6 +67,17 @@ custom_minimum_size = Vector2(100, 36)
 layout_mode = 2
 text = "Close"
 
+[node name="Summary" type="Label" parent="Page/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "0 verified · 0 provisional"
+
+[node name="FilterRow" type="HBoxContainer" parent="Page/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="Body" type="HBoxContainer" parent="Page/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3

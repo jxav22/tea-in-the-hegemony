@@ -35,6 +35,14 @@ func _ready() -> void:
 func bind(settings_ref: UISettings, history_ref: DialogueHistoryModel) -> void:
 	settings = settings_ref
 	history = history_ref
+	if settings and not settings.changed.is_connected(_on_settings_changed):
+		settings.changed.connect(_on_settings_changed)
+
+
+func _on_settings_changed() -> void:
+	if settings == null:
+		return
+	_typewriter.set_speed(settings.text_chars_per_second, settings.instant_text)
 
 
 func show_line(speaker_id: String, speaker_display: String, text: String, expression: String = "neutral") -> void:
@@ -43,13 +51,21 @@ func show_line(speaker_id: String, speaker_display: String, text: String, expres
 	visible = true
 	_awaiting_advance = false
 	continue_cue.visible = false
+	if _cue_tween:
+		_cue_tween.kill()
+		_cue_tween = null
+	continue_cue.modulate.a = 1.0
 	speaker_label.text = speaker_display
+	speaker_label.remove_theme_color_override("font_color")
 	accent.color = HegemonyPalette.JADE if speaker_id != "cassian_vale" else HegemonyPalette.BRASS
 	var tex := PortraitBank.load_texture(PortraitBank.portrait_path(speaker_id, expression))
 	portrait.texture = tex
 	portrait.visible = tex != null
 	var cps := settings.text_chars_per_second if settings else 42.0
 	var instant := settings.instant_text if settings else false
+	# Ctrl held = dump this line now without flipping the global preference
+	if Input.is_key_pressed(KEY_CTRL) or Input.is_key_pressed(KEY_META):
+		instant = true
 	_typewriter.start(text, cps, instant)
 	body_label.text = _typewriter.visible_text()
 	if history:
@@ -60,7 +76,6 @@ func show_faculty(faculty: String, text: String) -> void:
 	show_line("faculty_%s" % faculty.to_lower(), faculty, text, "neutral")
 	speaker_label.add_theme_color_override("font_color", HegemonyPalette.AMBER)
 	if history:
-		# history already got speaker line; retag last as faculty
 		if not history.entries.is_empty():
 			history.entries[-1]["tags"] = ["faculty"]
 
@@ -86,7 +101,6 @@ func _on_typing_finished() -> void:
 	body_label.text = _typewriter.full_text()
 	_awaiting_advance = true
 	continue_cue.visible = true
-	# Soft pulse on the continue cue — presence, not noise
 	if _cue_tween:
 		_cue_tween.kill()
 	if settings == null or not settings.reduce_motion:
