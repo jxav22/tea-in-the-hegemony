@@ -156,6 +156,14 @@ Briefing (clinical romance protocol) → foyer/Moth → awkward Maris intro → 
 
 See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `briefing.intro`.
 
+### Follow-up polish (`cursor/reception-prose-polish-c9ed`)
+
+- Rewrote weakest clinical jokes (briefing / salon).
+- Deepened Maris as Observatory actor with her own dock fight (not affection meter).
+- Debrief: seven distinct ending rubrics (prof + inter columns).
+- Cut generic finale/study filler lines.
+
+
 ## Agent C — Systems
 
 **Branch:** `cursor/social-espionage-systems-b2e0`  

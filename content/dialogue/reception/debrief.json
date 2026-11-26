@@ -3,476 +3,62 @@
   "start": "debrief.intro",
   "nodes": [
     {
-      "id": "debrief.close",
-      "speaker": "wren_halden",
-      "text": "Chapter closed enough. Orth remains useful until he doesn't. If Maris messages, you will tell me \u2014 not because romance is mission-critical, but because secrets are. Dismissed. Lower-third on the way out.",
-      "tags": [
-        "exit",
-        "debrief",
-        "ending",
-        "end"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "reception_debrief_complete",
-          "value": true
-        },
-        {
-          "op": "set_flag",
-          "flag": "chapter_the_reception_done",
-          "value": true
-        },
-        {
-          "op": "set_flag",
-          "flag": "ending_reception_complete",
-          "value": true
-        }
-      ],
-      "choices": [],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Analysis",
-          "text": "Reception complete. Endings diverge; save the flag set.",
-          "weight": 1
-        },
-        {
-          "faculty": "Idealism",
-          "text": "You were a person for parts of it. Keep those parts.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.inter_cold",
-      "speaker": "wren_halden",
-      "text": "Downstream. What a hideous word for leaving a person in a corner. Professionally tidy. Interpersonally you are a spreadsheet with shoes. Maris will have noticed. I notice. Rubric scored. Go home before I prescribe more smiling.",
-      "tags": [
-        "debrief"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_inter_grade",
-          "value": "cold"
-        },
-        {
-          "op": "rel",
-          "char": "wren_halden",
-          "respect": -1
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.cold.close",
-          "text": "Home. No more smiling drills tonight.",
-          "intent": "close",
-          "next": "debrief.close",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Insecurity",
-          "text": "Spreadsheet with shoes. Accurate. Unkind. Accurate.",
-          "weight": 1
-        },
-        {
-          "faculty": "Empathy",
-          "text": "You can still change the next page.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.inter_ideal",
-      "speaker": "wren_halden",
-      "text": "You spent company time on someone else's career. Operationally irritating. Interpersonally... I have no clinical synonym for 'decent' that doesn't sound like a threat. Logged as decent. Don't make a habit without telling me.",
-      "tags": [
-        "debrief"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_inter_grade",
-          "value": "decent"
-        },
-        {
-          "op": "rel",
-          "char": "wren_halden",
-          "trust": 1
-        },
-        {
-          "op": "rel",
-          "char": "wren_halden",
-          "affection": 1
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.ideal.close",
-          "text": "Logged. I'll warn you before the next decency.",
-          "intent": "close",
-          "next": "debrief.close",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Idealism",
-          "text": "She said decent. Frame it.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.inter_soft",
-      "speaker": "wren_halden",
-      "text": "Hmm. Perceived authenticity up; operational purity... negotiable. I am not paid to be moved. I am noting, however, that Maris Quell is not an affection meter \u2014 and you finally treated her like that was true. Partial credit. Human-shaped.",
-      "tags": [
-        "debrief",
-        "comedy"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_inter_grade",
-          "value": "human_shaped"
-        },
-        {
-          "op": "rel",
-          "char": "wren_halden",
-          "respect": 1
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.soft.close",
-          "text": "I'll take human-shaped.",
-          "intent": "close",
-          "next": "debrief.close",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Composure",
-          "text": "Partial credit from Wren is a parade.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.interpersonal",
-      "speaker": "wren_halden",
-      "text": "Maris Quell. Not a metric. Still: trust, suspicion, whether she experienced you as a person or a briefing that learned posture. Also Taly, Pim, the trail of dignity you left like coat-check tickets.",
-      "tags": [
-        "debrief",
-        "interpersonal"
-      ],
-      "conditions": [],
-      "effects": [],
-      "choices": [
-        {
-          "id": "debrief.inter.genuine",
-          "text": "I stopped flowcharting for ninety seconds. She noticed.",
-          "intent": "honest",
-          "next": "debrief.inter_soft",
-          "effects": [],
-          "conditions": [
-            {
-              "flag": "genuine_with_maris",
-              "op": "eq",
-              "value": true
-            }
-          ]
-        },
-        {
-          "id": "debrief.inter.helped",
-          "text": "I burned mission time to keep Taly off a fixer's ledger.",
-          "intent": "honest",
-          "next": "debrief.inter_ideal",
-          "effects": [],
-          "conditions": [
-            {
-              "flag": "helped_taly",
-              "op": "eq",
-              "value": true
-            }
-          ]
-        },
-        {
-          "id": "debrief.inter.cold",
-          "text": "I prioritized the ask. Relationships are downstream.",
-          "intent": "cold",
-          "next": "debrief.inter_cold",
-          "effects": [],
-          "conditions": [
-            {
-              "flag": "abandoned_taly",
-              "op": "eq",
-              "value": true
-            }
-          ]
-        },
-        {
-          "id": "debrief.inter.default",
-          "text": "I was awkward, occasionally real, frequently wrong.",
-          "intent": "honest",
-          "next": "debrief.inter_soft",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Empathy",
-          "text": "Say the human part without translating it into cover language.",
-          "weight": 1
-        },
-        {
-          "faculty": "Idealism",
-          "text": "If you helped, say so. Make her write it down.",
-          "weight": 1
-        }
-      ]
-    },
-    {
       "id": "debrief.intro",
       "speaker": "wren_halden",
-      "text": "Sit. Same chair. Still not a metaphor. Report professional outcomes first. Interpersonal second. I will grade them on separate rubrics so your dignity has somewhere to hide.",
-      "tags": [
-        "entry",
-        "debrief"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_started",
-          "value": true
-        }
+      "text": "Sit. Same chair. Still not a metaphor. I have seven possible evenings in my notes and only one of you. We will name which evening you actually lived.",
+      "tags": ["debrief", "entry"],
+      "effects": [{"op": "set_flag", "flag": "debrief_started", "value": true}],
+      "faculty_interjections": [
+        {"faculty": "Insecurity", "text": "She already knows. This is theatre with a grade.", "weight": 1},
+        {"faculty": "Composure", "text": "Facts first. Feelings filed as facts.", "weight": 1}
       ],
       "choices": [
-        {
-          "id": "debrief.intro.go",
-          "text": "Professional first.",
-          "intent": "professional",
-          "next": "debrief.professional",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Insecurity",
-          "text": "Separate rubrics. She invented a new way to fail.",
-          "weight": 1
-        },
-        {
-          "faculty": "Composure",
-          "text": "Facts. Then feelings filed as facts.",
-          "weight": 1
-        }
+        {"id": "debrief.route", "text": "Name the evening.", "intent": "proceed", "next": "debrief.router"}
       ]
     },
     {
-      "id": "debrief.professional",
-      "speaker": "wren_halden",
-      "text": "Fragment status. Cover integrity. Voss identification. Speak in complete operational sentences.",
-      "tags": [
-        "debrief",
-        "professional"
-      ],
-      "conditions": [],
-      "effects": [],
+      "id": "debrief.router",
+      "speaker": "narrator",
+      "text": "Wren flips a page. The page has opinions.",
+      "tags": ["debrief", "router"],
       "choices": [
-        {
-          "id": "debrief.prof.success",
-          "text": "Fragment acquired. Voss tied to Friday dock window. Cover held or provisional.",
-          "intent": "report",
-          "next": "debrief.professional_good",
-          "effects": [],
-          "conditions": [
-            {
-              "flag": "has_cipher_fragment",
-              "op": "eq",
-              "value": true
-            }
-          ]
-        },
-        {
-          "id": "debrief.prof.fail",
-          "text": "Fragment lost \u2014 Sera or heat. Voss interest confirmed if overheard. Cover... varied.",
-          "intent": "report",
-          "next": "debrief.professional_bad",
-          "effects": [],
-          "conditions": [
-            {
-              "flag": "has_cipher_fragment",
-              "op": "neq",
-              "value": true
-            }
-          ]
-        },
-        {
-          "id": "debrief.prof.burned",
-          "text": "Extracted hot. Moth inked me. Fragment status uncertain.",
-          "intent": "report",
-          "next": "debrief.professional_burned",
-          "effects": [],
-          "conditions": [
-            {
-              "flag": "cover_compromised",
-              "op": "eq",
-              "value": true
-            }
-          ]
-        }
+        {"id": "r_burned", "text": "[Cover burned]", "intent": "system", "next": "debrief.ending_burned", "conditions": [{"flag": "ending_id", "op": "eq", "value": "cover_burned"}]},
+        {"id": "r_sera", "text": "[Sera took the fragment]", "intent": "system", "next": "debrief.ending_sera", "conditions": [{"any": [{"flag": "ending_id", "op": "eq", "value": "sera_wins"}, {"all": [{"flag": "sera_has_fragment", "op": "eq", "value": true}, {"flag": "got_fragment", "op": "neq", "value": true}]}]}]},
+        {"id": "r_balanced", "text": "[Fragment + helped Taly]", "intent": "system", "next": "debrief.ending_balanced", "conditions": [{"any": [{"flag": "ending_id", "op": "eq", "value": "balanced"}, {"all": [{"flag": "got_fragment", "op": "eq", "value": true}, {"flag": "helped_taly", "op": "eq", "value": true}]}]}]},
+        {"id": "r_pro", "text": "[Cold professional win]", "intent": "system", "next": "debrief.ending_professional", "conditions": [{"any": [{"flag": "ending_id", "op": "eq", "value": "professional_win"}, {"all": [{"flag": "got_fragment", "op": "eq", "value": true}, {"flag": "abandoned_taly", "op": "eq", "value": true}]}]}]},
+        {"id": "r_human", "text": "[Human cost]", "intent": "system", "next": "debrief.ending_human", "conditions": [{"any": [{"flag": "ending_id", "op": "eq", "value": "human_cost"}, {"all": [{"flag": "helped_taly", "op": "eq", "value": true}, {"flag": "got_fragment", "op": "neq", "value": true}]}]}]},
+        {"id": "r_connection", "text": "[Connection]", "intent": "system", "next": "debrief.ending_connection", "conditions": [{"any": [{"flag": "ending_id", "op": "eq", "value": "connection"}, {"all": [{"flag": "genuine_with_maris", "op": "eq", "value": true}, {"flag": "skipped_impress", "op": "eq", "value": true}]}]}]},
+        {"id": "r_mixed", "text": "[Mixed]", "intent": "system", "next": "debrief.ending_mixed"}
       ],
-      "next": "debrief.professional_mixed",
-      "faculty_interjections": [
-        {
-          "faculty": "Tradecraft",
-          "text": "Do not editorialize. She has editors.",
-          "weight": 1
-        }
-      ]
+      "next": "debrief.ending_mixed",
+      "faculty_interjections": [{"faculty": "Analysis", "text": "Match flags to the least flattering true ending.", "weight": 1}]
     },
-    {
-      "id": "debrief.professional_bad",
-      "speaker": "wren_halden",
-      "text": "Sera will be unbearable. I will be clinical. The dock window still exists; we are simply poorer. Failure is data. Expensive data. Interpersonal \u2014 speak.",
-      "tags": [
-        "debrief"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_prof_grade",
-          "value": "poor"
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.bad.next",
-          "text": "There may have been... people.",
-          "intent": "proceed",
-          "next": "debrief.interpersonal",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Idealism",
-          "text": "Expensive data included a life that didn't get laminated.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.professional_burned",
-      "speaker": "wren_halden",
-      "text": "Ink. Charming. We will retire Orth or bleach him. Either way, you cost us stationery. Proceed to interpersonal before I invent a third rubric called regret.",
-      "tags": [
-        "debrief",
-        "comedy"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_prof_grade",
-          "value": "burned"
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.burned.next",
-          "text": "Interpersonal. Quickly.",
-          "intent": "proceed",
-          "next": "debrief.interpersonal",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Insecurity",
-          "text": "She said bleach. About your cover. About you.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.professional_good",
-      "speaker": "wren_halden",
-      "text": "Acceptable. The cipher will keep analysts employed and rival services annoyed. You may feel a brief warmth \u2014 that is blood sugar, not pride. Now: the human wreckage.",
-      "tags": [
-        "debrief"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_prof_grade",
-          "value": "good"
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.good.next",
-          "text": "Interpersonal rubric. Fine.",
-          "intent": "proceed",
-          "next": "debrief.interpersonal",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Analysis",
-          "text": "Professional green. Brace for the other column.",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "debrief.professional_mixed",
-      "speaker": "wren_halden",
-      "text": "Mixed operational weather. I've seen worse. I've also seen better from people who smile with their whole face. Interpersonal.",
-      "tags": [
-        "debrief"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "debrief_prof_grade",
-          "value": "mixed"
-        }
-      ],
-      "choices": [
-        {
-          "id": "debrief.mixed.next",
-          "text": "Interpersonal.",
-          "intent": "proceed",
-          "next": "debrief.interpersonal",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": []
-    }
+    {"id": "debrief.ending_burned", "speaker": "wren_halden", "text": "Professional column: ink. Orth is compromised. We bleach the badge or bury it. Stationery budget weeps. You gave Clerk Moth a reason to believe in his job — never gift a zealot purpose.", "tags": ["debrief", "cover_burned"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "burned"}, {"op": "set_flag", "flag": "ending_id", "value": "cover_burned"}], "choices": [{"id": "burned.inter", "text": "And the interpersonal column?", "intent": "proceed", "next": "debrief.ending_burned_inter"}], "faculty_interjections": [{"faculty": "Tradecraft", "text": "Burned is recoverable. Pride is optional cargo.", "weight": 1}]},
+    {"id": "debrief.ending_burned_inter", "speaker": "wren_halden", "text": "Interpersonal: Maris Quell watched a logistics man become a security problem. That is not chemistry — that is a risk assessment she will finish without you. Taly will tell the story as farce. You are the punchline and the liability. Rubric: catastrophic competence theatre.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "liability"}], "next": "debrief.close_burned"},
+    {"id": "debrief.close_burned", "speaker": "wren_halden", "text": "Dismissed. If you see Maris again, do not explain. Explanations are how ink spreads. Lower-third on the way out — if your face still remembers how.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "choices": [], "next": null},
+
+    {"id": "debrief.ending_sera", "speaker": "wren_halden", "text": "Professional column: Sera Kade has the fragment. She will annotate it with a smile. We are late to our own dock window. I do not grade rivals, but if I did, she would be 'efficiently unbearable.'", "tags": ["debrief", "sera_wins"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "lost_race"}, {"op": "set_flag", "flag": "ending_id", "value": "sera_wins"}], "choices": [{"id": "sera.inter", "text": "Interpersonal.", "intent": "proceed", "next": "debrief.ending_sera_inter"}], "faculty_interjections": [{"faculty": "Analysis", "text": "Delay invoice paid in cipher.", "weight": 1}]},
+    {"id": "debrief.ending_sera_inter", "speaker": "wren_halden", "text": "Interpersonal: you were busy being decent while she was busy being finished. Maris may respect the decency — she respects outcomes more. Do not confuse her keeping score with her keeping you. Rubric: moral velocity, operational last place.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "decent_last"}], "next": "debrief.close_sera"},
+    {"id": "debrief.close_sera", "speaker": "wren_halden", "text": "Next time, be decent and fast, or admit you chose a ranking. Dismissed. Practice your lower-third — Sera already practiced hers on you.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "next": null},
+
+    {"id": "debrief.ending_balanced", "speaker": "wren_halden", "text": "Professional column: fragment secured. Voss's Friday window is ours to spoil. Cover held. Analysts will be employed; Sera will be annoyed. That is the correct emotional weather for a service.", "tags": ["debrief", "balanced"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "good"}, {"op": "set_flag", "flag": "ending_id", "value": "balanced"}], "choices": [{"id": "bal.inter", "text": "Interpersonal.", "intent": "proceed", "next": "debrief.ending_balanced_inter"}]},
+    {"id": "debrief.ending_balanced_inter", "speaker": "wren_halden", "text": "Interpersonal: Taly still has a career because you spent minutes like a person. Maris noticed — not as a conquest, as a colleague who can split a problem without dumping the human half. She does not owe you affection for that. She may owe you a second conversation. Rubric: both ledgers breathing. Rare. Do not get addicted to rare.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "partner_shaped"}, {"op": "rel", "char": "wren_halden", "respect": 1}], "faculty_interjections": [{"faculty": "Idealism", "text": "Partner-shaped. Frame it. Don't wedding it.", "weight": 1}], "next": "debrief.close_balanced"},
+    {"id": "debrief.close_balanced", "speaker": "wren_halden", "text": "If Maris messages, tell me — secrets, not courtship. Dismissed. You may feel pride. Label it blood sugar and go home.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "next": null},
+
+    {"id": "debrief.ending_professional", "speaker": "wren_halden", "text": "Professional column: green. Fragment. Cover. Voss timed to the toast. I could almost clap. I will not. Clapping is for audiences; we are inventory.", "tags": ["debrief", "professional_win"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "excellent"}, {"op": "set_flag", "flag": "ending_id", "value": "professional_win"}], "choices": [{"id": "pro.inter", "text": "Interpersonal.", "intent": "proceed", "next": "debrief.ending_professional_inter"}]},
+    {"id": "debrief.ending_professional_inter", "speaker": "wren_halden", "text": "Interpersonal: you walked past Taly like weather with a badge. Maris will have the story by morning — not as romance failed, as a man who optimized the room and filed the people under noise. That is not an affection score. That is her closing a door. Rubric: spreadsheet with shoes. Mission loved you. Humans did not.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "cold"}, {"op": "rel", "char": "wren_halden", "respect": -1}], "faculty_interjections": [{"faculty": "Idealism", "text": "You optimized the wrong variable.", "weight": 2}], "next": "debrief.close_professional"},
+    {"id": "debrief.close_professional", "speaker": "wren_halden", "text": "Keep the fragment. Lose the habit of calling people downstream. Dismissed before I prescribe smiling drills.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "next": null},
+
+    {"id": "debrief.ending_human", "speaker": "wren_halden", "text": "Professional column: empty pocket, full conscience. Sera has the cipher. The dock window is her problem now — and therefore still ours, only more expensive. Failure is data. This data has a receipt from the moral department.", "tags": ["debrief", "human_cost"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "poor"}, {"op": "set_flag", "flag": "ending_id", "value": "human_cost"}], "choices": [{"id": "human.inter", "text": "Interpersonal.", "intent": "proceed", "next": "debrief.ending_human_inter"}]},
+    {"id": "debrief.ending_human_inter", "speaker": "wren_halden", "text": "Interpersonal: Maris kept the data of what you did for Taly. That is not a crush metric — that is a policy advisor filing evidence about who you are under pressure. She may never like you. She may still prefer you to the men who collect people. Rubric: logged as decent. Operationally irritating. Do not make a habit without telling me.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "decent"}, {"op": "rel", "char": "wren_halden", "trust": 1, "affection": 1}], "next": "debrief.close_human"},
+    {"id": "debrief.close_human", "speaker": "wren_halden", "text": "We will work the gap Sera opened. You will not apologize for the person you saved — apologize for the minutes, if you must. Dismissed.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "next": null},
+
+    {"id": "debrief.ending_connection", "speaker": "wren_halden", "text": "Professional column: uneven. Some intel, some restraint that cost spectacle. You did not audition for Voss's porcelain shelf. Cover likely held. Fragment status: contingent on what you actually pocketed while being a person.", "tags": ["debrief", "connection"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "uneven"}, {"op": "set_flag", "flag": "ending_id", "value": "connection"}], "choices": [{"id": "conn.inter", "text": "Interpersonal.", "intent": "proceed", "next": "debrief.ending_connection_inter"}]},
+    {"id": "debrief.ending_connection_inter", "speaker": "wren_halden", "text": "Interpersonal: Maris Quell offered another ninety seconds as a hypothesis, not a promise. She has Observatory work that does not revolve around your cover. You treated her like that was true — finally. Perceived authenticity up. She is still not an affection meter. Rubric: human-shaped. Partial credit. Do not spend it on flowers.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "human_shaped"}, {"op": "rel", "char": "wren_halden", "respect": 1}], "faculty_interjections": [{"faculty": "Empathy", "text": "Hypothesis. Hold it gently.", "weight": 1}], "next": "debrief.close_connection"},
+    {"id": "debrief.close_connection", "speaker": "wren_halden", "text": "If she messages, you tell me — because secrets are mission-critical, not because I am your chaperone. Dismissed. Keep the parts where you were a person.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "next": null},
+
+    {"id": "debrief.ending_mixed", "speaker": "wren_halden", "text": "Professional column: mixed. Enough to justify a report, not enough to justify pride. Heat, hints, half-wins. I've seen worse from men who smile with their whole face.", "tags": ["debrief", "mixed"], "effects": [{"op": "set_flag", "flag": "debrief_prof_grade", "value": "mixed"}, {"op": "set_flag", "flag": "ending_id", "value": "mixed"}], "choices": [{"id": "mixed.inter", "text": "Interpersonal.", "intent": "proceed", "next": "debrief.ending_mixed_inter"}]},
+    {"id": "debrief.ending_mixed_inter", "speaker": "wren_halden", "text": "Interpersonal: awkward, occasionally real, frequently wrong. Maris has incomplete data on you — which means she has not decided. Incomplete is not romance. Incomplete is unfinished surveillance with manners. Rubric: median spy weather. Honest, if unflattering.", "effects": [{"op": "set_flag", "flag": "debrief_inter_grade", "value": "incomplete"}], "next": "debrief.close_mixed"},
+    {"id": "debrief.close_mixed", "speaker": "wren_halden", "text": "Orth remains useful until he doesn't. Go home. Next time, pick a ledger and finish it — or finish both, if you insist on being difficult. Dismissed.", "tags": ["debrief", "ending", "end"], "effects": [{"op": "set_flag", "flag": "reception_debrief_complete", "value": true}, {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}], "next": null}
   ]
 }
