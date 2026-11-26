@@ -1,9 +1,21 @@
 {
   "id": "edrin_voss",
   "display_name": "Lord Edrin Voss",
-  "role": "Host",
-  "silhouette_notes": "Politically influential; collects people like porcelain.",
-  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
-  "motivations": ["Influence", "Interesting guests"],
+  "role": "host",
+  "silhouette_notes": "Politically influential; collects people like porcelain. Soft voice, hard seating chart. Cufflinks that cost more than your cover identity.",
+  "default_rel": {
+    "trust": 5,
+    "familiarity": 0,
+    "suspicion": 10,
+    "respect": 0,
+    "affection": 0,
+    "comfort": 0,
+    "perceived_authenticity": 30
+  },
+  "motivations": [
+    "Host a reception that looks effortless and is anything but",
+    "Broker quiet influence via guest adjacency",
+    "Keep the study annex's papers boring to everyone but the right people"
+  ],
   "portrait_key": "edrin_voss"
 }
