@@ -68,3 +68,10 @@ If Core renames keys, map 1:1; do not rewrite prose for renames without a migrat
 5. **Debrief**: always contrast `debrief_prof_grade` vs `debrief_inter_grade`.
 
 Validate JSON with QA tools when available; until then: every `next` id exists across packs; every `speaker` has a character file (or `narrator`).
+
+## Engine wiring (post-Core merge)
+
+- Preferred paths: `content/dialogue/reception/<graph_id>.json`
+- Start: New Game → `briefing` → navigate hub rooms → Talk (`reception_<loc>`) → Debrief
+- Effects allowlist: `set_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `location`, `beat`
+- Chapter: `content/chapters/the_reception.json` (alias `reception.json`)

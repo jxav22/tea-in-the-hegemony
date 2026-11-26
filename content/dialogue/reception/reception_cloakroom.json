@@ -1,0 +1,149 @@
+{
+  "id": "reception_cloakroom",
+  "start": "cloak.enter",
+  "nodes": [
+    {
+      "id": "cloak.enter",
+      "speaker": "narrator",
+      "text": "Cloakroom corridor: coats, tickets, and the soft violence of procedure.",
+      "tags": [
+        "location",
+        "cloakroom"
+      ],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "seen_cloakroom",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "c_maris",
+          "text": "Maris is here, adjusting an earring like it insulted her.",
+          "intent": "social",
+          "next": "cloakroom.detour",
+          "conditions": [
+            {
+              "flag": "met_maris",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "c_moth_casual",
+          "text": "Badge check. Eyes only.",
+          "intent": "comply",
+          "next": "cloak.moth_soft",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "cloak.moth_soft",
+      "speaker": "clerk_moth",
+      "text": "Badge visible. Acceptable. Do not rearrange coats. Coats have jurisdiction.",
+      "effects": [
+        {
+          "op": "rel",
+          "char": "clerk_moth",
+          "respect": 1
+        }
+      ],
+      "next": null
+    },
+    {
+      "id": "cloak.maris",
+      "speaker": "maris_quell",
+      "text": "I needed air that hadn't been approved by a seating chart. You're either considerate or strategically considerate. Both are rare. Don't make me late for my own patience.",
+      "tags": [
+        "cloakroom",
+        "maris_quell"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "cloakroom_with_maris",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 1
+        }
+      ],
+      "choices": [
+        {
+          "id": "cloak.next_study",
+          "text": "I won't. I have a stupid errand \u2014 then I'd like to continue this.",
+          "intent": "honest",
+          "next": null,
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": 3
+            },
+            {
+              "op": "location",
+              "id": "study"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_study_approach",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Idealism",
+          "text": "Tell her you'll come back \u2014 then do it.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "cloakroom.detour",
+      "speaker": "narrator",
+      "text": "Cloakroom corridor: coats, secrets, and Maris adjusting an earring like it insulted her.",
+      "tags": [
+        "cloakroom"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "location",
+          "id": "cloakroom"
+        }
+      ],
+      "choices": [
+        {
+          "id": "cloak.ask",
+          "text": "You looked like you needed a corridor more than a salon.",
+          "intent": "empathy",
+          "next": "cloak.maris",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 2
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "She's not a side quest. Still \u2014 the study clock ticks.",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

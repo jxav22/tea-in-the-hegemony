@@ -4,63 +4,146 @@
   "nodes": [
     {
       "id": "cloak.enter",
-      "speaker": "clerk_moth",
-      "text": "Badge visible. Coat ticket. No loitering. Violations are… discouraged with paperwork.",
-      "tags": ["location", "cloakroom"],
-      "effects": [{ "op": "set_flag", "flag": "seen_cloakroom", "value": true }],
-      "faculty_interjections": [
-        { "faculty": "Composure", "text": "Do not joke about badges. He will escalate.", "weight": 2 }
+      "speaker": "narrator",
+      "text": "Cloakroom corridor: coats, tickets, and the soft violence of procedure.",
+      "tags": [
+        "location",
+        "cloakroom"
+      ],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "seen_cloakroom",
+          "value": true
+        }
       ],
       "choices": [
         {
-          "id": "c_comply",
-          "text": "Present badge. Smile with eyes only.",
+          "id": "c_maris",
+          "text": "Maris is here, adjusting an earring like it insulted her.",
+          "intent": "social",
+          "next": "cloakroom.detour",
+          "conditions": [
+            {
+              "flag": "met_maris",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "c_moth_casual",
+          "text": "Badge check. Eyes only.",
           "intent": "comply",
-          "next": "cloak.ok",
-          "effects": [{ "op": "rel", "char": "clerk_moth", "respect": 1 }]
-        },
-        {
-          "id": "c_ask_key",
-          "text": "Ask about study annex access — politely, like a form.",
-          "intent": "tradecraft",
-          "next": "cloak.key",
-          "conditions": [{ "flag": "maris_hint_study", "op": "eq", "value": true }],
-          "effects": []
-        },
-        {
-          "id": "c_joke_badge",
-          "text": "Joke that the badge is shy.",
-          "intent": "humour",
-          "next": "cloak.angry",
+          "next": "cloak.moth_soft",
           "effects": []
         }
       ]
     },
     {
-      "id": "cloak.ok",
+      "id": "cloak.moth_soft",
       "speaker": "clerk_moth",
-      "text": "Acceptable. Do not touch coats that are not yours. That is theft and aesthetics.",
-      "next": null
-    },
-    {
-      "id": "cloak.key",
-      "speaker": "clerk_moth",
-      "text": "Study annex is for authorised quiet people. You may be quiet. Authorisation is a different religion. Bring a host signature or leave the furniture alone.",
+      "text": "Badge visible. Acceptable. Do not rearrange coats. Coats have jurisdiction.",
       "effects": [
-        { "op": "set_flag", "flag": "moth_refused_key", "value": true },
-        { "op": "memory", "id": "mem_moth_key", "summary": "Moth: study needs host signature.", "tags": ["cloakroom"] }
+        {
+          "op": "rel",
+          "char": "clerk_moth",
+          "respect": 1
+        }
       ],
       "next": null
     },
     {
-      "id": "cloak.angry",
-      "speaker": "clerk_moth",
-      "text": "Humour is not a credential. Heat noted. Metaphorically. Also on the incident log.",
-      "effects": [
-        { "op": "heat", "amount": 15 },
-        { "op": "rel", "char": "clerk_moth", "suspicion": 2 }
+      "id": "cloak.maris",
+      "speaker": "maris_quell",
+      "text": "I needed air that hadn't been approved by a seating chart. You're either considerate or strategically considerate. Both are rare. Don't make me late for my own patience.",
+      "tags": [
+        "cloakroom",
+        "maris_quell"
       ],
-      "next": null
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "cloakroom_with_maris",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 1
+        }
+      ],
+      "choices": [
+        {
+          "id": "cloak.next_study",
+          "text": "I won't. I have a stupid errand \u2014 then I'd like to continue this.",
+          "intent": "honest",
+          "next": null,
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": 3
+            },
+            {
+              "op": "location",
+              "id": "study"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_study_approach",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Idealism",
+          "text": "Tell her you'll come back \u2014 then do it.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "cloakroom.detour",
+      "speaker": "narrator",
+      "text": "Cloakroom corridor: coats, secrets, and Maris adjusting an earring like it insulted her.",
+      "tags": [
+        "cloakroom"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "location",
+          "id": "cloakroom"
+        }
+      ],
+      "choices": [
+        {
+          "id": "cloak.ask",
+          "text": "You looked like you needed a corridor more than a salon.",
+          "intent": "empathy",
+          "next": "cloak.maris",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 2
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "She's not a side quest. Still \u2014 the study clock ticks.",
+          "weight": 1
+        }
+      ]
     }
   ]
 }

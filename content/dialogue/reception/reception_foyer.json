@@ -1,6 +1,6 @@
 {
-  "id": "reception.foyer",
-  "chapter_id": "the_reception",
+  "id": "reception_foyer",
+  "start": "foyer.arrival",
   "nodes": [
     {
       "id": "foyer.arrival",
@@ -19,9 +19,8 @@
       ],
       "effects": [
         {
-          "op": "set_flag",
-          "flag": "location",
-          "value": "foyer"
+          "op": "location",
+          "id": "foyer"
         }
       ],
       "choices": [
@@ -128,6 +127,60 @@
       ]
     },
     {
+      "id": "foyer.moth_pass",
+      "speaker": "clerk_moth",
+      "text": "Orth. Matches. Proceed. Do not rearrange the seating cards. They are not suggestions.",
+      "tags": [
+        "foyer"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "entered_reception",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "foyer.pass.salon",
+          "text": "Head toward the salon \u2014 voices, glass, opportunity.",
+          "intent": "explore",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "salon"
+            },
+            {
+              "op": "location",
+              "id": "salon"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_salon_enter",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "foyer.pass.pim",
+          "text": "Someone is waving with both arms. That is either rescue or Pim.",
+          "intent": "social",
+          "next": "foyer.pim",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "You're in. Clock starts now.",
+          "weight": 1
+        }
+      ]
+    },
+    {
       "id": "foyer.moth_sideeye",
       "speaker": "clerk_moth",
       "text": "Coat check is a separate jurisdiction. Your joke has been noted in pencil. Pencil can become ink.",
@@ -162,52 +215,6 @@
       ]
     },
     {
-      "id": "foyer.moth_pass",
-      "speaker": "clerk_moth",
-      "text": "Orth. Matches. Proceed. Do not rearrange the seating cards. They are not suggestions.",
-      "tags": [
-        "foyer"
-      ],
-      "conditions": [],
-      "effects": [
-        {
-          "op": "set_flag",
-          "flag": "entered_reception",
-          "value": true
-        }
-      ],
-      "choices": [
-        {
-          "id": "foyer.pass.salon",
-          "text": "Head toward the salon \u2014 voices, glass, opportunity.",
-          "intent": "explore",
-          "next": "salon.enter",
-          "effects": [
-            {
-              "op": "set_flag",
-              "flag": "location",
-              "value": "salon"
-            }
-          ]
-        },
-        {
-          "id": "foyer.pass.pim",
-          "text": "Someone is waving with both arms. That is either rescue or Pim.",
-          "intent": "social",
-          "next": "foyer.pim",
-          "effects": []
-        }
-      ],
-      "next": null,
-      "faculty_interjections": [
-        {
-          "faculty": "Tradecraft",
-          "text": "You're in. Clock starts now.",
-          "weight": 1
-        }
-      ]
-    },
-    {
       "id": "foyer.pim",
       "speaker": "pim_orel",
       "text": "Orth! You look like a man who has rehearsed his first sentence seventeen times and still hates it. Come on \u2014 Maris is in the salon pretending not to notice arrivals, which means she has noticed all of them.",
@@ -233,11 +240,20 @@
           "id": "foyer.pim.go",
           "text": "Lead on before I invent a seventeenth draft.",
           "intent": "accept",
-          "next": "salon.enter",
+          "next": null,
           "effects": [
             {
               "op": "set_flag",
               "flag": "pim_escort",
+              "value": true
+            },
+            {
+              "op": "location",
+              "id": "salon"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_salon_enter",
               "value": true
             }
           ]
@@ -246,12 +262,21 @@
           "id": "foyer.pim.delay",
           "text": "Give me thirty seconds to become someone who arrives.",
           "intent": "stall",
-          "next": "salon.enter",
+          "next": null,
           "effects": [
             {
               "op": "rel",
               "char": "pim_orel",
               "comfort": 1
+            },
+            {
+              "op": "location",
+              "id": "salon"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_salon_enter",
+              "value": true
             }
           ]
         }

@@ -1,18 +1,23 @@
 {
   "chapter_id": "the_reception",
-  "description": "Manifest of Reception dialogue packs for loader / QA validation.",
+  "description": "Reception dialogue manifest. Boot/hub loads graph ids via DialogueLoader (reception/<id>.json preferred).",
   "packs": [
-    {"file": "briefing.json", "start": "briefing.intro", "beats": ["briefing"]},
-    {"file": "foyer.json", "start": "foyer.arrival", "beats": ["foyer_arrival"]},
-    {"file": "salon_intro.json", "start": "salon.enter", "beats": ["awkward_intro"]},
-    {"file": "salon_genuine.json", "start": "salon.genuine_offer", "beats": ["genuine_talk"]},
-    {"file": "impress_backfire.json", "start": "salon.impress_hook", "beats": ["impress_attempt"]},
-    {"file": "political.json", "start": "political.hook", "beats": ["political_overhear"]},
-    {"file": "study_cover.json", "start": "study.approach", "beats": ["study_extract", "cover_inconsistency"]},
-    {"file": "sacrifice.json", "start": "sacrifice.hook", "beats": ["sacrifice_choice"]},
-    {"file": "fragment_race.json", "start": "race.check", "beats": ["fragment_race"]},
-    {"file": "finale.json", "start": "finale.router", "beats": ["finale"]},
-    {"file": "debrief.json", "start": "debrief.intro", "beats": ["debrief"]}
+    {"file": "briefing.json", "id": "briefing", "start": "briefing.intro", "beats": ["briefing"]},
+    {"file": "reception_foyer.json", "id": "reception_foyer", "start": "foyer.arrival", "beats": ["foyer_arrival"]},
+    {"file": "reception_salon.json", "id": "reception_salon", "start": "salon.enter", "beats": ["awkward_intro", "genuine_talk", "impress_attempt"]},
+    {"file": "reception_terrace.json", "id": "reception_terrace", "start": "terrace.enter", "beats": ["political_overhear", "sacrifice_choice", "fragment_race", "finale"]},
+    {"file": "reception_study.json", "id": "reception_study", "start": "study.enter", "beats": ["study_extract", "cover_inconsistency"]},
+    {"file": "reception_cloakroom.json", "id": "reception_cloakroom", "start": "cloak.enter", "beats": ["cloakroom", "moth"]},
+    {"file": "debrief.json", "id": "debrief", "start": "debrief.intro", "beats": ["debrief"]}
   ],
-  "graph_notes": "Linear beat spine with branching insides; cross-pack links via choice next ids (e.g. briefing.exit -> foyer.arrival). race.check and finale.branch are condition-routed; engine should hide system choices and auto-pick first matching condition, using ending_priority from chapter JSON as tie-break."
+  "load_order_note": "DialogueLoader: content/dialogue/reception/<id>.json then content/dialogue/<id>.json. Hub Talk uses reception_<location>.",
+  "ending_ids": [
+    "cover_burned",
+    "sera_wins",
+    "balanced",
+    "professional_win",
+    "human_cost",
+    "connection",
+    "mixed"
+  ]
 }

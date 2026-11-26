@@ -5,90 +5,41 @@
   "start_node": "briefing.intro",
   "start_location": "safehouse_briefing",
   "locations": [
-    {
-      "id": "safehouse_briefing",
-      "display_name": "Safehouse",
-      "tags": [
-        "briefing"
-      ]
-    },
-    {
-      "id": "foyer",
-      "display_name": "Voss House Foyer",
-      "tags": [
-        "public"
-      ]
-    },
-    {
-      "id": "salon",
-      "display_name": "Salon",
-      "tags": [
-        "public",
-        "social"
-      ]
-    },
-    {
-      "id": "terrace",
-      "display_name": "Terrace",
-      "tags": [
-        "semi_private"
-      ]
-    },
-    {
-      "id": "study_annex",
-      "display_name": "Study Annex",
-      "tags": [
-        "restricted"
-      ]
-    },
-    {
-      "id": "cloakroom",
-      "display_name": "Cloakroom Corridor",
-      "tags": [
-        "semi_private"
-      ]
-    },
-    {
-      "id": "safehouse_debrief",
-      "display_name": "Safehouse \u2014 Debrief",
-      "tags": [
-        "debrief"
-      ]
-    }
+    "foyer",
+    "salon",
+    "terrace",
+    "study",
+    "cloakroom"
   ],
   "objectives": [
     {
-      "id": "obj_contact_maris",
-      "label": "Contact Maris Quell",
+      "id": "contact_maris",
+      "label": "Make contact with Maris Quell",
       "flag_done": "met_maris"
     },
     {
-      "id": "obj_identify_voss",
-      "label": "Identify Voss's interest in east-dock schedules",
+      "id": "identify_voss",
+      "label": "Identify Lord Edrin Voss",
       "flag_done": "obj_identify_voss_done"
     },
     {
-      "id": "obj_cipher_fragment",
-      "label": "Obtain guest-list cipher / shipping discrepancy fragment",
-      "flag_done": "obj_cipher_fragment_done"
+      "id": "obtain_fragment",
+      "label": "Obtain the shipping discrepancy fragment",
+      "flag_done": "got_fragment"
     },
     {
-      "id": "obj_maintain_cover",
+      "id": "maintain_cover",
       "label": "Maintain cover as Cassian Orth",
       "flag_fail": "cover_compromised"
     }
   ],
   "dialogue_files": [
     "content/dialogue/reception/briefing.json",
-    "content/dialogue/reception/foyer.json",
-    "content/dialogue/reception/salon_intro.json",
-    "content/dialogue/reception/salon_genuine.json",
-    "content/dialogue/reception/impress_backfire.json",
-    "content/dialogue/reception/political.json",
-    "content/dialogue/reception/study_cover.json",
-    "content/dialogue/reception/sacrifice.json",
-    "content/dialogue/reception/fragment_race.json",
-    "content/dialogue/reception/finale.json",
+    "content/dialogue/reception/reception_foyer.json",
+    "content/dialogue/reception/reception_salon.json",
+    "content/dialogue/reception/reception_terrace.json",
+    "content/dialogue/reception/reception_study.json",
+    "content/dialogue/reception/reception_cloakroom.json",
     "content/dialogue/reception/debrief.json"
   ],
   "beat_order": [
@@ -106,11 +57,11 @@
     "debrief"
   ],
   "ending_ids": [
-    "professional_win",
-    "balanced",
-    "human_cost",
     "cover_burned",
     "sera_wins",
+    "balanced",
+    "professional_win",
+    "human_cost",
     "connection",
     "mixed"
   ],
@@ -154,13 +105,21 @@
     "chapter_complete": false
   },
   "assumptions": [
-    "Dialogue loader merges all nodes from dialogue_files by id.",
-    "Choice conditions use flag op eq/neq; first matching ending in ending_priority wins when evaluating finale.branch.",
-    "If Core uses TRES or different key names, map speaker/text/choices/next/effects 1:1 from this schema.",
-    "speaker 'narrator' and 'cassian_vale' are valid; player lines may be choice text only.",
-    "rel effects use char id + dimension delta; unknown dimensions ignored safely.",
-    "add_memory effects push to save.memories[] per sprint contract.",
-    "Location changes use set_flag flag=location (QA effect allowlist has no set_location).",
-    "Terminal debrief.close uses op end + ending tag."
+    "DialogueLoader prefers content/dialogue/reception/<id>.json over flat content/dialogue/<id>.json.",
+    "Boot/hub starts briefing then reception_<location>; debrief via menu.",
+    "Effects: set_flag, add_flag, toggle_flag, rel, memory, heat, objective, item, beat, location.",
+    "got_fragment twin of has_cipher_fragment for Core HUD.",
+    "Cross-room flow uses location effects + player nav / Talk here; graphs are self-contained."
+  ],
+  "start_dialogue": "briefing",
+  "characters": [
+    "cassian_vale",
+    "maris_quell",
+    "wren_halden",
+    "edrin_voss",
+    "taly_renn",
+    "sera_kade",
+    "pim_orel",
+    "clerk_moth"
   ]
 }

@@ -1,0 +1,662 @@
+{
+  "id": "reception_study",
+  "start": "study.enter",
+  "nodes": [
+    {
+      "id": "study.enter",
+      "speaker": "narrator",
+      "text": "Study annex: wood polish, low lamp, a desk that has never met a commoner.",
+      "tags": [
+        "location",
+        "study"
+      ],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "seen_study",
+          "value": true
+        }
+      ],
+      "next": "study.approach"
+    },
+    {
+      "id": "cover.moth_ambush",
+      "speaker": "clerk_moth",
+      "text": "Orth. Invitation serial versus seating card. Discrepancy. You will explain in complete sentences without metaphors, humor, or logistics poetry.",
+      "tags": [
+        "cover",
+        "clerk_moth",
+        "inconsistency",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "moth_confrontation",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "clerk_moth",
+          "suspicion": 3
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.moth.cite",
+          "text": "Reprint batch B-17. Liaison office. I can cite the memo number.",
+          "intent": "tradecraft",
+          "next": "cover.moth_pass",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "cover_held",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "clerk_moth",
+              "respect": 2
+            },
+            {
+              "op": "rel",
+              "char": "clerk_moth",
+              "suspicion": -2
+            }
+          ]
+        },
+        {
+          "id": "cover.moth.pim",
+          "text": "Pim Orel can vouch \u2014 he seated me by the ferns.",
+          "intent": "social",
+          "next": "cover.moth_pim",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "called_pim_vouch",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "cover.moth.break",
+          "text": "The card is wrong. Re-laminate reality.",
+          "intent": "aggression",
+          "next": "cover.moth_fail",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "cover_strained",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "clerk_moth",
+              "suspicion": 3
+            },
+            {
+              "op": "set_flag",
+              "flag": "heat_high",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Memo numbers calm bureaucrats. Invent precisely.",
+          "weight": 2
+        },
+        {
+          "faculty": "Improvisation",
+          "text": "Pim will vouch loudly. Loud is a kind of cover.",
+          "weight": 1
+        },
+        {
+          "faculty": "Composure",
+          "text": "Do not tell Moth to re-laminate reality. That is how wars start.",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "cover.moth_fail",
+      "speaker": "clerk_moth",
+      "text": "Ink. You are inked. Security will smile at you soon. Until then \u2014 stay visible, stay boring, stay away from annex doors.",
+      "tags": [
+        "cover",
+        "heat"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "cover_compromised",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "annex_watched",
+          "value": true
+        },
+        {
+          "op": "heat",
+          "amount": 25
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.fail.next",
+          "text": "Visible. Boring. Understood.",
+          "intent": "comply",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_sacrifice_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Heat high. Mission still possible. Dignity optional.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "cover.moth_pass",
+      "speaker": "clerk_moth",
+      "text": "B-17 is... plausible. Plausible is not vindicated. You are provisional. Do not make me upgrade you to ink.",
+      "tags": [
+        "cover",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "moth_provisional",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.pass.next",
+          "text": "Provisional accepted.",
+          "intent": "ack",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_sacrifice_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Cover held. Heat medium. Continue.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "cover.moth_pim",
+      "speaker": "pim_orel",
+      "text": "I vouch! He is Orth, he is dull in the correct way, and the ferns love him. Clerk Moth \u2014 if you eject him, eject me, and then who will explain canap\u00e9s to Voss?",
+      "tags": [
+        "cover",
+        "pim_orel",
+        "comedy"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "cover_held",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "pim_orel",
+          "trust": 2
+        },
+        {
+          "op": "rel",
+          "char": "clerk_moth",
+          "suspicion": -1
+        },
+        {
+          "op": "set_flag",
+          "flag": "pim_risked_for_you",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.pim.next",
+          "text": "Thank you. Dullness is my ministry.",
+          "intent": "gratitude",
+          "next": null,
+          "effects": [
+            {
+              "op": "rel",
+              "char": "pim_orel",
+              "affection": 1
+            },
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_sacrifice_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Empathy",
+          "text": "He risked lamination for you. Remember.",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "cover.sera_bargain",
+      "speaker": "sera_kade",
+      "text": "Fair is adorable. I'll delay Moth by one corridor. You owe me a non-idiotic favor later \u2014 or the fragment, if you're slow.",
+      "tags": [
+        "cover",
+        "sera_kade"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "sera_delayed_moth",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "owes_sera",
+          "value": true
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.bargain.next",
+          "text": "One corridor. I'll be faster than idiotic.",
+          "intent": "accept",
+          "next": null,
+          "effects": [
+            {
+              "op": "location",
+              "id": "terrace"
+            },
+            {
+              "op": "set_flag",
+              "flag": "resume_sacrifice_hook",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Analysis",
+          "text": "Debt to Sera is expensive. Still cheaper than Moth.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "cover.sera_catch",
+      "speaker": "sera_kade",
+      "text": "Orth. Alone with furniture. Either you're shy or employed. Badge says liaison \u2014 but your invitation serial doesn't match the seating card Clerk Moth is currently worshipping. Curious arithmetic.",
+      "tags": [
+        "cover",
+        "sera_kade",
+        "inconsistency"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "cover_inconsistency_raised",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "sera_kade",
+          "suspicion": 2
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.sera.bluff",
+          "text": "Reprint error. Logistics specializes in those.",
+          "intent": "bluff",
+          "next": "cover.moth_ambush",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "bluffed_sera",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "cover.sera.bargain",
+          "text": "You want the fragment race fair? Stop feeding Moth.",
+          "intent": "bargain",
+          "next": "cover.sera_bargain",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "sera_kade",
+              "respect": 1
+            }
+          ]
+        },
+        {
+          "id": "cover.sera.truthish",
+          "text": "I'm exactly as official as you are. Shall we compare footnotes?",
+          "intent": "mirror",
+          "next": "cover.sera_mirror",
+          "effects": [
+            {
+              "op": "rel",
+              "char": "sera_kade",
+              "familiarity": 1
+            },
+            {
+              "op": "set_flag",
+              "flag": "acknowledged_rivalry",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "She manufactured a serial mismatch or found a real one. Assume both.",
+          "weight": 2
+        },
+        {
+          "faculty": "Improvisation",
+          "text": "Mirror her. Rival recognitions can buy silence.",
+          "weight": 1
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "Moth is coming. You can hear the lamination.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "cover.sera_mirror",
+      "speaker": "sera_kade",
+      "text": "Footnotes. Dangerous hobby. Keep your arithmetic pretty \u2014 I'll keep mine. May the least obvious win.",
+      "tags": [
+        "cover",
+        "sera_kade"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "sera_truce_soft",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "sera_kade",
+          "respect": 2
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover.mirror.next",
+          "text": "May the least laminated win.",
+          "intent": "wry",
+          "next": "cover.moth_ambush",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "Truce is not friendship. Move.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "study.approach",
+      "speaker": "narrator",
+      "text": "Study annex: wood polish, low lamp, a desk that has never met a commoner. The guest-list folio sits like a dare.",
+      "tags": [
+        "study"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "location",
+          "id": "study_annex"
+        }
+      ],
+      "choices": [
+        {
+          "id": "study.take",
+          "text": "Extract the cipher fragment. Fast, clean.",
+          "intent": "mission",
+          "next": "study.extract",
+          "effects": []
+        },
+        {
+          "id": "study.photo",
+          "text": "Photograph the discrepancy page; leave paper undisturbed.",
+          "intent": "careful",
+          "next": "study.extract_soft",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "soft_extract",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "study.abort",
+          "text": "Footsteps. Abort and blend.",
+          "intent": "abort",
+          "next": "cover.moth_ambush",
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "study_aborted",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Toast clock ticking. Soft extract preferred if you value exits.",
+          "weight": 1
+        },
+        {
+          "faculty": "Analysis",
+          "text": "Folio stamp matches Voss's aide. This is the fragment.",
+          "weight": 1
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "If you get caught, Wren will invent a new romance protocol as punishment.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "study.extract",
+      "speaker": "narrator",
+      "text": "The cipher fragment slides free \u2014 guest names that aren't names, dock times that don't match the public schedule. Your pulse files a complaint.",
+      "tags": [
+        "study",
+        "intel"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "has_cipher_fragment",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_cipher_fragment_done",
+          "value": true
+        },
+        {
+          "op": "memory",
+          "id": "mem_got_cipher",
+          "summary": "Obtained guest-list cipher fragment linking false names to dock times.",
+          "salience": 6,
+          "tags": [
+            "intel",
+            "cipher"
+          ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "got_fragment",
+          "value": true
+        },
+        {
+          "op": "objective",
+          "id": "obtain_fragment",
+          "status": "complete",
+          "label": "Obtain the shipping discrepancy fragment"
+        },
+        {
+          "op": "item",
+          "id": "shipping_discrepancy",
+          "meta": {
+            "label": "Guest-list cipher / shipping discrepancy"
+          }
+        }
+      ],
+      "choices": [],
+      "next": "cover.sera_catch",
+      "faculty_interjections": [
+        {
+          "faculty": "Composure",
+          "text": "Pocket it. Face blank. Become logistics.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "study.extract_soft",
+      "speaker": "narrator",
+      "text": "One frame, no shuffle. The discrepancy lives in your device now; the folio looks innocent enough to pass a Moth inspection.",
+      "tags": [
+        "study",
+        "intel"
+      ],
+      "conditions": [],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "has_cipher_fragment",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "obj_cipher_fragment_done",
+          "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "folio_undisturbed",
+          "value": true
+        },
+        {
+          "op": "memory",
+          "id": "mem_got_cipher_soft",
+          "summary": "Photographed cipher/discrepancy without moving the folio.",
+          "salience": 6,
+          "tags": [
+            "intel",
+            "cipher"
+          ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "got_fragment",
+          "value": true
+        },
+        {
+          "op": "objective",
+          "id": "obtain_fragment",
+          "status": "complete",
+          "label": "Obtain the shipping discrepancy fragment"
+        },
+        {
+          "op": "item",
+          "id": "shipping_discrepancy",
+          "meta": {
+            "label": "Guest-list cipher / shipping discrepancy"
+          }
+        }
+      ],
+      "choices": [
+        {
+          "id": "study.soft.next",
+          "text": "Exit toward the cloakroom corridor.",
+          "intent": "exit",
+          "next": "cover.sera_catch",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {
+          "faculty": "Tradecraft",
+          "text": "Good. Evidence without theft theater.",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}
