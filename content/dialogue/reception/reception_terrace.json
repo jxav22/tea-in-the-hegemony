@@ -74,7 +74,7 @@
     {
       "id": "ending.balanced",
       "speaker": "narrator",
-      "text": "Fragment secured. Taly still has a career. After the toast Maris finds you, dry as ever: 'You managed both kinds of logistics. Don't get addicted \u2014 Observatory still has a fight that isn't your redemption arc.' It isn't praise. It might be a working relationship.",
+      "text": "Fragment secured. Taly keeps her career. Maris, after the toast: 'You split the problem without dumping the person. Observatory could use that. Don't turn it into a personality.' She is already walking toward someone else who needs numbers.",
       "tags": [
         "balanced",
         "end",
@@ -116,7 +116,7 @@
     {
       "id": "ending.connection",
       "speaker": "maris_quell",
-      "text": "You didn't perform for the room. You talked to me \u2014 and I still have a dock fight that doesn't need an audience. Whatever else you came for, and I suspect there is an else, I'd take another ninety seconds. Not a promise. A hypothesis I am willing to test between meetings.",
+      "text": "You didn't audition for the room. You listened while I still had a fight to win. After the toast I'm publishing whether Voss likes it or not. If you want another ninety seconds, find me between the fallout meetings. Hypothesis. Not a promise. Not your mission's property.",
       "tags": [
         "connection",
         "end",
@@ -307,7 +307,7 @@
     {
       "id": "ending.human_cost_maris",
       "speaker": "maris_quell",
-      "text": "Taly told me. You chose a person over a win. I don't know your real brief \u2014 I know what you did under pressure. That's data I'll keep for Observatory reasons and for my own. Don't ask me to convert it into a feeling on demand.",
+      "text": "Taly told me. You chose her over a win. I don't need your real name to keep that. Observatory keeps evidence on people under pressure. So do I. Don't ask me to translate it into softness on demand.",
       "tags": [
         "end",
         "ending",
@@ -349,7 +349,7 @@
     {
       "id": "ending.professional_win",
       "speaker": "narrator",
-      "text": "Fragment secured. Cover holds. The toast tastes like metal and victory. Across the room Maris does not look for you; she is mid-argument with someone about opacity, and you have made yourself irrelevant to it. File that under success if you can stand the filing.",
+      "text": "Fragment. Cover. Toast like metal. Maris does not look for you \u2014 she is correcting a deputy about opacity timelines. You won the evening she was not starring in.",
       "tags": [
         "end",
         "ending",
@@ -562,7 +562,7 @@
     {
       "id": "finale.router",
       "speaker": "narrator",
-      "text": "Three minutes to the toast. The evening stops being potential and becomes a record.",
+      "text": "Three minutes to the toast. The night hardens into a result.",
       "tags": [
         "finale",
         "router"
@@ -814,7 +814,7 @@
     {
       "id": "political.pim_assist",
       "speaker": "pim_orel",
-      "text": "Lord Voss! Have you heard my theory that canap\u00e9s are soft power with pastry? No? Excellent \u2014 walk with me while I ruin two reputations and one tray.",
+      "text": "Lord Voss! You look underserved by conversation. Come \u2014 I'll explain why your canap\u00e9 budget is a foreign policy and Orth here will look scholarly about freight until you forget I exist.",
       "tags": [
         "political",
         "pim_orel",
@@ -1027,10 +1027,9 @@
       "choices": [
         {
           "id": "race.held.next",
-          "text": "Continue to the toast.",
+          "text": "To the toast.",
           "intent": "proceed",
-          "next": "finale.router",
-          "effects": []
+          "next": "finale.router"
         }
       ],
       "next": null,
@@ -1054,10 +1053,9 @@
       "choices": [
         {
           "id": "race.none.next",
-          "text": "Continue to the toast.",
+          "text": "To the toast.",
           "intent": "proceed",
-          "next": "finale.router",
-          "effects": []
+          "next": "finale.router"
         }
       ],
       "next": null,
@@ -1102,10 +1100,9 @@
       "choices": [
         {
           "id": "race.stole.next",
-          "text": "Continue to the toast.",
+          "text": "To the toast. Empty-handed.",
           "intent": "proceed",
-          "next": "finale.router",
-          "effects": []
+          "next": "finale.router"
         }
       ],
       "next": null,
@@ -1125,7 +1122,7 @@
     {
       "id": "sacrifice.abandon",
       "speaker": "narrator",
-      "text": "You pass like a professional weather system. Behind you, the fixer's voice sharpens. Ahead, the fragment path stays clear \u2014 clearer than your stomach.",
+      "text": "You pass. Professional weather. Behind you the fixer's voice sharpens. Ahead the annex stays clear. Your stomach disagrees with the briefing.",
       "tags": [
         "sacrifice"
       ],
@@ -1173,7 +1170,7 @@
     {
       "id": "sacrifice.help_aftermath",
       "speaker": "taly_renn",
-      "text": "You just volunteered for paperwork hell. Either you're decent or running a long con so baroque I almost respect it. Maris \u2014 your liaison has dimensions. Annoying ones.",
+      "text": "Paperwork hell, volunteered. Decent or baroque \u2014 undecided. Maris, he just spent mission-shaped minutes on me. Decide what that costs him later. I've decided what it costs the fixer.",
       "tags": [
         "sacrifice",
         "taly_renn"
@@ -1199,8 +1196,8 @@
       "choices": [
         {
           "id": "sacrifice.help.next",
-          "text": "Dimensions are accidental. I should go be late for something important.",
-          "intent": "humble",
+          "text": "I have to move. Before the toast eats the annex.",
+          "intent": "urgent",
           "next": "race.check",
           "effects": [
             {
@@ -1228,7 +1225,7 @@
     {
       "id": "sacrifice.help_taly",
       "speaker": "cassian_vale",
-      "text": "The remark was mine \u2014 misheard, misfiled. I was explaining freight variance and used an ugly metaphor. Log it against Orth, not Renn.",
+      "text": "The remark was mine. Misheard. I was talking freight variance and used a metaphor that should have stayed in a memo. Log it on Orth. Leave Renn out of the minutes.",
       "tags": [
         "sacrifice"
       ],
@@ -1298,7 +1295,7 @@
       "choices": [
         {
           "id": "sacrifice.help",
-          "text": "Intervene. Burn time, maybe heat, maybe the clean exit with the fragment.",
+          "text": "Take the blame. Burn the clean minute.",
           "intent": "idealism",
           "next": "sacrifice.help_taly",
           "effects": [
@@ -1316,7 +1313,7 @@
         },
         {
           "id": "sacrifice.mission",
-          "text": "Keep moving. Fragment first. People survive gossip.",
+          "text": "Keep walking. Fragment over gossip.",
           "intent": "mission",
           "next": "sacrifice.abandon",
           "effects": [
@@ -1333,18 +1330,14 @@
             {
               "op": "rel",
               "char": "maris_quell",
-              "respect": -2
-            },
-            {
-              "op": "rel",
-              "char": "maris_quell",
+              "respect": -2,
               "affection": -1
             }
           ]
         },
         {
           "id": "sacrifice.half",
-          "text": "Signal Maris \u2014 she can extract Taly while you still move.",
+          "text": "Catch Maris's eye \u2014 she handles Taly, you keep moving.",
           "intent": "split",
           "next": "sacrifice.split",
           "effects": [
@@ -1393,7 +1386,7 @@
     {
       "id": "sacrifice.split",
       "speaker": "maris_quell",
-      "text": "I see it. Go. I'll take Taly \u2014 not as your errand, as my friend. Later you'll explain why you trusted me with the human half of your evening instead of treating me like a dead drop with better posture.",
+      "text": "I see her. Go. Taly's mine \u2014 because she's mine, not because you outsourced guilt. Afterward you explain why you thought I was safe with the human half. Wrong answer gets you filed under operator.",
       "tags": [
         "sacrifice",
         "maris_quell"
@@ -1439,14 +1432,16 @@
       "choices": [
         {
           "id": "sacrifice.split.next",
-          "text": "Because the human part was never optional.",
-          "intent": "warm",
+          "text": "Because you'd do it better than I would, and she'd trust you.",
+          "intent": "honest",
           "next": "race.check",
           "effects": [
             {
               "op": "rel",
               "char": "maris_quell",
-              "affection": 2
+              "affection": 1,
+              "respect": 2,
+              "trust": 1
             }
           ]
         }

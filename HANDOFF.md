@@ -164,6 +164,11 @@ See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `b
 - Cut generic finale/study filler lines.
 
 
+### Critical pass (`cursor/reception-critical-pass-c9ed`)
+
+- Cut unfunny protocol/list comedy; Maris scenes tied to dock opacity fight.
+- Cosmetic quip-choices removed or given stakes; sacrifice/endings tightened.
+
 ## Agent C — Systems
 
 **Branch:** `cursor/social-espionage-systems-b2e0`  

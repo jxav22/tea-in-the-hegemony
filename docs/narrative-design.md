@@ -92,3 +92,7 @@ Debrief routes on `ending_id` (and twin flags) into seven distinct Wren rubrics:
 
 Maris is scored as an independent actor (Observatory agenda, risk assessment, hypothesis) — never as an affection meter.
 
+## Critical pass (`cursor/reception-critical-pass-c9ed`)
+
+Killed listicle romance-protocol comedy and TEU gag. Maris beats now orbit her opacity fight / toast strategy. Choices that only quipped into the same node were replaced with ally/work/retreat stakes or trimmed exits. Sacrifice and ending lines sharpened; cosmetic continues de-quipped.
+

@@ -397,7 +397,7 @@
     {
       "id": "cloak.maris",
       "speaker": "maris_quell",
-      "text": "I needed air that hadn't been approved by a seating chart. You're either considerate or strategically considerate. Both are rare. Don't make me late for my own patience.",
+      "text": "I needed air the seating chart hadn't approved. You're either considerate or strategically considerate. I don't have time to sort it \u2014 I have a toast to survive and a schedule to publish after. Don't make me late for my own patience.",
       "tags": [
         "cloakroom",
         "maris_quell"
@@ -417,7 +417,7 @@
       "choices": [
         {
           "id": "cloak.next_study",
-          "text": "I won't. I have a stupid errand \u2014 then I'd like to continue this.",
+          "text": "Stupid errand. Then I find you \u2014 if you still want the hypothesis.",
           "intent": "honest",
           "next": null,
           "effects": [
@@ -439,7 +439,7 @@
         },
         {
           "id": "cloak.stay",
-          "text": "The errand can wait sixty seconds. What are you actually escaping?",
+          "text": "What are you escaping that the salon can't fix?",
           "intent": "curious",
           "next": "cloak.maris_more",
           "effects": [
@@ -447,7 +447,7 @@
               "op": "rel",
               "char": "maris_quell",
               "comfort": 2,
-              "affection": 1
+              "respect": 1
             }
           ]
         }
@@ -468,7 +468,7 @@
     {
       "id": "cloak.maris_more",
       "speaker": "maris_quell",
-      "text": "Voss collects people. Observatory collects outcomes. Tonight I'm refusing both hobbies. If you're Orth the liaison, fine. If you're someone who notices corridors \u2014 rarer. I have a opacity fight after the toast that doesn't need a date. Don't make me regret the hypothesis.",
+      "text": "Voss collects people. Observatory collects outcomes. I'm refusing both hobbies tonight. If you're Orth, fine. If you notice corridors \u2014 rarer. My opacity fight doesn't need a date. Don't make me regret the hypothesis.",
       "effects": [
         {
           "op": "set_flag",
