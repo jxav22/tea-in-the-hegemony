@@ -1,26 +1,39 @@
-# HANDOFF — Tea in the Hegemony (Core Engine)
+# HANDOFF — Tea in the Hegemony
 
-**Owner:** Agent A (Core)  
 **Godot:** 4.3.stable | renderer: `gl_compatibility` | typed GDScript  
 **Repo:** https://github.com/jxav22/tea-in-the-hegemony  
-**Sprint start:** 2026-11-26T15:38:54Z
+**Sprint start:** 2026-11-26T15:38:54Z  
+**Main stack:** Core #3 · Presentation #4/#6/#9 · Narrative #2/#7/#10 · Systems #5/#8 · QA #1/#11
 
 ## How to run
 
 ```bash
-# Editor / play
-godot --path .          # or ./.bin/godot --path .
-
-# Headless verification
-./tools/run_tests.sh
-# equivalent:
-./.bin/godot --headless -s res://tests/core/test_dialogue_runner.gd
-./.bin/godot --headless --path . res://scenes/main/boot.tscn
+godot --path .                                 # or ./.bin/godot --path .
+godot --path . res://scenes/ui/ui_showcase.tscn  # UI-only demo
 ```
 
-Main scene: `res://scenes/main/boot.tscn`
+Main scene: `res://scenes/main/boot.tscn` (TitleScreen → GameHUD).
 
-**Playable now:** New Game → Wren briefing (choices) → soft-arrive foyer → navigate Reception rooms (foyer / salon / terrace / study / cloakroom) via nav buttons → talk graphs → debrief endings → quick save/load slot 1.
+### How to play
+
+1. **New Game** → Wren briefing.
+2. Nav bar: rooms (foyer / salon / terrace / study / cloakroom) + **Talk** / **Debrief** / dossier / notebook.
+3. Goals: contact Maris, identify Voss, extract fragment, keep cover; endings via terrace finale routers.
+4. Esc menu save/load (UI slots 0–4 → SaveService 1–5). Hotkeys: `H` history, `N` notebook, `Space` advance, `1–9` choices.
+
+Endings: `cover_burned`, `sera_wins`, `balanced`, `professional_win`, `human_cost`, `connection`, `mixed`.
+
+### Verify
+
+```bash
+./tools/run_tests.sh
+./.bin/godot --headless --path . res://tests/core/test_runner.tscn
+./.bin/godot --headless --path . res://scenes/main/boot.tscn   # briefing → foyer → debrief
+QA_SKIP_GODOT=1 python3 -m unittest tests.validation.test_validators -v
+python3 tools/validate_narrative.py --json
+python3 tools/simulate_strategies.py --json
+python3 scripts/espionage/simulate_reception_paths.py
+```
 
 ## Architecture
 
@@ -55,14 +68,16 @@ See `content/schemas/dialogue_node.schema.json` and sprint contracts. Graph file
 
 **Load order for `DialogueRunner.start(id)`:**  
 `content/dialogue/reception/<id>.json` → `content/dialogue/<id>.json` → recursive basename search.  
-Chapter manifests: `content/chapters/the_reception.json` preferred, else `reception.json`.
+Chapter: `the_reception.json` (alias `reception`). Hub Talk uses `reception_<location>`.
 
-**Effects:** `set_flag`, `add_flag`, `toggle_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `beat`, `location` (soft — updates `GameState.current_location` without tearing down UI).  
-**Systems extensions:** `cover`, `evidence`, `knowledge` (Agent C — routed via `GameState.systems` / EffectExecutor).
+**Router nodes:** If every authored choice text starts with `[`, engine auto-picks first visible match (prefers chapter `ending_priority`); falls back to `ending.default_mixed` when present.
 
-**Conditions:** `{flag, op, value}` plus `{all:[…]}` / `{any:[…]}`. Systems also accepts rel/memory/cover/evidence/objective condition kinds via `GameState.systems.check_condition`.
+**Effects:** `set_flag`, `add_flag`, `toggle_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `beat`, `location` (soft).  
+**Systems:** `cover`, `evidence`, `knowledge` via `GameState.systems`. Aliases: `add_memory`→`memory`, `set_location`→`location`.
 
-**Extra APIs:** `CharacterRegistry`, `RelationshipQuery`, `CoverAPI`, `DialogueOverlay` (`scenes/main/dialogue_overlay.tscn`) for Agent D.
+**Conditions:** `{flag, op, value}` plus `{all:[…]}` / `{any:[…]}`.
+
+**APIs:** `CharacterRegistry`, `RelationshipQuery`, `CoverAPI`. GameHUD supersedes `dialogue_overlay.tscn`.
 
 ### Save payload
 
@@ -92,31 +107,30 @@ Chapter manifests: `content/chapters/the_reception.json` preferred, else `recept
 
 `foyer`, `salon`, `terrace`, `study`, `cloakroom` — adjacency helpers + `set_location(id, change_scene_file=false|true)`.
 
-## Stub content shipped (until B/C land)
+## Playable graph map
 
-- `content/dialogue/briefing.json`
-- `content/dialogue/reception_{foyer,salon,terrace,study,cloakroom}.json`
-- `content/dialogue/debrief.json` (multiple ending flags)
-- Character JSON for cast in contracts
-- Chapter manifest `content/chapters/reception.json`
+| id | start | role |
+|----|-------|------|
+| `briefing` | `briefing.intro` | Wren brief |
+| `reception_foyer` | `foyer.arrival` | Moth / Pim |
+| `reception_salon` | `salon.enter` | Maris / Taly |
+| `reception_terrace` | `terrace.enter` | Voss / Sera / race / finale |
+| `reception_study` | `study.enter` | Fragment / cover |
+| `reception_cloakroom` | `cloak.enter` | Moth / Maris corridor |
+| `debrief` | `debrief.intro` | Dual-rubric wrap |
 
 ## Evidence / verification
 
 ```
 $ ./.bin/godot --headless --path . res://tests/core/test_runner.tscn
-[test] loader graphs=7
-[test] flags ok
-[test] dialogue flow ok
-[test] save/load ok
-TEST PASS (4 suites)
-
 $ ./.bin/godot --headless --path . res://scenes/main/boot.tscn
-[smoke] headless start
-[smoke] OK — briefing + save/load
+# Expect: briefing ok → foyer ok → debrief ok + save/load
 ```
 
-Godot binary: 4.3.stable.official (`.bin/godot`, gitignored).  
-Verified UTC: 2026-11-26T15:48Z (Pacific/Auckland: Fri 27 Nov 2026, 04:48 NZDT).
+Godot: 4.3.stable (`.bin/godot`, gitignored).  
+Stabilize: router auto-pick + extended boot smoke + typed filter fix in `intel_notebook.gd`.
+Verified UTC: 2026-11-26T16:05Z (Pacific/Auckland: Fri 27 Nov 2026, 05:05 NZDT).
+
 
 ## Notes for concurrent agents
 

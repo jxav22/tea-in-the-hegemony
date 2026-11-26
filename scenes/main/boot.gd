@@ -226,21 +226,34 @@ func _headless_smoke() -> void:
 	print("[smoke] headless start")
 	GameState.reset_to_new_game()
 	assert(DialogueRunner.start("briefing"))
-	var smoke_guard: int = 0
-	while DialogueRunner.is_active and smoke_guard < 24:
-		var smoke_choices: Array = DialogueRunner.get_visible_choices()
-		if smoke_choices.is_empty():
-			DialogueRunner.advance()
-		else:
-			DialogueRunner.choose_index(0)
-		smoke_guard += 1
+	await _smoke_drive(24)
 	assert(FlagStore.get_flag(&"briefed", false) == true)
-	var guard: int = 0
-	while DialogueRunner.is_active and guard < 8:
-		DialogueRunner.advance()
-		guard += 1
+	print("[smoke] briefing ok")
+	GameState.set_location(&"foyer")
+	SceneRouter.current_location = &"foyer"
+	assert(DialogueRunner.start("reception_foyer"))
+	await _smoke_drive(20)
+	print("[smoke] foyer ok")
+	assert(DialogueRunner.start("debrief"))
+	await _smoke_drive(24)
+	print("[smoke] debrief ok")
 	assert(SaveService.save_game(1))
 	assert(SaveService.load_game(1))
 	assert(FlagStore.get_flag(&"briefed", false) == true)
-	print("[smoke] OK — briefing + save/load")
+	print("[smoke] OK — boot→Reception→debrief + save/load")
 	get_tree().quit(0)
+
+
+func _smoke_drive(max_steps: int) -> void:
+	var guard: int = 0
+	while DialogueRunner.is_active and guard < max_steps:
+		await get_tree().process_frame
+		if not DialogueRunner.is_active:
+			break
+		var choices: Array = DialogueRunner.get_visible_choices()
+		if choices.is_empty():
+			if not DialogueRunner.advance():
+				break
+		else:
+			DialogueRunner.choose_index(0)
+		guard += 1

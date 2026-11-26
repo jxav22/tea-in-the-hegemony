@@ -70,15 +70,58 @@ func goto_node(node_id: String) -> bool:
 	FacultyBus.emit_interjections(node.get("faculty_interjections", []) as Array, current_node_id)
 	node_presented.emit(node)
 	var visible_choices: Array = _visible_choices(node)
+	# Agent B router nodes: all authored choice texts start with "[" — auto-pick.
+	if _is_router_node(node):
+		var picked: Dictionary = _pick_router_choice(visible_choices)
+		if picked.is_empty():
+			var nodes_map: Dictionary = current_graph.get("nodes", {}) as Dictionary
+			if nodes_map.has("ending.default_mixed"):
+				call_deferred("goto_node", "ending.default_mixed")
+				choices_available.emit([])
+				return true
+		else:
+			call_deferred("_auto_choose", str(picked.get("id", "")))
+			choices_available.emit([])
+			return true
 	if not visible_choices.is_empty():
 		choices_available.emit(visible_choices)
-	elif node.get("next", null) != null and str(node.get("next")) != "":
-		# Auto-continue nodes with next and no choices are still presented;
-		# UI/callers invoke advance() or choose implicitly.
-		choices_available.emit([])
 	else:
 		choices_available.emit([])
 	return true
+
+
+func _auto_choose(choice_id: String) -> void:
+	if is_active and not choice_id.is_empty():
+		choose(choice_id)
+
+
+func _is_router_node(node: Dictionary) -> bool:
+	var raw: Array = node.get("choices", []) as Array
+	if raw.is_empty():
+		return false
+	for ch: Variant in raw:
+		if typeof(ch) != TYPE_DICTIONARY:
+			continue
+		var text: String = str((ch as Dictionary).get("text", "")).strip_edges()
+		if not text.begins_with("["):
+			return false
+	return true
+
+
+func _pick_router_choice(choices: Array) -> Dictionary:
+	if choices.is_empty():
+		return {}
+	var chapter: Dictionary = ContentIndex.load_chapter("the_reception")
+	var priority: Array = chapter.get("ending_priority", []) as Array
+	if not priority.is_empty():
+		for end_id: Variant in priority:
+			var want: String = str(end_id)
+			for ch: Variant in choices:
+				var choice: Dictionary = ch as Dictionary
+				var next_id: String = str(choice.get("next", ""))
+				if want in next_id:
+					return choice
+	return choices[0] as Dictionary
 
 
 func advance() -> bool:
