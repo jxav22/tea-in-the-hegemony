@@ -248,6 +248,7 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 - **Systems UI:** Prefer `CoverAPI.present()`, `RelationshipQuery.present()`, `GameState.systems.present_mission/evidence` — qualitative heat bands / mood lines, no raw dumps.
 - **Layering fix:** TitleScreen on CanvasLayer 30 above GameHUD; nav overlay on 22; modals z-ordered.
 - **Notebook / dossier / brief:** Stronger empty-states, verified counts, affinity/mood copy.
+- **LocationBanner** during room changes; dialogue continue-cue pulse.
 
 ## Agent E — QA
 

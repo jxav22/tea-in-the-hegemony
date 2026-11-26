@@ -15,6 +15,7 @@ signal room_transition_done(location_id: String)
 
 @onready var root: Control = %Root
 @onready var room_transition: RoomTransition = %RoomTransition
+@onready var location_banner: LocationBanner = %LocationBanner
 @onready var dialogue_box: DialogueBox = %DialogueBox
 @onready var choice_list: ChoiceList = %ChoiceList
 @onready var faculty_stack: FacultyStack = %FacultyStack
@@ -105,10 +106,16 @@ func _on_viewport_resized() -> void:
 func set_background(location_id: String, animate: bool = true) -> void:
 	if room_transition == null:
 		return
+	var display := location_id.replace("_", " ")
+	var info: Dictionary = SceneRouter.get_location(StringName(location_id))
+	if not info.is_empty():
+		display = str(info.get("display_name", display))
 	if not _bg_seeded or not animate:
 		room_transition.set_location_immediate(location_id)
 		_bg_seeded = true
 		return
+	if location_banner:
+		location_banner.announce(location_id, display, settings.reduce_motion if settings else false)
 	room_transition.transition_to(location_id)
 
 
