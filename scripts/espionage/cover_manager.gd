@@ -13,7 +13,8 @@ signal heat_changed(new_heat: int, band: String, reason: String)
 signal inconsistency_recorded(key: String, detail: Dictionary)
 signal cover_blown(reason: String)
 
-const HEAT_BLOW_THRESHOLD := 95
+## Aligned with Core GameState.adjust_heat blow threshold.
+const HEAT_BLOW_THRESHOLD := 80
 
 var cover: CoverIdentity
 ## Optional hook: RelationshipManager for witness suspicion bumps.

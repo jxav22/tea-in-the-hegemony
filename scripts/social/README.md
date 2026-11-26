@@ -1,10 +1,23 @@
 # Social systems (Agent C)
 
-Core exposes relationship APIs on `GameState`:
+Multi-dimension relationships + character memories. **No single progress bar.**
 
-- `ensure_relationship(char_id)`
-- `get_rel` / `adjust_rel` / `set_rel` / `apply_rel_effects`
-- Dimensions: trust, familiarity, suspicion, respect, affection, comfort, perceived_authenticity
-- Memories via `GameState.add_memory` / `has_memory`
+## Core storage
 
-Put social-sim logic here. Do not fork relationship storage.
+Mutations flow through `GameState` / `EffectExecutor` and mirror via `SystemsBridge` — do not fork relationship storage.
+
+- Dimensions: `trust`, `familiarity`, `suspicion`, `respect`, `affection`, `comfort`, `perceived_authenticity`
+- `GameState.systems` → `RelationshipManager` / `MemoryManager`
+- UI: `RelationshipQuery.present(char_id)` (qualitative) or `GameState.systems.present_character`
+
+## Effects
+
+```json
+{"op":"rel","char":"maris_quell","trust":1,"suspicion":-1}
+{"op":"memory","char":"maris_quell","id":"noticed_hesitation","summary":"...","salience":2,"tags":["awkward"],"beat":"foyer.meet"}
+{"op":"knowledge","char":"maris_quell","flag":"identified_voss","value":true}
+```
+
+## Scripts
+
+`relationship_dimensions.gd`, `relationship_state.gd`, `relationship_manager.gd`, `memory_entry.gd`, `memory_manager.gd`, `social_presentation.gd`, `knowledge_flags.gd`, `relationship_query.gd`

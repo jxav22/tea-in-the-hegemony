@@ -88,7 +88,7 @@ class Sim:
             action = effect.get("action")
             if action == "blow":
                 self.blown = True
-                self.heat = max(self.heat, 95)
+                self.heat = max(self.heat, 80)
             elif action == "slip":
                 self.heat = min(100, self.heat + int(effect.get("heat", 15)))
                 self.inconsistencies += 1
@@ -96,7 +96,7 @@ class Sim:
                 self.heat = max(0, min(100, self.heat + int(effect.get("delta", 0))))
             elif action == "assert" and effect.get("heat"):
                 self.heat = max(0, min(100, self.heat + int(effect["heat"])))
-            if self.heat >= 95:
+            if self.heat >= 80:
                 self.blown = True
         elif op == "objective":
             action = effect.get("action")

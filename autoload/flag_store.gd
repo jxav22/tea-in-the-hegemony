@@ -52,6 +52,10 @@ func evaluate_condition(condition: Dictionary) -> bool:
 				return true
 		return false
 	if not condition.has("flag"):
+		## Delegate Systems condition kinds (rel/memory/cover/evidence/objective) to GameState.
+		if _looks_like_systems_condition(condition):
+			if Engine.get_main_loop() != null and GameState != null and GameState.systems != null:
+				return GameState.check_systems_condition(condition)
 		return true
 	var flag: StringName = StringName(str(condition["flag"]))
 	var op: String = str(condition.get("op", "eq"))
@@ -110,3 +114,16 @@ func _default_for(expected: Variant) -> Variant:
 			return ""
 		_:
 			return null
+
+
+func _looks_like_systems_condition(condition: Dictionary) -> bool:
+	if condition.has("kind") or condition.has("type"):
+		return true
+	for key in [
+		"dim", "dimension", "memory", "memory_tag", "knowledge",
+		"heat", "heat_band", "blown", "fact", "inconsistency_count",
+		"fragment", "contradiction_count", "objective", "char", "character",
+	]:
+		if condition.has(key):
+			return true
+	return false

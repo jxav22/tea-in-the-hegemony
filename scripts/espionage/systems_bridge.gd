@@ -15,6 +15,7 @@ var cover: CoverManager
 var evidence: EvidenceManager
 var mission: MissionManager
 var flags: Dictionary = {} ## optional local flag bag if Core has not bound yet
+var _flag_provider: Callable = Callable()
 
 
 func _init() -> void:
@@ -28,16 +29,29 @@ func _init() -> void:
 
 
 func get_flags() -> Dictionary:
+	if _flag_provider.is_valid():
+		var provided: Variant = _flag_provider.call()
+		if typeof(provided) == TYPE_DICTIONARY:
+			return provided as Dictionary
 	return flags
 
 
 func set_flag(flag: String, value: Variant = true) -> void:
 	flags[flag] = value
+	## When bound to Core, also write FlagStore (live condition source).
+	if _flag_provider.is_valid():
+		FlagStore.set_flag(StringName(flag), value)
 
 
 ## Core may replace the flag bag with its own GameState.flags reference.
 func bind_flags(flag_dict: Dictionary) -> void:
 	flags = flag_dict
+	mission.bind(relationships, cover, evidence, Callable(self, "get_flags"))
+
+
+## Preferred Core wiring: live FlagStore via Callable returning Dictionary.
+func bind_flag_provider(provider: Callable) -> void:
+	_flag_provider = provider
 	mission.bind(relationships, cover, evidence, Callable(self, "get_flags"))
 
 
