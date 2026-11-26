@@ -84,11 +84,6 @@
       "effects": [
         {
           "op": "set_flag",
-          "flag": "ending_id",
-          "value": "balanced"
-        },
-        {
-          "op": "set_flag",
           "flag": "chapter_complete",
           "value": true
         },
@@ -96,6 +91,11 @@
           "op": "rel",
           "char": "maris_quell",
           "familiarity": 2
+        },
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "balanced"
         }
       ],
       "choices": [],
@@ -127,11 +127,6 @@
       "effects": [
         {
           "op": "set_flag",
-          "flag": "ending_id",
-          "value": "connection"
-        },
-        {
-          "op": "set_flag",
           "flag": "chapter_complete",
           "value": true
         },
@@ -159,6 +154,11 @@
             "ending",
             "maris"
           ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "connection"
         }
       ],
       "choices": [],
@@ -190,11 +190,6 @@
       "effects": [
         {
           "op": "set_flag",
-          "flag": "ending_id",
-          "value": "cover_burned"
-        },
-        {
-          "op": "set_flag",
           "flag": "chapter_complete",
           "value": true
         },
@@ -202,6 +197,11 @@
           "op": "set_flag",
           "flag": "extracted_hot",
           "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "cover_burned"
         }
       ],
       "choices": [],
@@ -232,13 +232,13 @@
       "effects": [
         {
           "op": "set_flag",
-          "flag": "ending_id",
-          "value": "mixed"
+          "flag": "chapter_complete",
+          "value": true
         },
         {
           "op": "set_flag",
-          "flag": "chapter_complete",
-          "value": true
+          "flag": "ending_id",
+          "value": "mixed"
         }
       ],
       "choices": [],
@@ -254,7 +254,7 @@
     {
       "id": "ending.human_cost",
       "speaker": "sera_kade",
-      "text": "Cute rescue. I took the annex while you took the moral high ground. Don't worry \u2014 I'll send Wren a postcard.",
+      "text": "Cute rescue. I took the annex while you took the moral high ground. Wren gets a postcard. You get a clean conscience and an empty pocket. Taxonomy updated.",
       "tags": [
         "end",
         "ending",
@@ -263,11 +263,6 @@
       ],
       "conditions": [],
       "effects": [
-        {
-          "op": "set_flag",
-          "flag": "ending_id",
-          "value": "human_cost"
-        },
         {
           "op": "set_flag",
           "flag": "has_cipher_fragment",
@@ -292,6 +287,11 @@
           "op": "rel",
           "char": "maris_quell",
           "affection": 2
+        },
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "human_cost"
         }
       ],
       "choices": [],
@@ -324,6 +324,11 @@
             "ending",
             "maris"
           ]
+        },
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "human_cost"
         }
       ],
       "choices": [],
@@ -354,13 +359,13 @@
       "effects": [
         {
           "op": "set_flag",
-          "flag": "ending_id",
-          "value": "professional_win"
+          "flag": "chapter_complete",
+          "value": true
         },
         {
           "op": "set_flag",
-          "flag": "chapter_complete",
-          "value": true
+          "flag": "ending_id",
+          "value": "professional_win"
         }
       ],
       "choices": [],
@@ -391,11 +396,6 @@
       "effects": [
         {
           "op": "set_flag",
-          "flag": "ending_id",
-          "value": "sera_wins"
-        },
-        {
-          "op": "set_flag",
           "flag": "has_cipher_fragment",
           "value": false
         },
@@ -408,6 +408,11 @@
           "op": "set_flag",
           "flag": "chapter_complete",
           "value": true
+        },
+        {
+          "op": "set_flag",
+          "flag": "ending_id",
+          "value": "sera_wins"
         }
       ],
       "choices": [],
@@ -1061,7 +1066,7 @@
     {
       "id": "race.sera_stole",
       "speaker": "narrator",
-      "text": "Your pocket is lighter \u2014 or the folio is gone. Sera passes in the hall with a smile that has already finished the job. The physical fragment is hers; any soft copy you never took does not exist.",
+      "text": "Your pocket is lighter \u2014 or the folio is. Sera passes with a smile that has already filed the job. Physical fragment: hers. Soft copy you never took: fiction.",
       "tags": [
         "race",
         "sera_kade"
@@ -1168,7 +1173,7 @@
     {
       "id": "sacrifice.help_aftermath",
       "speaker": "taly_renn",
-      "text": "You just volunteered for paperwork hell. Either you're decent or playing a long game so elaborate I almost respect it. Maris \u2014 your liaison has dimensions.",
+      "text": "You just volunteered for paperwork hell. Either you're decent or running a long con so baroque I almost respect it. Maris \u2014 your liaison has dimensions. Annoying ones.",
       "tags": [
         "sacrifice",
         "taly_renn"
@@ -1273,7 +1278,7 @@
     {
       "id": "sacrifice.hook",
       "speaker": "narrator",
-      "text": "Near the terrace stair: Taly, pale under party lighting. A ministry fixer has her cornered over a mis-attributed remark \u2014 the kind that ends careers if it hardens into minutes.",
+      "text": "Terrace stair: Taly, pale under party light. A ministry fixer has her over a mis-attributed remark \u2014 the kind that hardens into minutes and ends careers. You can intervene, walk past, or hand the human half to Maris.",
       "tags": [
         "sacrifice",
         "moral"
