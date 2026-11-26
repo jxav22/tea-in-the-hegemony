@@ -29,12 +29,16 @@ func show_interjection_styled(faculty: String, text: String, reduce_motion: bool
 	title.add_theme_color_override("font_color", accent)
 	body.add_theme_color_override("font_color", HegemonyPalette.MONOLOGUE)
 	if panel:
-		var sb := panel.get_theme_stylebox("panel")
-		if sb is StyleBoxFlat:
-			var flat := (sb as StyleBoxFlat).duplicate() as StyleBoxFlat
-			flat.border_color = accent
-			flat.bg_color = Color(HegemonyPalette.INK_DEEP, 0.92)
-			panel.add_theme_stylebox_override("panel", flat)
+		var flat := StyleBoxFlat.new()
+		flat.bg_color = Color(HegemonyPalette.INK_DEEP, 0.92)
+		flat.border_color = accent
+		flat.set_border_width_all(2)
+		flat.set_corner_radius_all(4)
+		flat.content_margin_left = 12
+		flat.content_margin_right = 12
+		flat.content_margin_top = 8
+		flat.content_margin_bottom = 8
+		panel.add_theme_stylebox_override("panel", flat)
 	visible = true
 	if _tween:
 		_tween.kill()

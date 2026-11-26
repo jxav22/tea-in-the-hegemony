@@ -181,6 +181,7 @@ func refresh_cover() -> void:
 		return
 	var presented := CoverAPI.present(false)
 	hud.mission_panel.set_cover_present(presented)
+	hud.set_heat_wash(str(presented.get("heat_band", "clear")))
 
 
 func refresh_save_summaries() -> void:

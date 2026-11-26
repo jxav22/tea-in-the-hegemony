@@ -29,6 +29,7 @@ signal room_transition_done(location_id: String)
 @onready var hotkey_bar: Label = %HotkeyBar
 @onready var letterbox_top: ColorRect = %LetterboxTop
 @onready var letterbox_bottom: ColorRect = %LetterboxBottom
+@onready var heat_wash: ColorRect = get_node_or_null("%HeatWash") as ColorRect
 
 ## Back-compat alias for scripts that still expect faculty_panel
 var faculty_panel: FacultyStack:
@@ -166,6 +167,24 @@ func set_cinematic(enabled: bool) -> void:
 	_set_letterbox(enabled)
 	mission_panel.visible = not enabled
 	hotkey_bar.visible = not enabled
+
+
+func set_heat_wash(band: String) -> void:
+	## Subtle vermillion wash when cover heat climbs — comic tension, not HUD spam.
+	if heat_wash == null:
+		return
+	var alpha := 0.0
+	match band:
+		"elevated":
+			alpha = 0.04
+		"high":
+			alpha = 0.08
+		"critical", "blown":
+			alpha = 0.14
+		_:
+			alpha = 0.0
+	heat_wash.color = Color(HegemonyPalette.VERMILLION.r, HegemonyPalette.VERMILLION.g, HegemonyPalette.VERMILLION.b, alpha)
+	heat_wash.visible = alpha > 0.0
 
 
 func _on_choice(choice_id: String) -> void:
