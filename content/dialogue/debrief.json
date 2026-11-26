@@ -633,7 +633,7 @@
     {
       "id": "debrief.ending_connection_inter",
       "speaker": "wren_halden",
-      "text": "Interpersonal: she offered ninety seconds between fallout meetings \u2014 calendar scraps from a woman about to publish against Voss, not a unlock. You treated her opacity fight as real. That is rare. Do not spend it on performance.",
+      "text": "Interpersonal: she offered ninety seconds between fallout meetings \u2014 calendar scraps from a woman about to publish against Voss. You treated her opacity fight as real. That is rare. Do not spend it on performance.",
       "effects": [
         {
           "op": "set_flag",
@@ -649,7 +649,7 @@
       "faculty_interjections": [
         {
           "faculty": "Empathy",
-          "text": "Hypothesis. Hold it gently.",
+          "text": "She offered minutes of her calendar. Treat them as scarce.",
           "weight": 1
         }
       ],

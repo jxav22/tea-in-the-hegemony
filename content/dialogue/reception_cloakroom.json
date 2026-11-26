@@ -58,7 +58,7 @@
         },
         {
           "id": "c_moth_casual",
-          "text": "Present badge. Smile with the lower third only.",
+          "text": "Present badge. Bore him correctly.",
           "intent": "comply",
           "next": "cloak.moth_soft"
         },
@@ -220,7 +220,7 @@
         },
         {
           "faculty": "Composure",
-          "text": "Lower third. Boredom is camouflage.",
+          "text": "Boredom is camouflage. Do not invent wit.",
           "weight": 1
         }
       ],
@@ -495,7 +495,7 @@
       "faculty_interjections": [
         {
           "faculty": "Idealism",
-          "text": "Hypothesis. Hold it like evidence that matters.",
+          "text": "She left a door ajar. Do not turn it into a parade.",
           "weight": 1
         },
         {
