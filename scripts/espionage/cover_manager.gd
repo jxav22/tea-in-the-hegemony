@@ -204,7 +204,7 @@ func _slip(effect: Dictionary) -> Dictionary:
 	if value != "":
 		var witnesses: Array = []
 		if cover.stated_facts.has(key):
-			witnesses = cover.stated_facts[key].get("witnesses", []).duplicate()
+			witnesses = (cover.stated_facts[key].get("witnesses", []) as Array).duplicate()
 		if witness != "" and witness not in witnesses:
 			witnesses.append(witness)
 		cover.stated_facts[key] = {

@@ -63,7 +63,7 @@ func load_mission(data: Dictionary) -> void:
 func load_from_file(path: String) -> Error:
 	if not FileAccess.file_exists(path):
 		return ERR_FILE_NOT_FOUND
-	var f := FileAccess.open(path, FileAccess.READ)
+	var f: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return ERR_CANT_OPEN
 	var parsed: Variant = JSON.parse_string(f.get_as_text())
@@ -224,7 +224,7 @@ func _rule_match(rule: Dictionary) -> bool:
 		"evidence":
 			return evidence != null and evidence.check_condition(rule)
 		"objective":
-			var other := get_objective(str(rule.get("id", "")))
+			var other: IntelObjective = get_objective(str(rule.get("id", "")))
 			if other == null:
 				return false
 			var want := str(rule.get("status", IntelObjective.STATUS_COMPLETE))
@@ -243,7 +243,7 @@ func _rule_match(rule: Dictionary) -> bool:
 				return cover != null and cover.check_condition(rule)
 			if rule.has("objective") or (rule.has("id") and objectives.has(str(rule.get("id", "")))):
 				var oid := str(rule.get("objective", rule.get("id", "")))
-				var other2 := get_objective(oid)
+				var other2: IntelObjective = get_objective(oid)
 				return other2 != null and other2.status == str(rule.get("status", IntelObjective.STATUS_COMPLETE))
 	return false
 

@@ -29,7 +29,7 @@ static func _seed_reception_characters(bridge: SystemsBridge) -> void:
 
 static func _try_load_character_dir(dir_path: String) -> Array:
 	var out: Array = []
-	var dir := DirAccess.open(dir_path)
+	var dir: DirAccess = DirAccess.open(dir_path)
 	if dir == null:
 		return out
 	dir.list_dir_begin()
@@ -37,7 +37,7 @@ static func _try_load_character_dir(dir_path: String) -> Array:
 	while file_name != "":
 		if not dir.current_is_dir() and file_name.ends_with(".json"):
 			var full := dir_path.rstrip("/") + "/" + file_name
-			var f := FileAccess.open(full, FileAccess.READ)
+			var f: FileAccess = FileAccess.open(full, FileAccess.READ)
 			if f != null:
 				var parsed: Variant = JSON.parse_string(f.get_as_text())
 				if typeof(parsed) == TYPE_DICTIONARY and str(parsed.get("id", "")) != "":

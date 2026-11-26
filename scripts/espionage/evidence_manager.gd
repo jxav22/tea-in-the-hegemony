@@ -36,7 +36,7 @@ func load_catalog(catalog: Array) -> void:
 func load_from_file(path: String) -> Error:
 	if not FileAccess.file_exists(path):
 		return ERR_FILE_NOT_FOUND
-	var f := FileAccess.open(path, FileAccess.READ)
+	var f: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return ERR_CANT_OPEN
 	var parsed: Variant = JSON.parse_string(f.get_as_text())
@@ -82,7 +82,10 @@ func apply_effect(effect: Dictionary) -> Dictionary:
 		"add_claim":
 			return add_claim(fid, effect.get("claim", {}))
 		"register":
-			var frag := register_fragment(effect.get("data", effect))
+			var data_raw: Variant = effect.get("data", effect)
+			if typeof(data_raw) != TYPE_DICTIONARY:
+				return {"ok": false, "error": "bad_data"}
+			var frag: EvidenceFragment = register_fragment(data_raw as Dictionary)
 			return {"id": frag.id, "registered": true}
 		_:
 			push_warning("Unknown evidence action: %s" % action)
