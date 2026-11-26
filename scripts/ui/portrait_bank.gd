@@ -26,8 +26,18 @@ static func silhouette_path(character_id: String) -> String:
 
 
 static func background_path(location_id: String) -> String:
-	var path := "%s%s_bg.png" % [BG_DIR, location_id]
-	return path if ResourceLoader.exists(path) else ""
+	var loc := location_id
+	if loc == "study":
+		loc = "study_annex"
+	var path := "%s%s_bg.png" % [BG_DIR, loc]
+	if ResourceLoader.exists(path):
+		return path
+	# Optional alias file for study
+	if loc == "study_annex":
+		var alias := "%sstudy_bg.png" % BG_DIR
+		if ResourceLoader.exists(alias):
+			return alias
+	return ""
 
 
 static func load_texture(path: String) -> Texture2D:

@@ -9,8 +9,8 @@ signal closed
 @onready var list: ItemList = %EvidenceList
 @onready var detail: RichTextLabel = %Detail
 @onready var close_btn: Button = %CloseBtn
-@onready var filter_row: HBoxContainer = get_node_or_null("%FilterRow") as HBoxContainer
-@onready var summary: Label = get_node_or_null("%Summary") as Label
+@onready var filter_row: HBoxContainer = %FilterRow
+@onready var summary: Label = %Summary
 
 var _fragments: Array = []
 var _view: Array = []

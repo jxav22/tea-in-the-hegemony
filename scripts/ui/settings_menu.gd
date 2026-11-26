@@ -17,8 +17,8 @@ signal restart_requested
 @onready var apply_btn: Button = %ApplyBtn
 @onready var close_btn: Button = %CloseBtn
 @onready var restart_btn: Button = %RestartBtn
-@onready var preset_row: HBoxContainer = get_node_or_null("%PresetRow") as HBoxContainer
-@onready var hint: Label = get_node_or_null("%SpeedHint") as Label
+@onready var preset_row: HBoxContainer = %PresetRow
+@onready var hint: Label = %SpeedHint
 
 var settings: UISettings
 

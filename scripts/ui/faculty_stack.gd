@@ -42,7 +42,7 @@ func _release_next() -> void:
 	_releasing = true
 	var entry: Dictionary = _queue.pop_front()
 	_spawn_panel(str(entry.get("faculty", "")), str(entry.get("text", "")))
-	if reduce_motion:
+	if reduce_motion or not is_inside_tree():
 		_release_next()
 		return
 	get_tree().create_timer(STAGGER_SEC).timeout.connect(_release_next)
@@ -61,12 +61,16 @@ func _spawn_panel(faculty: String, text: String) -> void:
 	_panels.append(panel)
 	panel.call_deferred("show_interjection_styled", faculty, text, reduce_motion, _panels.size() - 1)
 	# Auto-dismiss oldest after a dwell if stack stays full
-	if not reduce_motion and _panels.size() >= MAX_PANELS:
+	if not reduce_motion and _panels.size() >= MAX_PANELS and is_inside_tree():
+		var expected_first := _panels[0]
 		get_tree().create_timer(4.2).timeout.connect(func ():
-			if _panels.size() >= MAX_PANELS and is_instance_valid(_panels[0]):
-				var drop: FacultyPanel = _panels.pop_front()
-				drop.hide_panel(false)
-				_repack()
+			if _panels.is_empty():
+				return
+			if _panels[0] != expected_first or not is_instance_valid(_panels[0]):
+				return
+			var drop: FacultyPanel = _panels.pop_front()
+			drop.hide_panel(false)
+			_repack()
 		)
 
 

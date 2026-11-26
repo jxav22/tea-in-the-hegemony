@@ -23,7 +23,8 @@ func announce(location_id: String, display_name: String = "", reduce_motion: boo
 		_tween.kill()
 	if reduce_motion:
 		modulate.a = 1.0
-		await get_tree().create_timer(0.6).timeout
+		if is_inside_tree():
+			await get_tree().create_timer(0.6).timeout
 		visible = false
 		modulate.a = 0.0
 		return
