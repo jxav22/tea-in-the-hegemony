@@ -57,15 +57,17 @@ See `content/schemas/dialogue_node.schema.json` and sprint contracts. Graph file
 `content/dialogue/reception/<id>.json` → `content/dialogue/<id>.json` → recursive basename search.  
 Chapter manifests: `content/chapters/the_reception.json` preferred, else `reception.json`.
 
-**Effects:** `set_flag`, `add_flag`, `toggle_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `beat`, `location` (soft — updates `GameState.current_location` without tearing down UI).
+**Effects:** `set_flag`, `add_flag`, `toggle_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `beat`, `location` (soft — updates `GameState.current_location` without tearing down UI).  
+**Systems extensions:** `cover`, `evidence`, `knowledge` (Agent C — routed via `GameState.systems` / EffectExecutor).
 
-**Conditions:** `{flag, op, value}` plus `{all:[…]}` / `{any:[…]}`.
+**Conditions:** `{flag, op, value}` plus `{all:[…]}` / `{any:[…]}`. Systems also accepts rel/memory/cover/evidence/objective condition kinds via `GameState.systems.check_condition`.
 
 **Extra APIs:** `CharacterRegistry`, `RelationshipQuery`, `CoverAPI`, `DialogueOverlay` (`scenes/main/dialogue_overlay.tscn`) for Agent D.
 
 ### Save payload
 
-`save_version`, `chapter_id`, `current_location`, `flags`, `rels`, `memories`, `inventory`, `cover_state`, `objectives`, `beat_index`, `timestamp`
+`save_version`, `chapter_id`, `current_location`, `flags`, `rels`, `memories`, `inventory`, `cover_state`, `objectives`, `beat_index`, `timestamp`  
+(+ optional `evidence` runtime bag mirrored from SystemsBridge)
 
 ## Open interfaces (other agents)
 
@@ -73,7 +75,7 @@ Chapter manifests: `content/chapters/the_reception.json` preferred, else `recept
 |-------|----------------|
 | **B Narrative** | Drop/replace JSON under `content/dialogue/`, `content/characters/`, `content/chapters/`. Keep node schema. Wire new graphs by id (`DialogueRunner.start("id")`). |
 | **C Systems** | Own `scripts/social/`, `scripts/espionage/`, `content/missions/`, `content/evidence/`. Use `GameState` rel/heat/item/objective APIs — do not fork stores. |
-| **D Presentation** | Own `scenes/ui/`, `assets/`, `themes/`. Listen to `DialogueRunner` + `FacultyBus` signals; may restyle `boot.tscn` but keep runner API. Location scenes already exist as thin shells. |
+| **D Presentation** | Own `scenes/ui/`, `assets/`, `themes/`. Listen to `DialogueRunner` + `FacultyBus` signals; may restyle `boot.tscn` but keep runner API. Location scenes already exist as thin shells. Prefer `GameState.systems.present_*` for qualitative UI. |
 | **E QA** | Extend `tests/`; `tools/run_tests.sh` entrypoint. Schemas in `content/schemas/`. |
 
 ### Key signals
@@ -128,7 +130,48 @@ _(append)_
 
 ## Agent C — Systems
 
-_(append)_
+**Branch:** `cursor/social-espionage-systems-b2e0`  
+**Paths:** `scripts/social/`, `scripts/espionage/`, `content/missions/`, `content/evidence/`
+
+### What landed
+
+Data-driven multi-dimension relationships, per-character memories, cover identity + inconsistency heat, evidence fragments (claims / contradictions / verification), intel objectives, mission reporting with professional vs human trade-offs. **No runtime LLM.** Presentation APIs return qualitative bands — raw numbers only with `reveal_raw=true`.
+
+**Storage rule:** SystemsBridge mirrors into `GameState` fields (`relationships`, `memories`, `cover_state`, `objectives`, `inventory` for obtained fragments). Does not fork save keys.
+
+### Wiring
+
+- `GameState.systems` — `SystemsBootstrap.create_with_reception_content()` on ready / new game
+- `EffectExecutor` routes `rel`, `memory`, `heat`, `objective`, `cover`, `evidence`, `knowledge` through `GameState.apply_systems_effect`
+- Save/load: `GameState.to_save_dict` / `load_from_save_dict` sync systems bag (`evidence` optional key)
+
+### Effect ops (Systems)
+
+| op | shape |
+|----|--------|
+| `rel` | `{"op":"rel","char":"maris_quell","trust":1,"suspicion":-1}` (+ optional `knowledge`) |
+| `memory` | `{"op":"memory","char":"maris_quell","id":"...","summary":"...","salience":2,"tags":[],"beat":"..."}` |
+| `cover` | `{"op":"cover","action":"assert\|slip\|adjust_heat\|repair\|blow",...}` |
+| `heat` | Core shorthand → `cover.adjust_heat` |
+| `evidence` | `{"op":"evidence","action":"obtain\|verify\|dispute","id":"frag.shipping_delta"}` |
+| `objective` | Core `{id,status,label}` **or** Systems `{action,id}` (`activate\|complete\|fail\|reveal\|evaluate\|start_mission`) |
+| `knowledge` | `{"op":"knowledge","char":"maris_quell","flag":"identified_voss","value":true}` |
+
+### Presentation (Agent D)
+
+`GameState.systems.present_character(id)` / `present_cover()` / `present_evidence()` / `present_mission()` / `present_debrief()`
+
+### Content
+
+- `content/missions/reception.json` — contact Maris, identify Voss, obtain fragment, maintain cover; trade-off paths in `meta.trade_off_design.example_paths`
+- `content/evidence/reception_evidence.json`
+- `content/missions/reception_effect_cookbook.json`
+- `content/missions/systems_data_schema.json`
+- Simulator: `python3 scripts/espionage/simulate_reception_paths.py` (five outcomes OK)
+
+### Objective id mapping
+
+Mission file uses `obj.*` ids; GameState seeds Core ids (`contact_maris`, …). Sync mirrors both: completing `obj.contact_maris` also sets `contact_maris` status on GameState.
 
 ## Agent D — Presentation
 

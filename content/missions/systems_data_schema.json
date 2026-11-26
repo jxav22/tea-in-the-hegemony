@@ -1,0 +1,76 @@
+{
+  "$schema_name": "tea_hegemony_systems_data",
+  "version": 1,
+  "relationship_dimensions": [
+    "trust",
+    "familiarity",
+    "suspicion",
+    "respect",
+    "affection",
+    "comfort",
+    "perceived_authenticity"
+  ],
+  "memory": {
+    "required": ["id", "summary"],
+    "fields": {
+      "id": "string",
+      "summary": "string",
+      "salience": "int",
+      "tags": "string[]",
+      "created_at_beat": "string",
+      "about_character": "string",
+      "subject": "string",
+      "source": "string",
+      "forgotten": "bool"
+    }
+  },
+  "cover_state": {
+    "fields": [
+      "cover_id",
+      "legal_name",
+      "cover_name",
+      "cover_role",
+      "employer",
+      "backstory_beats",
+      "stated_facts",
+      "inconsistencies",
+      "heat",
+      "blown",
+      "active"
+    ],
+    "heat_bands": ["clear", "low", "elevated", "high", "critical", "blown"]
+  },
+  "evidence_fragment": {
+    "required": ["id", "claims"],
+    "fields": {
+      "id": "string",
+      "title": "string",
+      "summary": "string",
+      "source": "string",
+      "location": "string",
+      "claims": "object[]",
+      "contradicts": "string[]",
+      "supports": "string[]",
+      "tags": "string[]",
+      "verified": "bool",
+      "obtained": "bool",
+      "mission_id": "string"
+    }
+  },
+  "objective": {
+    "statuses": ["hidden", "active", "optional", "complete", "failed", "abandoned"],
+    "categories": ["intel", "social", "cover", "survival"],
+    "rule_kinds": ["flag", "rel", "memory", "cover", "evidence", "objective", "heat_band", "any", "all"]
+  },
+  "mission_report_outcomes": [
+    "clean_professional",
+    "professional_costly",
+    "human_first",
+    "balanced",
+    "compromised",
+    "blown",
+    "partial"
+  ],
+  "save_keys": ["rels", "cover_state", "evidence", "objectives", "flags"],
+  "effect_ops": ["rel", "memory", "evidence", "cover", "objective", "knowledge", "set_flag"]
+}
