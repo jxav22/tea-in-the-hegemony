@@ -30,5 +30,6 @@ Cover slip→repair→blown syncs FlagStore (`heat_high`, `cover_blown`, …). P
 python3 scripts/espionage/simulate_reception_paths.py
 python3 scripts/espionage/test_cover_chains.py
 python3 scripts/espionage/test_memory_inference.py
+python3 scripts/espionage/test_path_flags.py
 python3 scripts/espionage/validate_systems_content.py
 ```
