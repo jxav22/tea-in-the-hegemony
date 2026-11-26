@@ -1,0 +1,129 @@
+{
+  "id": "reception.fragment_race",
+  "chapter_id": "the_reception",
+  "nodes": [
+    {
+      "id": "race.check",
+      "speaker": "narrator",
+      "text": "Between the terrace and the toast, the annex corridor tells the truth about who was faster.",
+      "tags": ["race"],
+      "conditions": [],
+      "effects": [],
+      "choices": [
+        {
+          "id": "race.to.steal",
+          "text": "[Delayed — Sera had a minute]",
+          "intent": "system",
+          "next": "race.sera_stole",
+          "effects": [],
+          "conditions": [
+            {"flag": "fragment_risk", "op": "eq", "value": true},
+            {"flag": "has_cipher_fragment", "op": "eq", "value": true},
+            {"flag": "soft_extract", "op": "neq", "value": true}
+          ]
+        },
+        {
+          "id": "race.to.held_soft",
+          "text": "[Soft extract — copy remains yours even if paper moved]",
+          "intent": "system",
+          "next": "race.held",
+          "effects": [],
+          "conditions": [
+            {"flag": "has_cipher_fragment", "op": "eq", "value": true},
+            {"flag": "soft_extract", "op": "eq", "value": true}
+          ]
+        },
+        {
+          "id": "race.to.held",
+          "text": "[Fragment secure]",
+          "intent": "system",
+          "next": "race.held",
+          "effects": [],
+          "conditions": [
+            {"flag": "has_cipher_fragment", "op": "eq", "value": true},
+            {"flag": "fragment_risk", "op": "neq", "value": true}
+          ]
+        },
+        {
+          "id": "race.to.none",
+          "text": "[Never secured fragment]",
+          "intent": "system",
+          "next": "race.none",
+          "effects": [],
+          "conditions": [{"flag": "has_cipher_fragment", "op": "neq", "value": true}]
+        }
+      ],
+      "next": "race.held",
+      "faculty_interjections": [
+        {"faculty": "Tradecraft", "text": "Race resolution. No speeches.", "weight": 1}
+      ]
+    },
+    {
+      "id": "race.sera_stole",
+      "speaker": "narrator",
+      "text": "Your pocket is lighter — or the folio is gone. Sera passes in the hall with a smile that has already finished the job. The physical fragment is hers; any soft copy you never took does not exist.",
+      "tags": ["race", "sera_kade"],
+      "conditions": [],
+      "effects": [
+        {"op": "set_flag", "flag": "has_cipher_fragment", "value": false},
+        {"op": "set_flag", "flag": "sera_has_fragment", "value": true},
+        {"op": "set_flag", "flag": "obj_cipher_fragment_done", "value": false},
+        {"op": "add_memory", "id": "mem_sera_stole", "summary": "Sera took the physical cipher fragment during your delay helping Taly.", "salience": 6, "tags": ["sera", "loss"], "created_at_beat": "race"}
+      ],
+      "choices": [
+        {
+          "id": "race.stole.next",
+          "text": "Continue to the toast.",
+          "intent": "proceed",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {"faculty": "Analysis", "text": "Physical extract + delay = loss. Soft extract would have survived.", "weight": 1},
+        {"faculty": "Idealism", "text": "Invoice paid. Still paid for a person.", "weight": 1}
+      ]
+    },
+    {
+      "id": "race.held",
+      "speaker": "narrator",
+      "text": "The fragment — or its copy — remains yours. The toast can wait one more corridor.",
+      "tags": ["race"],
+      "conditions": [],
+      "effects": [{"op": "set_flag", "flag": "fragment_secured_final", "value": true}],
+      "choices": [
+        {
+          "id": "race.held.next",
+          "text": "Continue to the toast.",
+          "intent": "proceed",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {"faculty": "Composure", "text": "Don't touch your pocket in public.", "weight": 1}
+      ]
+    },
+    {
+      "id": "race.none",
+      "speaker": "narrator",
+      "text": "No fragment. Only the evening's other consequences, lining up for the toast.",
+      "tags": ["race"],
+      "conditions": [],
+      "effects": [],
+      "choices": [
+        {
+          "id": "race.none.next",
+          "text": "Continue to the toast.",
+          "intent": "proceed",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": []
+    }
+  ]
+}

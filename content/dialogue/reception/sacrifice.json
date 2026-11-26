@@ -90,7 +90,7 @@
           "id": "sacrifice.help.next",
           "text": "Dimensions are accidental. I should go be late for something important.",
           "intent": "humble",
-          "next": "finale.router",
+          "next": "race.check",
           "effects": [
             {"op": "set_flag", "flag": "fragment_risk", "value": true}
           ]
@@ -117,7 +117,7 @@
           "id": "sacrifice.abandon.next",
           "text": "Keep walking. Finish the job.",
           "intent": "mission",
-          "next": "finale.router",
+          "next": "race.check",
           "effects": []
         }
       ],
@@ -146,7 +146,7 @@
           "id": "sacrifice.split.next",
           "text": "Because the human part was never optional.",
           "intent": "warm",
-          "next": "finale.router",
+          "next": "race.check",
           "effects": [{"op": "rel", "char": "maris_quell", "affection": 2}]
         }
       ],

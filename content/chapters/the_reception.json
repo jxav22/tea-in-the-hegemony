@@ -1,0 +1,149 @@
+{
+  "id": "the_reception",
+  "title": "The Reception",
+  "synopsis": "Under cover as Cassian Orth, infiltrate Lord Voss's reception: contact Maris Quell, identify Voss's dock interest, secure a guest-list cipher fragment, and decide what you're willing to sacrifice when a person needs you more than a win.",
+  "start_node": "briefing.intro",
+  "start_location": "safehouse_briefing",
+  "locations": [
+    {
+      "id": "safehouse_briefing",
+      "display_name": "Safehouse",
+      "tags": ["briefing"]
+    },
+    {
+      "id": "foyer",
+      "display_name": "Voss House Foyer",
+      "tags": ["public"]
+    },
+    {
+      "id": "salon",
+      "display_name": "Salon",
+      "tags": ["public", "social"]
+    },
+    {
+      "id": "terrace",
+      "display_name": "Terrace",
+      "tags": ["semi_private"]
+    },
+    {
+      "id": "study_annex",
+      "display_name": "Study Annex",
+      "tags": ["restricted"]
+    },
+    {
+      "id": "cloakroom",
+      "display_name": "Cloakroom Corridor",
+      "tags": ["semi_private"]
+    },
+    {
+      "id": "safehouse_debrief",
+      "display_name": "Safehouse — Debrief",
+      "tags": ["debrief"]
+    }
+  ],
+  "objectives": [
+    {
+      "id": "obj_contact_maris",
+      "label": "Contact Maris Quell",
+      "flag_done": "met_maris"
+    },
+    {
+      "id": "obj_identify_voss",
+      "label": "Identify Voss's interest in east-dock schedules",
+      "flag_done": "obj_identify_voss_done"
+    },
+    {
+      "id": "obj_cipher_fragment",
+      "label": "Obtain guest-list cipher / shipping discrepancy fragment",
+      "flag_done": "obj_cipher_fragment_done"
+    },
+    {
+      "id": "obj_maintain_cover",
+      "label": "Maintain cover as Cassian Orth",
+      "flag_fail": "cover_compromised"
+    }
+  ],
+  "dialogue_files": [
+    "content/dialogue/reception/briefing.json",
+    "content/dialogue/reception/foyer.json",
+    "content/dialogue/reception/salon_intro.json",
+    "content/dialogue/reception/salon_genuine.json",
+    "content/dialogue/reception/impress_backfire.json",
+    "content/dialogue/reception/political.json",
+    "content/dialogue/reception/study_cover.json",
+    "content/dialogue/reception/sacrifice.json",
+    "content/dialogue/reception/fragment_race.json",
+    "content/dialogue/reception/finale.json",
+    "content/dialogue/reception/debrief.json"
+  ],
+  "beat_order": [
+    "briefing",
+    "foyer_arrival",
+    "awkward_intro",
+    "genuine_talk",
+    "impress_attempt",
+    "political_overhear",
+    "study_extract",
+    "cover_inconsistency",
+    "sacrifice_choice",
+    "fragment_race",
+    "finale",
+    "debrief"
+  ],
+  "ending_ids": [
+    "professional_win",
+    "balanced",
+    "human_cost",
+    "cover_burned",
+    "sera_wins",
+    "connection",
+    "mixed"
+  ],
+  "ending_priority": [
+    "cover_burned",
+    "sera_wins",
+    "balanced",
+    "professional_win",
+    "human_cost",
+    "connection",
+    "mixed"
+  ],
+  "faculties": [
+    "Analysis",
+    "Tradecraft",
+    "Composure",
+    "Empathy",
+    "Improvisation",
+    "Idealism",
+    "Insecurity"
+  ],
+  "characters_present": [
+    "cassian_vale",
+    "maris_quell",
+    "wren_halden",
+    "edrin_voss",
+    "taly_renn",
+    "sera_kade",
+    "pim_orel",
+    "clerk_moth"
+  ],
+  "flags_initialized": {
+    "briefed": false,
+    "met_maris": false,
+    "has_cipher_fragment": false,
+    "cover_compromised": false,
+    "helped_taly": false,
+    "abandoned_taly": false,
+    "genuine_with_maris": false,
+    "impress_backfired": false,
+    "chapter_complete": false
+  },
+  "assumptions": [
+    "Dialogue loader merges all nodes from dialogue_files by id.",
+    "Choice conditions use flag op eq/neq; first matching ending in ending_priority wins when evaluating finale.branch.",
+    "If Core uses TRES or different key names, map speaker/text/choices/next/effects 1:1 from this schema.",
+    "speaker 'narrator' and 'cassian_vale' are valid; player lines may be choice text only.",
+    "rel effects use char id + dimension delta; unknown dimensions ignored safely.",
+    "add_memory effects push to save.memories[] per sprint contract."
+  ]
+}
