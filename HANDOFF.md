@@ -3,7 +3,7 @@
 **Godot 4.3** · Compatibility renderer (`gl_compatibility`) · typed GDScript · browser-friendly  
 **Repo:** https://github.com/jxav22/tea-in-the-hegemony  
 **Sprint start:** 2026-11-26T15:38:54Z  
-**Main tip verified through:** PR #19 (`add00b3`) + follow-ups through #18/#17/#16/#15/#14 as merged
+**Main tip:** `a9ed495` (#23 SystemFont web text) on top of #22/#21 publish stack (+ #20 HANDOFF, through #19 content)
 
 Playable chapter: **The Reception** — social-espionage under cover as Cassian Orth.
 
@@ -36,8 +36,8 @@ Do **not** change repo visibility. Do not commit secrets. `builds/` stays gitign
 
 - First visit downloads ~37MB wasm; cold load can take several seconds.
 - Headless Tweener warnings in smoke tests are non-blocking.
-- Pages 404 / `deploy-pages` fails with 404 until source is set to Actions (after #21: export-web PASS, deploy-pages “Ensure GitHub Pages has been enabled”).
-- Web export must load fonts via `ResourceLoader.load` (imported FontFile); `FontFile.load_dynamic_font` yields tofu glyphs in PCK builds.
+- Pages 404 / `deploy-pages` fails with 404 until source is set to Actions (runs after #21/#22/#23: export-web PASS, deploy-pages “Ensure GitHub Pages has been enabled”).
+- Web text: use `SystemFont` primary when `OS.has_feature("web")` (#23). Bundled FontFile/`load_dynamic_font` still tofu on HTML5; local verify after #23 shows readable TitleScreen + briefing.
 
 ---
 
