@@ -186,7 +186,8 @@ Data-driven multi-dimension relationships, per-character memories, cover identit
 | op | shape |
 |----|--------|
 | `rel` | `{"op":"rel","char":"maris_quell","trust":1,"suspicion":-1}` (+ optional `knowledge`) |
-| `memory` | `{"op":"memory","char":"maris_quell","id":"...","summary":"...","salience":2,"tags":[],"beat":"..."}` |
+| `memory` | `{"op":"memory","id":"...","summary":"...","tags":["maris"]}` — `char` optional (inferred from tags/id); also Core flat `GameState.memories` |
+| `item` | Inventory pickup; mapped ids like `shipping_discrepancy` → `frag.shipping_delta` evidence obtain |
 | `cover` | `{"op":"cover","action":"assert\|slip\|adjust_heat\|repair\|blow",...}` |
 | `heat` | Core shorthand → `cover.adjust_heat` |
 | `evidence` | `{"op":"evidence","action":"obtain\|verify\|dispute","id":"frag.shipping_delta"}` |
@@ -195,7 +196,8 @@ Data-driven multi-dimension relationships, per-character memories, cover identit
 
 ### Presentation (Agent D)
 
-`GameState.systems.present_character(id)` / `present_cover()` / `present_evidence()` / `present_mission()` / `present_debrief()`
+`GameState.systems.present_character(id)` / `present_cover()` / `present_evidence()` / `present_mission()` / `present_debrief()`  
+Helpers: `RelationshipQuery.present(id)`, `CoverAPI.present()`, `CoverAPI.evidence_notebook()`, `CoverAPI.debrief()` — prefer these over raw heat/rel ints in chrome.
 
 ### Content
 
@@ -208,6 +210,13 @@ Data-driven multi-dimension relationships, per-character memories, cover identit
 ### Objective id mapping
 
 Mission file uses `obj.*` ids; GameState seeds Core ids (`contact_maris`, …). Sync mirrors both: completing `obj.contact_maris` also sets `contact_maris` status on GameState.
+
+### Trade-off balance (follow-up)
+
+- **Professional without romance:** `path.pro_extract` / `path.pro_cold` → `clean_professional` (lukewarm affection OK; genuine memories not required)
+- **Human without full intel:** `path.human_first` → `human_first` (genuine connection; fragment can fail)
+- Narrative memories without `char` infer speaker via tags/id (`mem_maris_*`, tags `maris`/`moth`/…)
+- Cover assert/slip hardened (empty key/value, blown no-ops, inconsistency dedupe, repair cools only when not ignoring blown)
 
 ## Agent D — Presentation
 

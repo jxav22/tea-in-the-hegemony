@@ -32,6 +32,7 @@ var social_highlights: Array[Dictionary] = []
 var trade_off_tags: Array[String] = []
 var handler_note: String = ""
 var personal_note: String = ""
+var genuine_connection: bool = false ## romance/human axis without requiring full intel
 
 
 func collect_from(
@@ -68,6 +69,7 @@ func collect_from(
 			cover_score = 0
 
 	professional_score = _score_professional(mission, evidence)
+	genuine_connection = _has_genuine_connection(rels)
 	human_score = _score_human(rels)
 	_derive_outcome(mission)
 	_compose_notes(rels, cover)
@@ -92,6 +94,30 @@ func _score_professional(mission: MissionManager, evidence: EvidenceManager) -> 
 	return clampi(score, 0, 100)
 
 
+const GENUINE_MEMORY_IDS: Array[String] = [
+	"shared_something_real",
+	"mem_maris_freight_joke",
+	"mem_cloak_hypothesis",
+	"mem_ending_connection",
+	"mem_ending_human",
+	"mem_maris_page_four",
+	"mem_split_help",
+]
+
+
+func _has_genuine_connection(rels: RelationshipManager) -> bool:
+	if rels == null:
+		return false
+	for mid in GENUINE_MEMORY_IDS:
+		if rels.has_memory_anywhere(mid):
+			return true
+	if rels.has_memory_with_tag_anywhere("genuine"):
+		return true
+	if rels.has_character("maris_quell"):
+		return rels.get_dim("maris_quell", RelationshipDimensions.AFFECTION) >= 18
+	return false
+
+
 func _score_human(rels: RelationshipManager) -> int:
 	if rels == null:
 		return 0
@@ -108,10 +134,13 @@ func _score_human(rels: RelationshipManager) -> int:
 		score += clampi(comfort / 2, -10, 15)
 		score -= clampi(suspicion, 0, 35)
 		score += clampi(authenticity / 2, -15, 15)
-		if rels.has_memory("maris_quell", "shared_something_real"):
+		if _has_genuine_connection(rels):
 			score += 12
-		if rels.has_memory("maris_quell", "felt_used"):
+		if rels.has_memory("maris_quell", "felt_used") or rels.has_memory_anywhere("felt_used"):
 			score -= 18
+		if rels.has_memory_anywhere("mem_skipped_impress"):
+			# Restraint can be human without romance — small bump only.
+			score += 4
 		social_highlights.append(rels.present("maris_quell"))
 	# Secondary: Taly perception, Wren approval (handler is professional, not human win).
 	if rels.has_character("taly_renn"):
@@ -119,6 +148,10 @@ func _score_human(rels: RelationshipManager) -> int:
 		if taly_sus >= 30:
 			score -= 8
 			trade_off_tags.append("taly_clocked_you")
+		if rels.has_memory_anywhere("mem_helped_taly"):
+			score += 6
+		if rels.has_memory_anywhere("mem_abandoned_taly"):
+			score -= 6
 	return clampi(score, 0, 100)
 
 
@@ -131,9 +164,15 @@ func _derive_outcome(mission: MissionManager) -> void:
 		trade_off_tags.append("blown")
 		return
 
-	var intel_ok := objectives_complete.has("obj.obtain_fragment") \
-		or objectives_complete.has("obj.identify_voss")
-	# Broader: any required intel-ish complete count.
+	var fragment_got := (
+		objectives_complete.has("obj.obtain_fragment")
+		or objectives_complete.has("obtain_fragment")
+		or "frag.shipping_delta" in evidence_obtained
+		or "shipping_discrepancy" in evidence_obtained
+	)
+	var intel_ok := fragment_got \
+		or objectives_complete.has("obj.identify_voss") \
+		or objectives_complete.has("identify_voss")
 	var req_done := objectives_complete.size()
 	var req_failed := 0
 	for oid in objectives_failed:
@@ -141,25 +180,31 @@ func _derive_outcome(mission: MissionManager) -> void:
 		if obj != null and obj.required:
 			req_failed += 1
 
-	var pro_high := professional_score >= 60
-	var human_high := human_score >= 60
-	var pro_low := professional_score < 35
-	var human_low := human_score < 35
+	# Thresholds: pro success without romance; human success without full intel.
+	var pro_high := professional_score >= 55
+	var pro_low := professional_score < 40
+	# Human axis = genuine connection OR high human score (affection/memories).
+	var human_connection := genuine_connection or human_score >= 60
 
 	if cover_heat >= 55:
 		trade_off_tags.append("high_heat")
-	if human_high:
+	if human_connection:
 		trade_off_tags.append("human_connection")
+	else:
+		trade_off_tags.append("romance_absent")
 	if pro_high:
 		trade_off_tags.append("professional_success")
+	if not fragment_got:
+		trade_off_tags.append("intel_incomplete")
 	if contradictions_open.size() > 0:
 		trade_off_tags.append("unresolved_intel")
 
-	if pro_high and human_high and cover_heat < 40:
+	if pro_high and human_connection and cover_heat < 40 and fragment_got:
 		outcome_id = OUTCOME_BALANCED
 		outcome_title = "Both Ledgers"
 		outcome_summary = "You leave with the fragment and something harder to file: a real conversation."
-	elif pro_high and human_low:
+	elif pro_high and not human_connection:
+		# Professional success without romance — reachable even with lukewarm social score.
 		outcome_id = OUTCOME_CLEAN_PROFESSIONAL if cover_heat < 35 else OUTCOME_PROFESSIONAL_COSTLY
 		outcome_title = "Clean Extraction" if outcome_id == OUTCOME_CLEAN_PROFESSIONAL else "Costly Success"
 		outcome_summary = (
@@ -168,12 +213,13 @@ func _derive_outcome(mission: MissionManager) -> void:
 			else "The intel is solid. The room remembers your sweat."
 		)
 		trade_off_tags.append("mission_over_person")
-	elif human_high and pro_low:
+	elif human_connection and (pro_low or not fragment_got):
+		# Human success without full intel — connection can win even if fragment missing.
 		outcome_id = OUTCOME_HUMAN_FIRST
 		outcome_title = "The Soft Exit"
 		outcome_summary = "You protected a person and lost an angle. Wren will not clap."
 		trade_off_tags.append("person_over_mission")
-	elif req_failed > 0 or (pro_low and human_low):
+	elif req_failed > 0 or (pro_low and not human_connection and human_score < 40):
 		outcome_id = OUTCOME_COMPROMISED
 		outcome_title = "Compromised Evening"
 		outcome_summary = "Little to show Wren. Little warmth left in the room."

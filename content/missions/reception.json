@@ -9,11 +9,11 @@
     "political_figure": "edrin_voss",
     "target_fragment": "frag.shipping_delta",
     "trade_off_design": {
-      "principle": "Professional success and social/human outcomes are both reachable; maximizing one pressures the other.",
+      "principle": "Professional success without romance and human success without full intel are both reachable; maximizing one pressures the other.",
       "example_paths": [
         {
           "id": "path.pro_extract",
-          "label": "Clean professional",
+          "label": "Clean professional (instrumental)",
           "beats": [
             "Brief with Wren — prioritize fragment over rapport",
             "Identify Voss via salon observation / guest cipher, minimal chat",
@@ -31,8 +31,25 @@
           ]
         },
         {
+          "id": "path.pro_cold",
+          "label": "Clean professional without romance (lukewarm)",
+          "beats": [
+            "Polite contact — no genuine beat, no felt_used sting",
+            "Identify Voss + obtain/verify fragment",
+            "Skip terrace honesty; affection stays low"
+          ],
+          "expected_outcome": "clean_professional",
+          "effects_sketch": [
+            {"op": "objective", "action": "complete", "id": "obj.contact_maris"},
+            {"op": "objective", "action": "complete", "id": "obj.identify_voss"},
+            {"op": "evidence", "action": "obtain", "id": "frag.shipping_delta"},
+            {"op": "evidence", "action": "verify", "id": "frag.shipping_delta"},
+            {"op": "rel", "char": "maris_quell", "trust": 8, "affection": 2, "comfort": 4, "suspicion": 0, "perceived_authenticity": 5}
+          ]
+        },
+        {
           "id": "path.human_first",
-          "label": "Human first",
+          "label": "Human first without full intel",
           "beats": [
             "Contact Maris sincerely on terrace; share a non-cover detail",
             "Defuse Taly with honesty-adjacent humour",
@@ -44,7 +61,7 @@
           "effects_sketch": [
             {"op": "objective", "action": "complete", "id": "obj.contact_maris"},
             {"op": "rel", "char": "maris_quell", "trust": 15, "affection": 20, "comfort": 15, "perceived_authenticity": 12},
-            {"op": "memory", "char": "maris_quell", "id": "shared_something_real", "summary": "He said something that wasn't logistics.", "salience": 4, "tags": ["honest", "personal"]},
+            {"op": "memory", "id": "mem_ending_human", "summary": "She kept the conversation that wasn't a mission.", "salience": 4, "tags": ["ending", "maris", "genuine"]},
             {"op": "objective", "action": "fail", "id": "obj.obtain_fragment"}
           ]
         },
@@ -234,7 +251,17 @@
         {"kind": "flag", "flag": "met_maris", "op": "eq", "value": true}
       ],
       "complete_when": [
-        {"kind": "memory", "char": "maris_quell", "memory": "shared_something_real"}
+        {
+          "any": [
+            {"kind": "memory", "char": "maris_quell", "memory": "shared_something_real"},
+            {"kind": "memory", "memory": "mem_maris_freight_joke"},
+            {"kind": "memory", "memory": "mem_cloak_hypothesis"},
+            {"kind": "memory", "memory": "mem_ending_connection"},
+            {"kind": "memory", "memory": "mem_ending_human"},
+            {"kind": "memory", "memory": "mem_maris_page_four"},
+            {"kind": "memory", "memory_tag": "genuine"}
+          ]
+        }
       ]
     },
     {

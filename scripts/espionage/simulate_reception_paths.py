@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Offline simulator for Reception trade-off paths (no Godot / no LLM).
 
-Mirrors MissionReport outcome logic enough to prove both professional and
-human endings are reachable from content/missions/reception.json sketches.
+Mirrors MissionReport outcome logic enough to prove professional-without-romance
+and human-without-full-intel endings are both reachable.
 """
 
 from __future__ import annotations
@@ -26,10 +26,47 @@ DIMS = [
     "perceived_authenticity",
 ]
 
+GENUINE_IDS = {
+    "shared_something_real",
+    "mem_maris_freight_joke",
+    "mem_cloak_hypothesis",
+    "mem_ending_connection",
+    "mem_ending_human",
+    "mem_maris_page_four",
+    "mem_split_help",
+}
+
+TAG_CHAR = {
+    "maris": "maris_quell",
+    "moth": "clerk_moth",
+    "wren": "wren_halden",
+    "taly": "taly_renn",
+    "sera": "sera_kade",
+    "pim": "pim_orel",
+    "voss": "edrin_voss",
+}
+
 
 def load_json(path: Path):
     with path.open(encoding="utf-8") as f:
         return json.load(f)
+
+
+def infer_char(effect: dict) -> str:
+    if effect.get("char") or effect.get("character"):
+        return str(effect.get("char") or effect.get("character"))
+    tags = [str(t).lower() for t in effect.get("tags", [])]
+    mid = str(effect.get("id", "")).lower()
+    for t in tags:
+        if t in TAG_CHAR:
+            return TAG_CHAR[t]
+        for key, cid in TAG_CHAR.items():
+            if key in t:
+                return cid
+    for key, cid in TAG_CHAR.items():
+        if key in mid:
+            return cid
+    return "cassian_vale"
 
 
 class Sim:
@@ -37,9 +74,11 @@ class Sim:
         self.flags: dict = {}
         self.rels: dict[str, dict] = {}
         self.memories: dict[str, set[str]] = {}
+        self.memory_tags: dict[str, set[str]] = {}
         self.heat = 0
         self.blown = False
         self.inconsistencies = 0
+        self.stated_facts: dict = {}
         self.evidence = {
             frag["id"]: {
                 "obtained": False,
@@ -49,7 +88,11 @@ class Sim:
             for frag in evidence_catalog.get("fragments", [])
         }
         self.objectives = {
-            o["id"]: {"status": o.get("status", "hidden"), "required": o.get("required", True), "category": o.get("category", "intel")}
+            o["id"]: {
+                "status": o.get("status", "hidden"),
+                "required": o.get("required", True),
+                "category": o.get("category", "intel"),
+            }
             for o in mission.get("objectives", [])
         }
         self.mission_meta = mission.get("meta", {})
@@ -68,12 +111,11 @@ class Sim:
                 if d in effect:
                     state[d] = max(-100, min(100, state[d] + int(effect[d])))
         elif op == "memory":
-            char = effect["char"]
-            self.memories.setdefault(char, set()).add(effect["id"])
-            if effect["id"] == "shared_something_real":
-                self.flags["shared_real"] = True
-            if effect["id"] == "felt_used":
-                self.flags["felt_used"] = True
+            char = infer_char(effect)
+            mid = effect["id"]
+            self.memories.setdefault(char, set()).add(mid)
+            for t in effect.get("tags", []):
+                self.memory_tags.setdefault(char, set()).add(str(t))
         elif op == "evidence":
             action = effect.get("action", "obtain")
             fid = effect["id"]
@@ -90,12 +132,29 @@ class Sim:
                 self.blown = True
                 self.heat = max(self.heat, 80)
             elif action == "slip":
+                key = effect.get("key", "slip")
+                val = effect.get("value", "")
+                if key in self.stated_facts and self.stated_facts[key] != val:
+                    self.inconsistencies += 1
+                self.stated_facts[key] = val
                 self.heat = min(100, self.heat + int(effect.get("heat", 15)))
                 self.inconsistencies += 1
+            elif action == "assert":
+                key = effect.get("key", "")
+                val = effect.get("value", "")
+                if key and key in self.stated_facts and self.stated_facts[key] != val and val != "":
+                    self.inconsistencies += 1
+                    self.heat = min(100, self.heat + int(effect.get("heat", 12)))
+                elif key and val != "":
+                    self.stated_facts[key] = val
             elif action == "adjust_heat":
                 self.heat = max(0, min(100, self.heat + int(effect.get("delta", 0))))
-            elif action == "assert" and effect.get("heat"):
-                self.heat = max(0, min(100, self.heat + int(effect["heat"])))
+            elif action == "repair":
+                delta = int(effect.get("delta", -5))
+                if delta > 0:
+                    delta = -delta
+                if not self.blown:
+                    self.heat = max(0, min(100, self.heat + delta))
             if self.heat >= 80:
                 self.blown = True
         elif op == "objective":
@@ -108,29 +167,30 @@ class Sim:
                     self.objectives[oid]["status"] = "failed"
                 elif action == "activate":
                     self.objectives[oid]["status"] = "active"
-        # Derived flags from common mission completes
         if self.evidence.get("frag.shipping_delta", {}).get("obtained") or (
             self.evidence.get("frag.guest_cipher", {}).get("obtained")
             and self.evidence.get("frag.pim_rumour", {}).get("obtained")
         ):
             self.objectives["obj.obtain_fragment"]["status"] = "complete"
-        if self.flags.get("met_maris") or "obj.contact_maris" in [
-            e.get("id") for e in []
-        ]:
-            pass
 
     def apply_path_flags(self, path_id: str) -> None:
-        # Path-specific narrative flags the sketches imply
-        if path_id in ("path.human_first", "path.balanced", "path.pro_extract", "path.costly_success"):
+        if path_id in (
+            "path.human_first",
+            "path.balanced",
+            "path.pro_extract",
+            "path.pro_cold",
+            "path.costly_success",
+        ):
             self.flags["met_maris"] = True
             self.objectives["obj.contact_maris"]["status"] = "complete"
-        if path_id in ("path.pro_extract", "path.balanced", "path.costly_success"):
+        if path_id in ("path.pro_extract", "path.pro_cold", "path.balanced", "path.costly_success"):
             self.flags["identified_voss"] = True
             self.objectives["obj.identify_voss"]["status"] = "complete"
-            self.evidence.setdefault("frag.voss_confirm", {"obtained": False, "verified": False, "contradicts": []})
+            self.evidence.setdefault(
+                "frag.voss_confirm", {"obtained": False, "verified": False, "contradicts": []}
+            )
             self.evidence["frag.voss_confirm"]["obtained"] = True
         if path_id == "path.human_first":
-            # Soft identify optional — may miss Voss
             self.flags["identified_voss"] = False
         if path_id != "path.blown":
             self.flags["reception_ending"] = True
@@ -144,9 +204,22 @@ class Sim:
             self.objectives["obj.maintain_cover"]["status"] = "failed"
             self.objectives["obj.contact_maris"]["status"] = "failed"
 
+    def genuine(self) -> bool:
+        for mems in self.memories.values():
+            if mems & GENUINE_IDS:
+                return True
+            if "genuine" in self.memory_tags.get(
+                next((c for c, m in self.memories.items() if m is mems), ""), set()
+            ):
+                return True
+        for char, tags in self.memory_tags.items():
+            if "genuine" in tags:
+                return True
+        m = self.ensure_rel("maris_quell")
+        return m["affection"] >= 18
+
     def score(self) -> dict:
         cover_score = 0 if self.blown else 100 - self.heat
-        # Professional
         pro = 0
         for oid, obj in self.objectives.items():
             if obj["required"] and obj["category"] in ("intel", "cover", "survival"):
@@ -166,7 +239,6 @@ class Sim:
         pro = int(pro * (0.5 + 0.5 * (cover_score / 100.0)))
         pro = max(0, min(100, pro))
 
-        # Human (Maris-centric)
         human = 40
         m = self.ensure_rel("maris_quell")
         human += max(-20, min(25, m["trust"]))
@@ -174,20 +246,30 @@ class Sim:
         human += max(-10, min(15, m["comfort"] // 2))
         human -= max(0, min(35, m["suspicion"]))
         human += max(-15, min(15, m["perceived_authenticity"] // 2))
-        mems = self.memories.get("maris_quell", set())
-        if "shared_something_real" in mems:
+        genuine = self.genuine()
+        if genuine:
             human += 12
-        if "felt_used" in mems:
+        all_mems = set()
+        for s in self.memories.values():
+            all_mems |= s
+        if "felt_used" in all_mems:
             human -= 18
+        if "mem_skipped_impress" in all_mems:
+            human += 4
+        if "mem_helped_taly" in all_mems:
+            human += 6
+        if "mem_abandoned_taly" in all_mems:
+            human -= 6
         human = max(0, min(100, human))
 
-        outcome = self.derive_outcome(pro, human, cover_score)
+        outcome = self.derive_outcome(pro, human, genuine)
         return {
             "professional_score": pro,
             "human_score": human,
             "cover_score": cover_score,
             "heat": self.heat,
             "blown": self.blown,
+            "genuine": genuine,
             "outcome_id": outcome,
             "objectives": {k: v["status"] for k, v in self.objectives.items()},
             "evidence_obtained": [k for k, v in self.evidence.items() if v.get("obtained")],
@@ -195,23 +277,25 @@ class Sim:
             "memories": {k: sorted(v) for k, v in self.memories.items()},
         }
 
-    def derive_outcome(self, pro: int, human: int, cover_score: int) -> str:
+    def derive_outcome(self, pro: int, human: int, genuine: bool) -> str:
         if self.blown:
             return "blown"
-        pro_high, human_high = pro >= 60, human >= 60
-        pro_low, human_low = pro < 35, human < 35
-        if pro_high and human_high and self.heat < 40:
+        fragment_got = self.evidence.get("frag.shipping_delta", {}).get("obtained") or self.objectives[
+            "obj.obtain_fragment"
+        ]["status"] == "complete"
+        pro_high = pro >= 55
+        pro_low = pro < 40
+        human_connection = genuine or human >= 60
+        if pro_high and human_connection and self.heat < 40 and fragment_got:
             return "balanced"
-        if pro_high and human_low:
+        if pro_high and not human_connection:
             return "clean_professional" if self.heat < 35 else "professional_costly"
-        if human_high and pro_low:
+        if human_connection and (pro_low or not fragment_got):
             return "human_first"
         req_failed = sum(
-            1
-            for o in self.objectives.values()
-            if o["required"] and o["status"] == "failed"
+            1 for o in self.objectives.values() if o["required"] and o["status"] == "failed"
         )
-        if req_failed or (pro_low and human_low):
+        if req_failed or (pro_low and not human_connection and human < 40):
             return "compromised"
         return "partial"
 
@@ -221,8 +305,10 @@ def run_path(mission: dict, evidence: dict, path: dict) -> dict:
     for effect in path.get("effects_sketch", []):
         sim.apply(effect)
     sim.apply_path_flags(path["id"])
-    # Optional objective from memory
-    if "shared_something_real" in sim.memories.get("maris_quell", set()):
+    all_mems = set()
+    for s in sim.memories.values():
+        all_mems |= s
+    if all_mems & GENUINE_IDS or any("genuine" in tags for tags in sim.memory_tags.values()):
         sim.objectives["obj.optional_real_talk"]["status"] = "complete"
     if sim.evidence.get("frag.shipping_delta", {}).get("verified"):
         sim.objectives["obj.optional_verify"]["status"] = "complete"
@@ -256,7 +342,7 @@ def main() -> int:
         print(f"  expected={result['expected_outcome']} got={result['outcome_id']}")
         print(
             f"  pro={result['professional_score']} human={result['human_score']} "
-            f"cover={result['cover_score']} heat={result['heat']} blown={result['blown']}"
+            f"cover={result['cover_score']} heat={result['heat']} genuine={result['genuine']} blown={result['blown']}"
         )
         print(f"  objectives={result['objectives']}")
         print(f"  evidence={result['evidence_obtained']} verified={result['evidence_verified']}")
@@ -264,13 +350,12 @@ def main() -> int:
 
     print("\n" + "=" * 60)
     print(f"Distinct outcomes reached: {sorted(outcomes)}")
-    both = "clean_professional" in outcomes or "professional_costly" in outcomes
-    human = "human_first" in outcomes
-    balanced = "balanced" in outcomes
-    print(f"Professional reachable: {both}")
-    print(f"Human-first reachable: {human}")
-    print(f"Balanced reachable: {balanced}")
-    if not (both and human):
+    pro_ok = "clean_professional" in outcomes or "professional_costly" in outcomes
+    human_ok = "human_first" in outcomes
+    print(f"Professional-without-romance reachable: {pro_ok}")
+    print(f"Human-without-full-intel reachable: {human_ok}")
+    print(f"Balanced reachable: {'balanced' in outcomes}")
+    if not (pro_ok and human_ok):
         all_ok = False
         print("FAIL: both professional and human outcomes must be reachable", file=sys.stderr)
     return 0 if all_ok else 2

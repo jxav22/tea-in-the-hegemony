@@ -41,7 +41,7 @@ static func apply(effect: Dictionary) -> void:
 		"objective":
 			_apply_objective(effect)
 		"item":
-			GameState.add_inventory_item(StringName(str(effect.get("id", ""))), effect.get("meta", {}) as Dictionary)
+			_apply_item(effect)
 		"beat":
 			GameState.advance_beat()
 		"location":
@@ -57,6 +57,58 @@ static func apply(effect: Dictionary) -> void:
 					push_warning("EffectExecutor: unknown op '%s'" % op)
 			else:
 				push_warning("EffectExecutor: unknown op '%s'" % op)
+
+
+## Narrative item ids → evidence fragment ids.
+const ITEM_EVIDENCE_MAP := {
+	"shipping_discrepancy": "frag.shipping_delta",
+	"frag.shipping_delta": "frag.shipping_delta",
+	"guest_cipher": "frag.guest_cipher",
+	"frag.guest_cipher": "frag.guest_cipher",
+	"voss_confirm": "frag.voss_confirm",
+	"frag.voss_confirm": "frag.voss_confirm",
+}
+
+
+static func _apply_item(effect: Dictionary) -> void:
+	var item_id := str(effect.get("id", ""))
+	var meta: Dictionary = effect.get("meta", {}) as Dictionary
+	if meta.is_empty():
+		meta = {}
+	else:
+		meta = meta.duplicate(true)
+	GameState.add_inventory_item(StringName(item_id), meta)
+	# Bridge inventory pickups into Systems evidence when mapped.
+	if GameState.systems == null:
+		return
+	var frag_id := str(ITEM_EVIDENCE_MAP.get(item_id, ""))
+	if frag_id == "" and item_id.begins_with("frag."):
+		frag_id = item_id
+	if frag_id == "":
+		return
+	if not GameState.systems.evidence.has_fragment(frag_id):
+		# Register a minimal fragment so obtain still works.
+		GameState.systems.evidence.register_fragment({
+			"id": frag_id,
+			"title": str(meta.get("label", meta.get("title", frag_id))),
+			"summary": str(meta.get("summary", meta.get("label", ""))),
+			"claims": meta.get("claims", []),
+			"contradicts": meta.get("contradicts", []),
+			"mission_id": "mission.reception",
+		})
+	GameState.apply_systems_effect({
+		"op": "evidence",
+		"action": "obtain",
+		"id": frag_id,
+		"beat": str(effect.get("beat", "")),
+	})
+	if bool(meta.get("verified", false)):
+		GameState.apply_systems_effect({
+			"op": "evidence",
+			"action": "verify",
+			"id": frag_id,
+			"notes": str(meta.get("verification_notes", "item_meta")),
+		})
 
 
 static func _apply_objective(effect: Dictionary) -> void:

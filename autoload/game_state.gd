@@ -170,17 +170,20 @@ func add_memory(memory: Dictionary) -> void:
 		memory["salience"] = 1
 	if not memory.has("tags"):
 		memory["tags"] = []
+	if str(memory.get("char", "")) == "" and str(memory.get("about_character", "")) == "":
+		memory["char"] = RelationshipManager.infer_memory_character(memory)
+	var char_id := str(memory.get("char", memory.get("about_character", "")))
 	# Dedupe by id.
 	for i in range(memories.size()):
 		if typeof(memories[i]) == TYPE_DICTIONARY and str((memories[i] as Dictionary).get("id", "")) == str(memory["id"]):
 			memories[i] = memory
 			memory_added.emit(memory)
-			if systems != null and memory.has("char"):
-				systems.relationships.add_memory(str(memory["char"]), memory)
+			if systems != null and char_id != "":
+				systems.relationships.add_memory(char_id, memory)
 			return
 	memories.append(memory)
-	if systems != null and str(memory.get("char", "")) != "":
-		systems.relationships.add_memory(str(memory["char"]), memory)
+	if systems != null and char_id != "":
+		systems.relationships.add_memory(char_id, memory)
 	memory_added.emit(memory)
 
 

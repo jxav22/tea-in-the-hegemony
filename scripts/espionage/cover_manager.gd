@@ -41,7 +41,11 @@ func apply_effect(effect: Dictionary) -> Dictionary:
 		"adjust_heat":
 			return adjust_heat(int(effect.get("delta", 0)), str(effect.get("reason", "adjust")))
 		"repair":
-			return adjust_heat(int(effect.get("delta", -5)), str(effect.get("reason", effect.get("beat", "repair"))))
+			# Explicit repair may cool heat even after a scare; does not un-blow.
+			var repair_delta := int(effect.get("delta", -5))
+			if repair_delta > 0:
+				repair_delta = -repair_delta
+			return adjust_heat(repair_delta, "repair:%s" % str(effect.get("reason", effect.get("beat", ""))))
 		"blow":
 			return blow(str(effect.get("reason", "explicit")))
 		"set_fact":
@@ -57,9 +61,15 @@ func _assert_fact(effect: Dictionary) -> Dictionary:
 	var beat := str(effect.get("beat", ""))
 	var witness := str(effect.get("witness", ""))
 	if key == "":
-		return {}
+		push_warning("cover assert missing key")
+		return {"ok": false, "error": "missing_key"}
+	if value == "" and not bool(effect.get("allow_empty", false)):
+		push_warning("cover assert empty value for key %s" % key)
+		return {"ok": false, "error": "empty_value", "key": key}
+	if cover.blown and not bool(effect.get("force", false)):
+		return {"ok": false, "error": "cover_blown", "key": key, "value": value}
 
-	var result := {"key": key, "value": value, "consistent": true}
+	var result := {"key": key, "value": value, "consistent": true, "ok": true}
 	if cover.stated_facts.has(key):
 		var prior: Dictionary = cover.stated_facts[key]
 		var prior_value := str(prior.get("value", ""))
@@ -73,18 +83,38 @@ func _assert_fact(effect: Dictionary) -> Dictionary:
 				"prior_beat": str(prior.get("beat", "")),
 				"witness": witness,
 			}
-			cover.inconsistencies.append(detail)
-			inconsistency_recorded.emit(key, detail)
+			# Dedupe identical inconsistency rows.
+			var dup := false
+			for existing in cover.inconsistencies:
+				if str(existing.get("key", "")) == key \
+					and str(existing.get("prior", "")) == prior_value \
+					and str(existing.get("stated", "")) == value:
+					dup = true
+					break
+			if not dup:
+				cover.inconsistencies.append(detail)
+				inconsistency_recorded.emit(key, detail)
 			var heat_delta := int(effect.get("heat", 12))
 			adjust_heat(heat_delta, "inconsistency:%s" % key)
 			_bump_witness_suspicion(witness, int(effect.get("suspicion", 8)))
 			result["inconsistency"] = detail
 			return result
+		# Same value restated — refresh beat/witnesses only.
+		var witnesses_same: Array = prior.get("witnesses", []).duplicate()
+		if witness != "" and witness not in witnesses_same:
+			witnesses_same.append(witness)
+		cover.stated_facts[key] = {
+			"value": prior_value if prior_value != "" else value,
+			"beat": beat if beat != "" else str(prior.get("beat", "")),
+			"witnesses": witnesses_same,
+		}
+		if bool(effect.get("reinforce", false)):
+			adjust_heat(int(effect.get("heat", -2)), "reinforce:%s" % key)
+		result["reinforced"] = true
+		return result
 
 	var witnesses: Array = []
-	if cover.stated_facts.has(key):
-		witnesses = cover.stated_facts[key].get("witnesses", []).duplicate()
-	if witness != "" and witness not in witnesses:
+	if witness != "":
 		witnesses.append(witness)
 	cover.stated_facts[key] = {
 		"value": value,
@@ -99,9 +129,13 @@ func _assert_fact(effect: Dictionary) -> Dictionary:
 
 func _slip(effect: Dictionary) -> Dictionary:
 	var key := str(effect.get("key", "slip"))
+	if key == "":
+		key = "slip"
 	var value := str(effect.get("value", ""))
 	var beat := str(effect.get("beat", ""))
 	var witness := str(effect.get("witness", ""))
+	if cover.blown and not bool(effect.get("force", false)):
+		return {"ok": false, "error": "cover_blown", "key": key}
 	var detail := {
 		"key": key,
 		"stated": value,
@@ -116,18 +150,31 @@ func _slip(effect: Dictionary) -> Dictionary:
 	_bump_witness_suspicion(witness, int(effect.get("suspicion", 12)))
 	if relationships != null and witness != "":
 		relationships.set_knowledge(witness, "saw_inconsistency", true)
+		var slip_id := "cover_slip_%s_%s" % [key, beat if beat != "" else str(cover.inconsistencies.size())]
 		relationships.apply_memory_effect({
 			"char": witness,
-			"id": "cover_slip_%s_%s" % [key, beat],
-			"summary": "Something Cassian said did not sit right: %s." % value,
+			"id": slip_id,
+			"summary": "Something Cassian said did not sit right: %s." % (value if value != "" else key),
 			"salience": 3,
 			"tags": ["cover", "inconsistency"],
 			"beat": beat,
 		})
+	detail["ok"] = true
 	return detail
 
 
 func adjust_heat(delta: int, reason: String = "") -> Dictionary:
+	if cover.blown and delta < 0 and not bool(reason.begins_with("repair")):
+		# Cooling while blown is a no-op unless explicit repair.
+		return {
+			"before": cover.heat,
+			"heat": cover.heat,
+			"band": cover.heat_band(),
+			"delta": 0,
+			"reason": reason,
+			"blown": true,
+			"ignored": true,
+		}
 	var before := cover.heat
 	cover.heat = clampi(cover.heat + delta, 0, 100)
 	heat_changed.emit(cover.heat, cover.heat_band(), reason)
@@ -145,6 +192,8 @@ func adjust_heat(delta: int, reason: String = "") -> Dictionary:
 
 
 func blow(reason: String = "") -> Dictionary:
+	if cover.blown:
+		return {"blown": true, "reason": reason, "heat": cover.heat, "already": true}
 	cover.blown = true
 	cover.heat = maxi(cover.heat, HEAT_BLOW_THRESHOLD)
 	cover_blown.emit(reason)
