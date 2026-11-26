@@ -254,7 +254,7 @@
       "choices": [
         {
           "id": "impress.skip.next",
-          "text": "I schedule embarrassment for after coffee.",
+          "text": "I schedule humiliation for after coffee.",
           "intent": "playful",
           "next": null,
           "effects": [
@@ -454,7 +454,7 @@
         },
         {
           "faculty": "Insecurity",
-          "text": "She has seen you. Or she is looking at the window. Or both. Both is worse.",
+          "text": "She has already finished inventorying you. Or the window. Or both.",
           "weight": 1
         }
       ]
@@ -608,7 +608,7 @@
         },
         {
           "id": "salon.genuine.deflect",
-          "text": "Honesty is expensive. Logistics taught me to invoice carefully.",
+          "text": "Honesty invoices poorly. I work freight.",
           "intent": "deflect",
           "next": "salon.genuine_deflect",
           "effects": [
@@ -629,7 +629,7 @@
       "faculty_interjections": [
         {
           "faculty": "Empathy",
-          "text": "She handed you a window. Climb through or wallpaper over it.",
+          "text": "She is not casting a lead. She is hiring evidence.",
           "weight": 2
         },
         {
@@ -890,7 +890,7 @@
       "choices": [
         {
           "id": "salon.intro.protocol",
-          "text": "Adjectives inflate risk. I prefer verbs that ship \u2014 and east-dock variance that matches the public story.",
+          "text": "Adjectives inflate risk. Verbs ship \u2014 and east-dock variance should match the public story.",
           "intent": "protocol",
           "next": "salon.intro_protocol_response",
           "effects": [
@@ -1150,7 +1150,7 @@
       "choices": [
         {
           "id": "salon.taly.name",
-          "text": "Cassian Orth. Trade liaison. I hover professionally.",
+          "text": "Cassian Orth. Trade liaison. Professional hoverer.",
           "intent": "cover",
           "next": "salon.intro_awkward",
           "effects": [
@@ -1163,7 +1163,7 @@
         },
         {
           "id": "salon.taly.honest",
-          "text": "Cassian. I'm worse at first sentences than at freight.",
+          "text": "Cassian. Worse at first sentences than freight.",
           "intent": "vulnerable",
           "next": "salon.intro_awkward",
           "effects": [
