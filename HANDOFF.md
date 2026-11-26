@@ -132,7 +132,42 @@ _(append)_
 
 ## Agent D — Presentation
 
-_(append)_
+**Branch:** `cursor/presentation-ui-df75`  
+**Owns:** `scenes/ui/`, `assets/`, `themes/`, `shaders/` (compat), `scripts/ui/`, `tools/generate_placeholders.py`
+
+### How to run UI
+
+```bash
+godot --path .                    # main = boot.tscn (wired to GameHUD)
+# Presentation-only smoke (no Core loop):
+godot --path . res://scenes/ui/ui_showcase.tscn
+```
+
+Boot flow: TitleScreen → New Game starts `DialogueRunner` briefing → GameHUD presents lines/choices/faculties → nav bar after dialogue ends → notebook/dossier/save-load/settings via Esc menu or hotkeys (`H` history, `N` notebook, `Space` advance, `1–9` choices).
+
+### Wiring (does not rewrite dialogue engine)
+
+- `scripts/ui/core_ui_controller.gd` listens to `DialogueRunner`, `FacultyBus`, `SceneRouter`, `GameState`
+- Uses shipped helpers: `CharacterRegistry`, `RelationshipQuery`, `CoverAPI` (heat / blown / evidence / affinity)
+- `scenes/main/boot.gd` restyled to host `GameHUD` + title; legacy stub labels hidden; headless smoke preserved
+- `scenes/main/dialogue_overlay.tscn` remains as Core stub — **GameHUD supersedes it** for play; overlay kept for thin embeds
+- Save/load slots map UI 0–4 → `SaveService` 1–5
+- Rebased onto `main` @ `81934cc` (PR #3)
+
+### Asset replacement
+
+See `assets/ASSETS.md` — CSP-replaceable naming:
+`portraits/{id}_{expression}.png`, `silhouettes/{id}_sil.png`, `backgrounds/{loc}_bg.png`, `ui/{element}.png`
+
+Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
+
+### Visual tokens
+
+`themes/hegemony_palette.gd` + `hegemony_theme_factory.gd` — ink navy / brass / jade / ivory / vermillion. Fonts: Tinos + Public Sans (+ Source Sans 3). Shaders: `shaders/vignette_compat.gdshader`, `panel_grain_compat.gdshader`.
+
+### Showcase
+
+`scenes/ui/ui_showcase.tscn` demos dialogue, intents, notebook, profile, objectives without Core.
 
 ## Agent E — QA
 
