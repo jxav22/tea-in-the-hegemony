@@ -275,7 +275,7 @@ func blow(reason: String = "") -> Dictionary:
 	_emit_flag_sync()
 	# Fail maintain_cover objective when systems mission is bound via GameState.
 	if Engine.get_main_loop() != null:
-		var gs := Engine.get_main_loop().root.get_node_or_null("/root/GameState")
+		var gs: Node = Engine.get_main_loop().root.get_node_or_null("/root/GameState")
 		if gs != null and gs.get("systems") != null:
 			gs.systems.mission.apply_effect({
 				"op": "objective",

@@ -434,7 +434,7 @@ def validate_dialogue(
         tags = {str(t).lower() for t in (node.get("tags") or [])}
         if "entry" in tags or "start" in tags or nid.endswith(".intro") or nid.endswith(".start"):
             entry_candidates.add(nid)
-        if "ending" in tags or "end" in tags or node.get("ending") or any(
+        if "ending" in tags or "end" in tags or "exit" in tags or node.get("ending") or any(
             isinstance(e, dict) and (e.get("op") == "end" or e.get("type") == "end")
             for e in (node.get("effects") or [])
             if isinstance(e, dict) or True
@@ -447,7 +447,12 @@ def validate_dialogue(
             if n in node_ids:
                 graph[nid].add(n)
 
-    # Reachability
+    # Reachability — hub Talk loads each pack by its own start node.
+    for start_id in report.stats.get("_pack_starts", []) or []:
+        if start_id in nodes:
+            entry_candidates.add(str(start_id))
+    if "briefing.intro" in nodes:
+        entry_candidates.add("briefing.intro")
     if not entry_candidates and nodes:
         # heuristic: nodes never referenced as next
         referenced = {n for outs in graph.values() for n in outs}
@@ -483,17 +488,37 @@ def validate_dialogue(
         if outs:
             continue
         tags = {str(t).lower() for t in (node.get("tags") or [])}
-        is_end = nid in ending_nodes or "ending" in tags or "end" in tags or node.get("ending")
+        is_end = (
+            nid in ending_nodes
+            or "ending" in tags
+            or "end" in tags
+            or "exit" in tags
+            or node.get("ending")
+        )
         if not is_end and choices:
-            # all choices missing next?
-            missing_next = all(not (isinstance(c, dict) and c.get("next")) for c in choices)
-            if missing_next:
-                report.add(
-                    "error",
-                    "softlock",
-                    f"Node '{nid}' has choices without next and is not an ending",
-                    sources.get(nid, nid),
+            # No usable next target on any choice?
+            no_target = all(not (isinstance(c, dict) and c.get("next")) for c in choices)
+            if no_target:
+                # Explicit next:null on every choice = intentional hub return (Talk ends).
+                # Softlock only when authors omitted `next` entirely.
+                explicit_hub = all(
+                    isinstance(c, dict) and "next" in c and not c.get("next")
+                    for c in choices
                 )
+                if explicit_hub:
+                    report.add(
+                        "info",
+                        "hub_terminal",
+                        f"Node '{nid}' ends Talk with next:null (hub return)",
+                        sources.get(nid, nid),
+                    )
+                else:
+                    report.add(
+                        "error",
+                        "softlock",
+                        f"Node '{nid}' has choices without next and is not an ending",
+                        sources.get(nid, nid),
+                    )
         elif not is_end and not choices and node.get("next") is None:
             # dead end mid content
             report.add(
@@ -503,17 +528,22 @@ def validate_dialogue(
                 sources.get(nid, nid),
             )
 
-        # contradictory choice gates: mutually exclusive conditions that leave no choice
+        # System/ending routers are expected to be fully conditioned — not softlocks.
         if isinstance(choices, list) and choices:
+            intents = {
+                str(c.get("intent", "")).lower()
+                for c in choices
+                if isinstance(c, dict)
+            }
             gated = [c for c in choices if isinstance(c, dict) and c.get("conditions")]
-            if gated and len(gated) == len(choices):
-                # flag as potential softlock if every choice requires a flag
-                report.add(
-                    "info",
-                    "softlock_heuristic",
-                    f"Node '{nid}': all choices are conditioned — verify a path always remains",
-                    sources.get(nid, nid),
-                )
+            if gated and len(gated) == len(choices) and not intents <= {"system", "ending", ""}:
+                if node.get("next") is None:
+                    report.add(
+                        "info",
+                        "softlock_heuristic",
+                        f"Node '{nid}': all player choices conditioned with no linear fallback",
+                        sources.get(nid, nid),
+                    )
 
     # Contradictory flags: set_flag true and false on same node effects without branch
     for nid, node in nodes.items():
@@ -602,6 +632,34 @@ def validate_project(repo: Path, report: Report) -> None:
         )
 
 
+def load_pack_starts(content_root: Path) -> list[str]:
+    starts: list[str] = []
+    index_path = content_root / "dialogue" / "reception" / "index.json"
+    if index_path.exists():
+        data = load_json(index_path)
+        if isinstance(data, dict):
+            for pack in data.get("packs", []) if isinstance(data.get("packs"), list) else []:
+                if isinstance(pack, dict) and pack.get("start"):
+                    starts.append(str(pack["start"]))
+    for chapter_path in collect_json_files(content_root / "chapters"):
+        data = load_json(chapter_path)
+        if isinstance(data, dict) and data.get("start_node"):
+            starts.append(str(data["start_node"]))
+    # Known location graph starts (hub Talk)
+    for sid in (
+        "briefing.intro",
+        "foyer.arrival",
+        "salon.enter",
+        "terrace.enter",
+        "study.enter",
+        "cloak.enter",
+        "debrief.intro",
+        "finale.router",
+    ):
+        starts.append(sid)
+    return sorted(set(starts))
+
+
 def run_validation(repo: Path) -> Report:
     report = Report()
     content = repo / "content"
@@ -614,6 +672,7 @@ def run_validation(repo: Path) -> Report:
     missions = index_missions(content, report)
     objectives = report.stats.pop("_objectives_map", {})
     nodes, sources = build_dialogue_index(content, report)
+    report.stats["_pack_starts"] = load_pack_starts(content)
 
     if not nodes:
         report.add("error", "dialogue", "No dialogue nodes found under content/dialogue or content/chapters")

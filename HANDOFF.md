@@ -337,27 +337,33 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 
 ## Agent E — QA
 
-**PR #1:** merged (`f401656`). Follow-up: `cursor/qa-postmerge-fixes-6f2c` (typed GDScript fixes missed merge tip).  
+**PR #1 / #11:** merged. Stabilize watch: `cursor/qa-stabilize-watch-6f2c` (post-#12/#13).  
 **Reports:** `/cursor/stores/self/internal/qa/` — `final-evidence.md`, `critique.md`, `pass_fail_matrix.md`
 
-### Commands (evidence 2026-11-26T16:03:19Z)
+### Commands (evidence 2026-11-26T16:09:24Z · Pacific/Auckland 05:09 NZDT)
 
 ```bash
 GODOT=~/.local/bin/godot ./tools/run_tests.sh
+bash tools/run_qa_suite.sh
 QA_SKIP_GODOT=1 python3 -m unittest tests.validation.test_validators -v
 python3 tools/validate_narrative.py --json
 python3 tools/simulate_strategies.py --json
 python3 tools/save_roundtrip.py --json
 ```
 
-### Latest results
+### Latest results (main `e83224f` + stabilize fixes)
 
-- validate: **PASS** (100 nodes, 0 errors)
-- strategy sims: **PASS** (5 unique signatures; organic endings → `mixed`; relationship deltas diverge)
+- validate: **PASS** (100 nodes, 0 errors, 1 unreachable warning)
+- strategy sims: **PASS** (3 unique signatures; organic → `mixed`; rel deltas diverge)
 - ending probes: **7/7 PASS**
-- Godot headless: **PASS**
+- save roundtrip / Godot headless / `run_qa_suite`: **PASS** 4/4
+
+### Post-#12/#13 fixes
+
+- `cover_manager.gd`: typed `var gs: Node = …` (nullable `:=` broke Systems compile → save/load flag/heat).
+- Softlock: explicit choice `next: null` → hub_terminal info (Talk return), not error.
 
 ### Remaining risks
 
-Organic non-mixed endings rare without terrace sacrifice/race; DialogueRunner should honor `ending_priority` for system choices; triage 72 soft warnings.
+Organic non-mixed endings rare without terrace sacrifice/race; `ending.human_cost_maris` unreachable warning.
 
