@@ -156,6 +156,14 @@ Briefing (clinical romance protocol) → foyer/Moth → awkward Maris intro → 
 
 See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `briefing.intro`.
 
+### Follow-up polish (`cursor/reception-prose-polish-c9ed`)
+
+- Rewrote weakest clinical jokes (briefing / salon).
+- Deepened Maris as Observatory actor with her own dock fight (not affection meter).
+- Debrief: seven distinct ending rubrics (prof + inter columns).
+- Cut generic finale/study filler lines.
+
+
 ## Agent C — Systems
 
 **Branch:** `cursor/social-espionage-systems-b2e0`  
@@ -239,6 +247,16 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 ### Showcase
 
 `scenes/ui/ui_showcase.tscn` demos dialogue, intents, notebook, profile, objectives without Core.
+
+### Polish pass (`cursor/presentation-polish-df75`)
+
+- **Faculty:** `FacultyStack` cascades up to 3 disagreeing comic panels (faculty-colored accents, snap-in + micro-shake).
+- **Rooms:** `RoomTransition` ink-pulse crossfade between Reception backgrounds (respects reduce-motion).
+- **Intents:** Choice rows show numbered accent + uppercase intent + short gloss (“tone, not outcomes”).
+- **Systems UI:** Prefer `CoverAPI.present()`, `RelationshipQuery.present()`, `GameState.systems.present_mission/evidence` — qualitative heat bands / mood lines, no raw dumps.
+- **Layering fix:** TitleScreen on CanvasLayer 30 above GameHUD; nav overlay on 22; modals z-ordered.
+- **Notebook / dossier / brief:** Stronger empty-states, verified counts, affinity/mood copy.
+- **LocationBanner** during room changes; dialogue continue-cue pulse.
 
 ## Agent E — QA
 

@@ -43,18 +43,27 @@ func _build_presentation() -> void:
 	_hud = GameHUDScene.instantiate() as GameHUD
 	add_child(_hud)
 
+	# Title above GameHUD CanvasLayer (layer 20) so it isn't buried
+	var title_layer := CanvasLayer.new()
+	title_layer.name = "TitleLayer"
+	title_layer.layer = 30
+	add_child(title_layer)
 	_title = TitleScene.instantiate() as TitleScreen
-	add_child(_title)
+	title_layer.add_child(_title)
 	_title.start_requested.connect(_start_new)
 	_title.continue_requested.connect(_continue_game)
 	_title.preferences_requested.connect(func (): _hud.settings_menu.open())
 
-	# Lightweight nav + status under dialogue (still presentation-owned)
+	# Nav/status above room art but under modal overlays
+	var overlay_layer := CanvasLayer.new()
+	overlay_layer.name = "PresOverlayLayer"
+	overlay_layer.layer = 22
+	add_child(overlay_layer)
 	var overlay := Control.new()
 	overlay.name = "PresentationOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(overlay)
+	overlay_layer.add_child(overlay)
 
 	_status = Label.new()
 	_status.name = "PresStatus"
@@ -97,14 +106,14 @@ func _show_title() -> void:
 	_nav_bar.visible = false
 	_status.text = "Ready"
 	_ui.refresh_objectives()
-	_ui.sync_background("salon")
+	_ui.sync_background("salon", false)
 
 
 func _start_new() -> void:
 	_title.visible = false
 	GameState.reset_to_new_game()
 	_status.text = "Briefing"
-	_ui.sync_background("briefing")
+	_ui.sync_background("briefing", false)
 	_ui.refresh_objectives()
 	DialogueRunner.start("briefing")
 
@@ -164,7 +173,7 @@ func _build_nav() -> void:
 		var b := Button.new()
 		var info: Dictionary = SceneRouter.get_location(StringName(adj))
 		b.text = str(info.get("display_name", adj))
-		b.custom_minimum_size = Vector2(0, 40)
+		NavChrome.style_button(b, "nav")
 		var target := adj
 		b.pressed.connect(func () -> void:
 			GameState.set_location(StringName(target))
@@ -175,27 +184,27 @@ func _build_nav() -> void:
 		_nav_bar.add_child(b)
 	var talk := Button.new()
 	talk.text = "Talk"
-	talk.custom_minimum_size = Vector2(72, 40)
+	NavChrome.style_button(talk, "quiet")
 	talk.pressed.connect(_start_location_dialogue)
 	_nav_bar.add_child(talk)
 	var dossier := Button.new()
 	dossier.text = "Dossier"
-	dossier.custom_minimum_size = Vector2(88, 40)
+	NavChrome.style_button(dossier, "nav")
 	dossier.pressed.connect(_open_next_dossier)
 	_nav_bar.add_child(dossier)
 	var note := Button.new()
 	note.text = "Notebook"
-	note.custom_minimum_size = Vector2(96, 40)
+	NavChrome.style_button(note, "nav")
 	note.pressed.connect(func (): _ui.open_notebook_from_state())
 	_nav_bar.add_child(note)
 	var deb := Button.new()
 	deb.text = "Debrief"
-	deb.custom_minimum_size = Vector2(88, 40)
+	NavChrome.style_button(deb, "danger")
 	deb.pressed.connect(func (): DialogueRunner.start("debrief"))
 	_nav_bar.add_child(deb)
 	var menu := Button.new()
 	menu.text = "Menu"
-	menu.custom_minimum_size = Vector2(72, 40)
+	NavChrome.style_button(menu, "quiet")
 	menu.pressed.connect(_show_title)
 	_nav_bar.add_child(menu)
 

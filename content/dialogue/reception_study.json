@@ -5,7 +5,7 @@
     {
       "id": "study.enter",
       "speaker": "narrator",
-      "text": "Study annex: wood polish, low lamp, a desk that has never met a commoner.",
+      "text": "Study annex: lemon oil, low lamp, a desk that has never forgiven a commoner. Ledgers pretend to sleep.",
       "tags": [
         "location",
         "study"
@@ -287,7 +287,7 @@
     {
       "id": "cover.sera_bargain",
       "speaker": "sera_kade",
-      "text": "Fair is adorable. I'll delay Moth by one corridor. You owe me a non-idiotic favor later \u2014 or the fragment, if you're slow.",
+      "text": "Fair is adorable. I'll delay Moth by one corridor. You owe me a non-idiotic favor later \u2014 or the fragment, if your feet are slow and your morals are loud.",
       "tags": [
         "cover",
         "sera_kade"
@@ -336,7 +336,7 @@
     {
       "id": "cover.sera_catch",
       "speaker": "sera_kade",
-      "text": "Orth. Alone with furniture. Either you're shy or employed. Badge says liaison \u2014 but your invitation serial doesn't match the seating card Clerk Moth is currently worshipping. Curious arithmetic.",
+      "text": "Orth. Alone with furniture. Either shy or employed. Badge says liaison \u2014 invitation serial doesn't match the seating card Moth is currently worshipping. Curious arithmetic. Shall I feed him, or do you prefer to keep your evening unlaminated?",
       "tags": [
         "cover",
         "sera_kade",
@@ -462,7 +462,7 @@
     {
       "id": "study.approach",
       "speaker": "narrator",
-      "text": "Study annex: wood polish, low lamp, a desk that has never met a commoner. The guest-list folio sits like a dare.",
+      "text": "The guest-list folio sits like a dare. East-dock times peer through polite paper. Your pulse files a complaint in advance.",
       "tags": [
         "study"
       ],
@@ -530,7 +530,7 @@
     {
       "id": "study.extract",
       "speaker": "narrator",
-      "text": "The cipher fragment slides free \u2014 guest names that aren't names, dock times that don't match the public schedule. Your pulse files a complaint.",
+      "text": "The cipher comes free: guest names that aren't names, dock times that refuse the public schedule. Pocket it. Face bored. Become logistics.",
       "tags": [
         "study",
         "intel"

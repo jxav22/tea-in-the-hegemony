@@ -11,12 +11,14 @@ signal restart_chapter
 signal pause_changed(paused: bool)
 signal notebook_requested
 signal profile_requested(character_id: String)
+signal room_transition_done(location_id: String)
 
 @onready var root: Control = %Root
-@onready var background: TextureRect = %Background
+@onready var room_transition: RoomTransition = %RoomTransition
+@onready var location_banner: LocationBanner = %LocationBanner
 @onready var dialogue_box: DialogueBox = %DialogueBox
 @onready var choice_list: ChoiceList = %ChoiceList
-@onready var faculty_panel: FacultyPanel = %FacultyPanel
+@onready var faculty_stack: FacultyStack = %FacultyStack
 @onready var mission_panel: MissionPanel = %MissionPanel
 @onready var history_view: DialogueHistoryView = %HistoryView
 @onready var notebook: IntelNotebook = %IntelNotebook
@@ -27,11 +29,18 @@ signal profile_requested(character_id: String)
 @onready var hotkey_bar: Label = %HotkeyBar
 @onready var letterbox_top: ColorRect = %LetterboxTop
 @onready var letterbox_bottom: ColorRect = %LetterboxBottom
+@onready var heat_wash: ColorRect = %HeatWash
+
+## Back-compat alias for scripts that still expect faculty_panel
+var faculty_panel: FacultyStack:
+	get:
+		return faculty_stack
 
 var settings := UISettings.new()
 var history := DialogueHistoryModel.new()
 var _paused: bool = false
 var _slot_summaries: Array = []
+var _bg_seeded: bool = false
 
 
 func _ready() -> void:
@@ -43,6 +52,11 @@ func _ready() -> void:
 	choice_list.bind(settings)
 	history_view.bind(history)
 	settings_menu.bind(settings)
+	if faculty_stack:
+		faculty_stack.reduce_motion = settings.reduce_motion
+	if room_transition:
+		room_transition.reduce_motion = settings.reduce_motion
+		room_transition.transition_finished.connect(_on_room_done)
 	hotkey_bar.text = "H history · N notebook · Esc menu · Space advance · 1–9 choices"
 
 	dialogue_box.advance_requested.connect(func (): advance_line.emit())
@@ -56,15 +70,30 @@ func _ready() -> void:
 	pause_menu.restart_requested.connect(func (): restart_chapter.emit())
 	notebook_requested.connect(func (): notebook.open_with([]))
 	settings_menu.restart_requested.connect(func (): restart_chapter.emit())
-	settings_menu.closed.connect(func (): pass)
-	settings.changed.connect(_apply_scale)
+	settings.changed.connect(_on_settings_changed)
 	save_load.save_requested.connect(func (s): save_slot.emit(s))
 	save_load.load_requested.connect(func (s): load_slot.emit(s))
 	save_load.delete_requested.connect(func (s): delete_slot.emit(s))
 
+	# Overlays above gameplay chrome
+	history_view.z_index = 40
+	notebook.z_index = 40
+	profile.z_index = 40
+	settings_menu.z_index = 50
+	save_load.z_index = 50
+	pause_menu.z_index = 60
+
 	_set_letterbox(false)
 	get_viewport().size_changed.connect(_on_viewport_resized)
 	_on_viewport_resized()
+
+
+func _on_settings_changed() -> void:
+	_apply_scale()
+	if faculty_stack:
+		faculty_stack.reduce_motion = settings.reduce_motion
+	if room_transition:
+		room_transition.reduce_motion = settings.reduce_motion
 
 
 func _on_viewport_resized() -> void:
@@ -75,10 +104,24 @@ func _on_viewport_resized() -> void:
 		mission_panel.offset_right = mission_panel.offset_left + ResponsiveLayout.mission_width(vs)
 
 
-func set_background(location_id: String) -> void:
-	var tex := PortraitBank.load_texture(PortraitBank.background_path(location_id))
-	background.texture = tex
-	background.visible = tex != null
+func set_background(location_id: String, animate: bool = true) -> void:
+	if room_transition == null:
+		return
+	var display := location_id.replace("_", " ")
+	var info: Dictionary = SceneRouter.get_location(StringName(location_id))
+	if not info.is_empty():
+		display = str(info.get("display_name", display))
+	if not _bg_seeded or not animate:
+		room_transition.set_location_immediate(location_id)
+		_bg_seeded = true
+		return
+	if location_banner:
+		location_banner.announce(location_id, display, settings.reduce_motion if settings else false)
+	room_transition.transition_to(location_id)
+
+
+func _on_room_done() -> void:
+	room_transition_done.emit(room_transition.current_location())
 
 
 func present_line(speaker_id: String, speaker_display: String, text: String, expression: String = "neutral") -> void:
@@ -96,13 +139,15 @@ func present_choices(choices: Array) -> void:
 func present_faculty(faculty: String, text: String) -> void:
 	if settings and not settings.show_faculty_panels:
 		return
-	if faculty_panel != null:
-		faculty_panel.show_interjection(faculty, text, settings.reduce_motion if settings else false)
+	if faculty_stack:
+		faculty_stack.reduce_motion = settings.reduce_motion if settings else false
+		faculty_stack.show_interjection(faculty, text)
 
 
 func hide_faculty() -> void:
-	if faculty_panel != null:
-		faculty_panel.hide_panel(settings.reduce_motion if settings else false)
+	if faculty_stack:
+		faculty_stack.reduce_motion = settings.reduce_motion if settings else false
+		faculty_stack.clear_all(true)
 
 
 func set_objectives(objectives: Array) -> void:
@@ -130,12 +175,29 @@ func set_cinematic(enabled: bool) -> void:
 	hotkey_bar.visible = not enabled
 
 
+func set_heat_wash(band: String) -> void:
+	## Subtle vermillion wash when cover heat climbs — comic tension, not HUD spam.
+	if heat_wash == null:
+		return
+	var alpha := 0.0
+	match band:
+		"elevated":
+			alpha = 0.04
+		"high":
+			alpha = 0.08
+		"critical", "blown":
+			alpha = 0.14
+		_:
+			alpha = 0.0
+	heat_wash.color = Color(HegemonyPalette.VERMILLION.r, HegemonyPalette.VERMILLION.g, HegemonyPalette.VERMILLION.b, alpha)
+	heat_wash.visible = alpha > 0.0
+
+
 func _on_choice(choice_id: String) -> void:
 	choice_list.hide_choices()
 	choice_made.emit(choice_id)
 
 
-## Call from Core after resolving a choice to log player wording + intent.
 func log_player_choice(text: String, intent: String = "") -> void:
 	history.add_choice(text, intent)
 
@@ -164,7 +226,6 @@ func _resume() -> void:
 func _apply_scale() -> void:
 	if root and settings:
 		root.scale = Vector2(settings.ui_scale, settings.ui_scale)
-		# Keep top-left anchored feel on scale
 		root.pivot_offset = Vector2.ZERO
 
 

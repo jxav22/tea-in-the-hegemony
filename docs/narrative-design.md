@@ -75,3 +75,20 @@ Validate JSON with QA tools when available; until then: every `next` id exists a
 - Start: New Game → `briefing` → navigate hub rooms → Talk (`reception_<loc>`) → Debrief
 - Effects allowlist: `set_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `location`, `beat`
 - Chapter: `content/chapters/the_reception.json` (alias `reception.json`)
+
+## Debrief (polish pass)
+
+Debrief routes on `ending_id` (and twin flags) into seven distinct Wren rubrics:
+
+| Ending | Prof grade | Inter grade |
+|--------|------------|-------------|
+| cover_burned | burned | liability |
+| sera_wins | lost_race | decent_last |
+| balanced | good | partner_shaped |
+| professional_win | excellent | cold |
+| human_cost | poor | decent |
+| connection | uneven | human_shaped |
+| mixed | mixed | incomplete |
+
+Maris is scored as an independent actor (Observatory agenda, risk assessment, hypothesis) — never as an affection meter.
+

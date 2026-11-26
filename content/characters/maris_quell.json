@@ -1,8 +1,8 @@
 {
   "id": "maris_quell",
   "display_name": "Maris Quell",
-  "role": "contact",
-  "silhouette_notes": "Upper-class business-casual; posture of someone who has already read the room twice. Fit, composed, dry smile that arrives half a beat late — on purpose.",
+  "role": "policy_advisor",
+  "silhouette_notes": "Upper-class business-casual; posture of someone who has already read the room twice. Fit, composed, dry smile that arrives half a beat late \u2014 on purpose.",
   "default_rel": {
     "trust": 10,
     "familiarity": 5,
@@ -13,9 +13,9 @@
     "perceived_authenticity": 40
   },
   "motivations": [
-    "Advance Observatory Circle policy work without becoming anyone's trophy introduction",
-    "Decide whether Cassian Orth is interesting or merely careful",
-    "Keep Taly from performing an autopsy of every conversation"
+    "Advance Observatory Circle transparency on east-dock schedules without becoming Voss's decorative introduction",
+    "Decide whether Cassian Orth is careful, interesting, or an operator \u2014 on her evidence, not his charm",
+    "Protect Taly from fixers and keep her own policy fight intact"
   ],
   "portrait_key": "maris_quell"
 }
