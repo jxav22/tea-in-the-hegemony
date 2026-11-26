@@ -11,7 +11,7 @@ func _run() -> void:
 	var failures: PackedStringArray = []
 	failures.append_array(_test_loader())
 	failures.append_array(_test_flags())
-	failures.append_array(_test_dialogue_flow())
+	failures.append_array(await _test_dialogue_flow())
 	failures.append_array(_test_save())
 	if failures.is_empty():
 		print("TEST PASS (4 suites)")
@@ -60,7 +60,7 @@ func _test_dialogue_flow() -> PackedStringArray:
 		return fails
 	# Prefer first visible choice — works for Core stubs (c_understood) and
 	# Narrative reception/briefing.json (briefing.intro.ready / .dread).
-	if not _drive_until_flag(&"briefed", 24):
+	if not await _drive_until_flag(&"briefed", 24):
 		# Core stub path sets briefed via later nodes; Narrative sets at briefing.exit.
 		fails.append("briefed flag not set after briefing drive")
 	# Core-only flag may be absent when Narrative pack shadows briefing.json — soft check.
@@ -68,13 +68,17 @@ func _test_dialogue_flow() -> PackedStringArray:
 	var used_narrative_briefing: bool = DialogueLoader.load_by_id("briefing").get("source", "").find("reception/") >= 0
 	if not used_narrative_briefing and not has_priority:
 		fails.append("priority_mission not set")
-	# Location graph still uses Core stub ids at content/dialogue/reception_salon.json
+	# Salon: Narrative sets met_maris on salon.intro_awkward — drive generically.
 	if not DialogueRunner.start("reception_salon"):
 		fails.append("start salon")
-	else:
-		_drive_choices(["c_approach", "c_honest"], 8)
-		if FlagStore.get_flag(&"met_maris", false) != true:
-			fails.append("met_maris not set")
+	elif not await _drive_until_flag(&"met_maris", 32):
+		fails.append("met_maris not set")
+	# Router smoke: bracket choices auto-resolve.
+	if DialogueRunner.start("reception_terrace", "race.check"):
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await _drive_until_flag(&"chapter_complete", 16)
+		print("[test] terrace router exercised")
 	if fails.is_empty():
 		print("[test] dialogue flow ok")
 	else:
@@ -102,17 +106,20 @@ func _drive_choices(preferred_ids: Array, max_steps: int) -> void:
 func _drive_until_flag(flag: StringName, max_steps: int) -> bool:
 	var guard: int = 0
 	while DialogueRunner.is_active and guard < max_steps:
+		await get_tree().process_frame
 		if FlagStore.get_flag(flag, false) == true:
 			return true
+		if not DialogueRunner.is_active:
+			break
 		var choices: Array = DialogueRunner.get_visible_choices()
 		if choices.is_empty():
 			DialogueRunner.advance()
 		else:
 			DialogueRunner.choose_index(0)
 		guard += 1
-	# Drain remaining linear nodes
 	var extra: int = 0
 	while DialogueRunner.is_active and extra < 8:
+		await get_tree().process_frame
 		DialogueRunner.advance()
 		extra += 1
 	return FlagStore.get_flag(flag, false) == true

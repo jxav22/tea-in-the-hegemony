@@ -33,12 +33,12 @@ func _ensure_filters() -> void:
 		return
 	for c in filter_row.get_children():
 		c.queue_free()
-	for key in ["all", "verified", "provisional"]:
+	for key: String in ["all", "verified", "provisional"]:
 		var b := Button.new()
 		b.text = key.capitalize()
 		b.toggle_mode = true
 		b.button_pressed = key == _filter
-		var k := key
+		var k: String = key
 		b.pressed.connect(func ():
 			_filter = k
 			_rebuild_list()
