@@ -189,6 +189,10 @@ See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `b
 - Residual salon/Sera/Pim/cloak/ending lines tightened.
 - `docs/narrative-design.md` rewritten to match live boot graphs, Maris rules, playtest paths.
 
+### Orphan cleanup (`cursor/reception-orphan-lines-c9ed`)
+
+- Removed leftover lower-third choice/faculty and "romance unlock" meta after protocol cut.
+
 ## Agent C — Systems
 
 **Branch:** `cursor/systems-harden-cover-memory-b2e0` (prior: `cursor/systems-balance-followup-b2e0`, `cursor/social-espionage-systems-b2e0`)  

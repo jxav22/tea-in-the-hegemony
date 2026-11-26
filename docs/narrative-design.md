@@ -74,4 +74,5 @@ Validate: `python3 tools/validate_narrative.py --repo .` (when present); every `
 
 - Polish (#7): distinct debrief rubrics; Maris agency; joke cuts  
 - Critical (#10): kill listicle/TEU comedy; cosmetic choices; opacity-fight Maris  
-- Final (`cursor/reception-final-prose-c9ed`): debrief operational specificity; residual quip cleanup; docs sync  
+- Final (`cursor/reception-final-prose-c9ed`): debrief operational specificity; residual quip cleanup; docs sync
+- Orphan cleanup (`cursor/reception-orphan-lines-c9ed`): removed leftover lower-third / romance-unlock meta after protocol cut
