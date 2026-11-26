@@ -14,7 +14,7 @@ var _index: int = 0
 
 func _ready() -> void:
 	visible = false
-	hint.text = "↑↓ / mouse · Enter confirm · Esc open menu"
+	hint.text = "Intent chips hint tone — not outcomes.  ↑↓ / 1–9 · Enter"
 
 
 func bind(settings_ref: UISettings) -> void:
@@ -25,19 +25,26 @@ func present(choices: Array) -> void:
 	_clear()
 	visible = true
 	var show_intent := true if settings == null else settings.show_intent_previews
+	var i := 0
 	for c in choices:
 		if typeof(c) != TYPE_DICTIONARY:
 			continue
 		var btn := ChoiceIntentButton.new()
-		btn.custom_minimum_size = Vector2(0, 48)
+		btn.custom_minimum_size = Vector2(0, 56)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var id := str(c.get("id", ""))
 		var label := str(c.get("text", c.get("label", "…")))
 		var intent := str(c.get("intent", ""))
-		btn.setup(id, label, intent, show_intent)
+		btn.setup(id, label, intent, show_intent, i)
 		btn.choice_activated.connect(_on_choice)
 		list.add_child(btn)
 		_buttons.append(btn)
+		# Soft stagger-in for presence (not noise)
+		if settings == null or not settings.reduce_motion:
+			btn.modulate.a = 0.0
+			var tw := create_tween()
+			tw.tween_property(btn, "modulate:a", 1.0, 0.12).set_delay(0.04 * float(i))
+		i += 1
 	if _buttons.is_empty():
 		visible = false
 		return

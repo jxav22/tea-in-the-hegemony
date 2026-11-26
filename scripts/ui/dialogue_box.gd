@@ -18,6 +18,7 @@ var _typewriter := Typewriter.new()
 var _speaker_id: String = ""
 var _speaker_name: String = ""
 var _awaiting_advance: bool = false
+var _cue_tween: Tween
 
 
 func _ready() -> void:
@@ -85,6 +86,14 @@ func _on_typing_finished() -> void:
 	body_label.text = _typewriter.full_text()
 	_awaiting_advance = true
 	continue_cue.visible = true
+	# Soft pulse on the continue cue — presence, not noise
+	if _cue_tween:
+		_cue_tween.kill()
+	if settings == null or not settings.reduce_motion:
+		continue_cue.modulate.a = 0.55
+		_cue_tween = create_tween().set_loops()
+		_cue_tween.tween_property(continue_cue, "modulate:a", 1.0, 0.55)
+		_cue_tween.tween_property(continue_cue, "modulate:a", 0.55, 0.55)
 	typing_finished.emit()
 
 
@@ -95,6 +104,10 @@ func request_advance() -> void:
 	if _awaiting_advance:
 		_awaiting_advance = false
 		continue_cue.visible = false
+		if _cue_tween:
+			_cue_tween.kill()
+			_cue_tween = null
+		continue_cue.modulate.a = 1.0
 		advance_requested.emit()
 
 

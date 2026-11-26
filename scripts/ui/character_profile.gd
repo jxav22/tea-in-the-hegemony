@@ -17,6 +17,7 @@ signal closed
 func _ready() -> void:
 	visible = false
 	title.text = "Dossier"
+	title.add_theme_color_override("font_color", HegemonyPalette.BRASS)
 	knowledge.bbcode_enabled = true
 	memories.bbcode_enabled = true
 	close_btn.pressed.connect(close)
@@ -24,12 +25,21 @@ func _ready() -> void:
 
 func open_profile(data: Dictionary) -> void:
 	visible = true
+	modulate.a = 0.0
+	var tw := create_tween()
+	tw.tween_property(self, "modulate:a", 1.0, 0.15)
 	var id := str(data.get("id", data.get("character_id", "")))
 	var display := str(data.get("display_name", id))
 	name_label.text = display
+	name_label.add_theme_color_override("font_color", HegemonyPalette.IVORY)
 	var role := str(data.get("role", "Unknown"))
 	if data.has("affinity"):
-		role = "%s · affinity %.1f" % [role, float(data.get("affinity", 0.0))]
+		var aff := float(data.get("affinity", 0.0))
+		var aff_col := HegemonyPalette.JADE if aff >= 0.0 else HegemonyPalette.VERMILLION
+		role_label.add_theme_color_override("font_color", aff_col)
+		role = "%s\naffinity %+0.1f  ·  not a romance bar" % [role, aff]
+	else:
+		role_label.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
 	role_label.text = role
 	var expr := str(data.get("expression", "neutral"))
 	portrait.texture = PortraitBank.load_texture(PortraitBank.portrait_path(id, expr))
@@ -46,25 +56,31 @@ func open_profile(data: Dictionary) -> void:
 		lab.text = dim.replace("_", " ")
 		lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		lab.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
+		lab.add_theme_font_size_override("font_size", 13)
 		var val := Label.new()
-		val.text = _bar(int(rel[dim]))
-		val.add_theme_color_override("font_color", HegemonyPalette.BRASS)
+		var v := int(rel[dim])
+		val.text = _bar(v)
+		val.add_theme_color_override("font_color", HegemonyPalette.VERMILLION if dim == "suspicion" and v > 0 else HegemonyPalette.BRASS)
+		val.add_theme_font_size_override("font_size", 13)
 		row.add_child(lab)
 		row.add_child(val)
 		rel_box.add_child(row)
 
 	var flags: Array = data.get("knowledge_flags", data.get("discovered", []))
-	if flags.is_empty():
-		knowledge.text = "[i]Nothing confirmed. Yet.[/i]"
+	var parts: PackedStringArray = []
+	var mood := str(data.get("mood_line", ""))
+	if not mood.is_empty():
+		parts.append("[color=#c4a574][i]%s[/i][/color]" % mood)
+	if flags.is_empty() and parts.is_empty():
+		knowledge.text = "[color=#9a9286][i]Nothing confirmed. Watch longer.[/i][/color]"
 	else:
-		var parts: PackedStringArray = []
 		for fl in flags:
 			parts.append("• %s" % str(fl))
 		knowledge.text = "\n".join(parts)
 
 	var mems: Array = data.get("memories", [])
 	if mems.is_empty():
-		memories.text = "[i]No shared moments logged.[/i]"
+		memories.text = "[color=#9a9286][i]No shared moments logged.[/i][/color]"
 	else:
 		var mparts: PackedStringArray = []
 		for m in mems:
