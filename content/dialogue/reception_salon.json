@@ -1,0 +1,149 @@
+{
+  "id": "reception_salon",
+  "start": "salon.enter",
+  "nodes": [
+    {
+      "id": "salon.enter",
+      "speaker": "narrator",
+      "text": "The salon is a constellation of glassware and careful laughs. Maris Quell stands near a tall window, dry humour already loaded.",
+      "tags": ["location", "salon"],
+      "effects": [{ "op": "set_flag", "flag": "seen_salon", "value": true }],
+      "choices": [
+        {
+          "id": "c_approach",
+          "text": "Approach Maris.",
+          "intent": "contact",
+          "next": "salon.maris_hello",
+          "effects": []
+        },
+        {
+          "id": "c_voss_spot",
+          "text": "Sweep for Voss first.",
+          "intent": "mission",
+          "next": "salon.voss_spot",
+          "effects": []
+        },
+        {
+          "id": "c_leave",
+          "text": "Not yet — back to the foyer.",
+          "intent": "explore",
+          "next": "salon.leave",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "salon.maris_hello",
+      "speaker": "maris_quell",
+      "text": "You're the trade liaison. Orth, yes? You look like someone who rehearsed this doorway.",
+      "tags": ["maris", "contact"],
+      "effects": [
+        { "op": "set_flag", "flag": "met_maris", "value": true },
+        { "op": "objective", "id": "contact_maris", "status": "complete", "label": "Make contact with Maris Quell" },
+        { "op": "rel", "char": "maris_quell", "familiarity": 2 }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Insecurity", "text": "She clocked the rehearsal. Abort? No. Recover.", "weight": 2 },
+        { "faculty": "Composure", "text": "Own it. Honesty as cover. Rare and effective.", "weight": 1.5 }
+      ],
+      "choices": [
+        {
+          "id": "c_honest",
+          "text": "I did. Doorways are structurally important.",
+          "intent": "awkward_charm",
+          "next": "salon.maris_laugh",
+          "effects": [
+            { "op": "rel", "char": "maris_quell", "affection": 1, "perceived_authenticity": 2 },
+            { "op": "set_flag", "flag": "maris_amused", "value": true }
+          ]
+        },
+        {
+          "id": "c_cover",
+          "text": "Only the freight schedules. Everything else is improvisation.",
+          "intent": "professional",
+          "next": "salon.maris_work",
+          "effects": [
+            { "op": "rel", "char": "maris_quell", "respect": 1 },
+            { "op": "set_flag", "flag": "maris_professional", "value": true }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "salon.maris_laugh",
+      "speaker": "maris_quell",
+      "text": "Structurally important. I'll steal that. Observatory Circle lives on doorways — who enters, who leaves, who pretends not to listen.",
+      "faculty_interjections": [
+        { "faculty": "Idealism", "text": "She's funny. That's not in the brief. Update the brief.", "weight": 1 }
+      ],
+      "next": "salon.maris_work"
+    },
+    {
+      "id": "salon.maris_work",
+      "speaker": "maris_quell",
+      "text": "If you're hunting policy rather than canapés, Voss holds court on the terrace later. The study annex is locked to everyone but people who look harmless. You look… almost harmless.",
+      "effects": [
+        { "op": "memory", "id": "mem_maris_tip", "summary": "Maris: Voss on terrace later; study for the harmless-looking.", "tags": ["tip", "voss", "study"] },
+        { "op": "set_flag", "flag": "maris_hint_study", "value": true }
+      ],
+      "choices": [
+        {
+          "id": "c_thank",
+          "text": "Almost is my brand. Thank you.",
+          "intent": "warm",
+          "next": null,
+          "effects": [{ "op": "rel", "char": "maris_quell", "comfort": 1 }]
+        },
+        {
+          "id": "c_probe",
+          "text": "Harmless enough to ask who keeps the annex key?",
+          "intent": "tradecraft",
+          "next": "salon.maris_key",
+          "effects": [{ "op": "rel", "char": "maris_quell", "suspicion": 1 }, { "op": "heat", "amount": 5 }]
+        }
+      ]
+    },
+    {
+      "id": "salon.maris_key",
+      "speaker": "maris_quell",
+      "text": "Clerk Moth. He treats keys like scripture. I'd bring a better excuse than curiosity.",
+      "next": null
+    },
+    {
+      "id": "salon.voss_spot",
+      "speaker": "narrator",
+      "text": "Across the room: Lord Edrin Voss, collecting people like porcelain. He hasn't noticed you. Yet.",
+      "effects": [
+        { "op": "set_flag", "flag": "spotted_voss", "value": true },
+        { "op": "objective", "id": "identify_voss", "status": "complete", "label": "Identify Lord Edrin Voss" }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Tradecraft", "text": "Do not stare. Stare adjacent. Collect silhouette.", "weight": 1.5 }
+      ],
+      "choices": [
+        {
+          "id": "c_back_maris",
+          "text": "File him. Return to Maris.",
+          "intent": "balance",
+          "next": "salon.maris_hello",
+          "conditions": [{ "flag": "met_maris", "op": "eq", "value": false }],
+          "effects": []
+        },
+        {
+          "id": "c_done_spot",
+          "text": "Enough for now.",
+          "intent": "exit",
+          "next": null,
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "salon.leave",
+      "speaker": "narrator",
+      "text": "You step back toward the foyer before the room invents a role for you.",
+      "effects": [{ "op": "location", "id": "foyer" }],
+      "next": null
+    }
+  ]
+}

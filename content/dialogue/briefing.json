@@ -1,0 +1,93 @@
+{
+  "id": "briefing",
+  "start": "briefing.intro",
+  "nodes": [
+    {
+      "id": "briefing.intro",
+      "speaker": "wren_halden",
+      "text": "Cassian. Tonight you are Cassian Orth — logistics analyst, Ministry Trade Liaison. Smile with your eyes, not your teeth. Maris Quell is Observatory Circle. She notices shoes.",
+      "tags": ["briefing"],
+      "effects": [
+        { "op": "set_flag", "flag": "briefing_started", "value": true },
+        { "op": "objective", "id": "contact_maris", "status": "active", "label": "Make contact with Maris Quell" }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Insecurity", "text": "She will notice your shoes.", "weight": 2 },
+        { "faculty": "Tradecraft", "text": "Cover first. Charm is optional. Survival is not.", "weight": 1.5 }
+      ],
+      "choices": [
+        {
+          "id": "c_understood",
+          "text": "Understood.",
+          "intent": "professional",
+          "next": "briefing.objectives",
+          "effects": [{ "op": "rel", "char": "wren_halden", "respect": 1 }]
+        },
+        {
+          "id": "c_shoes",
+          "text": "What's wrong with my shoes?",
+          "intent": "defensive",
+          "next": "briefing.shoes",
+          "effects": [{ "op": "rel", "char": "wren_halden", "respect": -1 }]
+        }
+      ]
+    },
+    {
+      "id": "briefing.shoes",
+      "speaker": "wren_halden",
+      "text": "Nothing, if you are auditioning as a man who files invoices and never once danced. Buy polish. Metaphorically. Actually also literally.",
+      "tags": ["briefing", "banter"],
+      "faculty_interjections": [
+        { "faculty": "Composure", "text": "Do not spiral. Accept the polish. Move on.", "weight": 1 }
+      ],
+      "next": "briefing.objectives"
+    },
+    {
+      "id": "briefing.objectives",
+      "speaker": "wren_halden",
+      "text": "Priorities: contact Maris, clock Lord Voss without looking like you're clocking him, lift the shipping discrepancy fragment from the study annex if you can, and do not get your badge confiscated by Clerk Moth.",
+      "tags": ["briefing"],
+      "effects": [
+        { "op": "set_flag", "flag": "briefed", "value": true },
+        { "op": "memory", "id": "mem_briefing", "summary": "Wren briefed Cassian on Reception priorities.", "salience": 2, "tags": ["briefing"] }
+      ],
+      "choices": [
+        {
+          "id": "c_mission",
+          "text": "Mission first. Connection later.",
+          "intent": "cold",
+          "next": "briefing.exit",
+          "effects": [
+            { "op": "set_flag", "flag": "priority_mission", "value": true },
+            { "op": "rel", "char": "wren_halden", "trust": 1 }
+          ]
+        },
+        {
+          "id": "c_human",
+          "text": "If Maris is real, I won't treat her like a dead drop.",
+          "intent": "idealistic",
+          "next": "briefing.exit",
+          "effects": [
+            { "op": "set_flag", "flag": "priority_human", "value": true },
+            { "op": "rel", "char": "wren_halden", "suspicion": 1 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "briefing.exit",
+      "speaker": "wren_halden",
+      "text": "Romantic advice, clinical edition: ask about her work before you ask about the weather. And Cassian — if Sera Kade is there, she is not your friend. Go. The foyer is waiting.",
+      "tags": ["briefing"],
+      "effects": [
+        { "op": "set_flag", "flag": "arrived_reception", "value": true },
+        { "op": "location", "id": "foyer" }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Idealism", "text": "You can do both. Mission and person. People do that.", "weight": 1 },
+        { "faculty": "Analysis", "text": "Statistically, people do not do that under heat.", "weight": 1.2 }
+      ],
+      "next": null
+    }
+  ]
+}

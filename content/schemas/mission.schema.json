@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tea://schemas/mission",
+  "title": "MissionStub",
+  "type": "object",
+  "required": ["id"],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "status": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "evidence_ids": { "type": "array", "items": { "type": "string" } }
+  }
+}

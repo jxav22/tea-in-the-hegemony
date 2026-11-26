@@ -1,0 +1,89 @@
+[gd_scene load_steps=2 format=3 uid="uid://btea_reception_hub"]
+
+[ext_resource type="Script" path="res://scenes/main/reception_hub.gd" id="1_hub"]
+
+[node name="ReceptionHub" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hub")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09, 0.11, 0.15, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 20
+
+[node name="HBox" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Left" type="VBoxContainer" parent="Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Margin/HBox/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.77, 0.65, 0.45, 1)
+theme_override_font_sizes/font_size = 28
+text = "The Reception"
+
+[node name="DescLabel" type="Label" parent="Margin/HBox/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = ""
+
+[node name="HudLabel" type="Label" parent="Margin/HBox/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.65, 1)
+text = ""
+
+[node name="RoomsLabel" type="Label" parent="Margin/HBox/Left"]
+layout_mode = 2
+text = "Locations"
+
+[node name="RoomsBox" type="VBoxContainer" parent="Margin/HBox/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Right" type="VBoxContainer" parent="Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="ActionsLabel" type="Label" parent="Margin/HBox/Right"]
+layout_mode = 2
+text = "Actions"
+
+[node name="ActionsBox" type="VBoxContainer" parent="Margin/HBox/Right"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LogLabel" type="RichTextLabel" parent="Margin/HBox/Right"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+scroll_active = true
+fit_content = false
+text = ""

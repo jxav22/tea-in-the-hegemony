@@ -1,0 +1,66 @@
+{
+  "id": "reception_cloakroom",
+  "start": "cloak.enter",
+  "nodes": [
+    {
+      "id": "cloak.enter",
+      "speaker": "clerk_moth",
+      "text": "Badge visible. Coat ticket. No loitering. Violations are… discouraged with paperwork.",
+      "tags": ["location", "cloakroom"],
+      "effects": [{ "op": "set_flag", "flag": "seen_cloakroom", "value": true }],
+      "faculty_interjections": [
+        { "faculty": "Composure", "text": "Do not joke about badges. He will escalate.", "weight": 2 }
+      ],
+      "choices": [
+        {
+          "id": "c_comply",
+          "text": "Present badge. Smile with eyes only.",
+          "intent": "comply",
+          "next": "cloak.ok",
+          "effects": [{ "op": "rel", "char": "clerk_moth", "respect": 1 }]
+        },
+        {
+          "id": "c_ask_key",
+          "text": "Ask about study annex access — politely, like a form.",
+          "intent": "tradecraft",
+          "next": "cloak.key",
+          "conditions": [{ "flag": "maris_hint_study", "op": "eq", "value": true }],
+          "effects": []
+        },
+        {
+          "id": "c_joke_badge",
+          "text": "Joke that the badge is shy.",
+          "intent": "humour",
+          "next": "cloak.angry",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "cloak.ok",
+      "speaker": "clerk_moth",
+      "text": "Acceptable. Do not touch coats that are not yours. That is theft and aesthetics.",
+      "next": null
+    },
+    {
+      "id": "cloak.key",
+      "speaker": "clerk_moth",
+      "text": "Study annex is for authorised quiet people. You may be quiet. Authorisation is a different religion. Bring a host signature or leave the furniture alone.",
+      "effects": [
+        { "op": "set_flag", "flag": "moth_refused_key", "value": true },
+        { "op": "memory", "id": "mem_moth_key", "summary": "Moth: study needs host signature.", "tags": ["cloakroom"] }
+      ],
+      "next": null
+    },
+    {
+      "id": "cloak.angry",
+      "speaker": "clerk_moth",
+      "text": "Humour is not a credential. Heat noted. Metaphorically. Also on the incident log.",
+      "effects": [
+        { "op": "heat", "amount": 15 },
+        { "op": "rel", "char": "clerk_moth", "suspicion": 2 }
+      ],
+      "next": null
+    }
+  ]
+}

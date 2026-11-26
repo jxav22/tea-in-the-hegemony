@@ -1,0 +1,103 @@
+{
+  "id": "reception_study",
+  "start": "study.enter",
+  "nodes": [
+    {
+      "id": "study.enter",
+      "speaker": "narrator",
+      "text": "The study annex: leather, ledgers, a desk drawer that pretends to be locked. Taly Renn is already here, reading you faster than the books.",
+      "tags": ["location", "study"],
+      "effects": [{ "op": "set_flag", "flag": "seen_study", "value": true }],
+      "conditions": [],
+      "choices": [
+        {
+          "id": "c_search",
+          "text": "Search the desk while looking scholarly.",
+          "intent": "tradecraft",
+          "next": "study.search",
+          "effects": []
+        },
+        {
+          "id": "c_taly",
+          "text": "Acknowledge Taly before she acknowledges you harder.",
+          "intent": "social",
+          "next": "study.taly",
+          "effects": []
+        },
+        {
+          "id": "c_leave",
+          "text": "Leave before awkwardness becomes evidence.",
+          "intent": "leave",
+          "next": "study.leave",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "study.search",
+      "speaker": "narrator",
+      "text": "Between tariff tables: a shipping schedule with a date that doesn't match the public guest cipher. Fragment acquired — if you can walk out looking bored.",
+      "effects": [
+        { "op": "item", "id": "shipping_discrepancy", "meta": { "label": "Shipping schedule discrepancy" } },
+        { "op": "set_flag", "flag": "got_fragment", "value": true },
+        { "op": "objective", "id": "obtain_fragment", "status": "complete", "label": "Obtain the shipping discrepancy fragment" },
+        { "op": "memory", "id": "mem_fragment", "summary": "Found shipping discrepancy in study annex.", "salience": 3, "tags": ["evidence"] },
+        { "op": "heat", "amount": 10 }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Tradecraft", "text": "Pocket it. Face neutral. Exit with purpose.", "weight": 2 },
+        { "faculty": "Insecurity", "text": "Taly saw. Taly always sees.", "weight": 1.5 }
+      ],
+      "choices": [
+        {
+          "id": "c_exit_cool",
+          "text": "Nod at a bookshelf and leave.",
+          "intent": "exit",
+          "next": null,
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "study.taly",
+      "speaker": "taly_renn",
+      "text": "Orth. You look like a man arguing with a desk. Maris said you might. She also said you're almost harmless — which is the dangerous kind.",
+      "effects": [
+        { "op": "set_flag", "flag": "met_taly", "value": true },
+        { "op": "rel", "char": "taly_renn", "familiarity": 1 }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Empathy", "text": "She's protective of Maris. Earn that or don't poke it.", "weight": 1.2 }
+      ],
+      "choices": [
+        {
+          "id": "c_honest_taly",
+          "text": "I'm trying not to make her evening worse.",
+          "intent": "sincere",
+          "next": "study.taly_ok",
+          "effects": [{ "op": "rel", "char": "taly_renn", "trust": 1, "perceived_authenticity": 1 }]
+        },
+        {
+          "id": "c_joke",
+          "text": "The desk started it.",
+          "intent": "humour",
+          "next": "study.taly_ok",
+          "effects": [{ "op": "rel", "char": "taly_renn", "affection": 1 }]
+        }
+      ]
+    },
+    {
+      "id": "study.taly_ok",
+      "speaker": "taly_renn",
+      "text": "Fine. Don't steal anything that screams. Maris hates screaming furniture.",
+      "next": null
+    },
+    {
+      "id": "study.leave",
+      "speaker": "narrator",
+      "text": "You return to the salon with empty hands and a full pulse.",
+      "effects": [{ "op": "location", "id": "salon" }],
+      "next": null
+    }
+  ]
+}

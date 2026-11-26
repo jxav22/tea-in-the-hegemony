@@ -1,0 +1,116 @@
+{
+  "id": "reception_terrace",
+  "start": "terrace.enter",
+  "nodes": [
+    {
+      "id": "terrace.enter",
+      "speaker": "narrator",
+      "text": "Night air. City lights like a circuit board. Lord Voss holds court beside a stone balustrade; Sera Kade laughs at something that wasn't a joke.",
+      "tags": ["location", "terrace"],
+      "effects": [{ "op": "set_flag", "flag": "seen_terrace", "value": true }],
+      "choices": [
+        {
+          "id": "c_voss",
+          "text": "Edge into Voss's orbit.",
+          "intent": "mission",
+          "next": "terrace.voss",
+          "effects": []
+        },
+        {
+          "id": "c_sera",
+          "text": "Sera Kade saw you. Pretend you meant to.",
+          "intent": "rival",
+          "next": "terrace.sera",
+          "effects": []
+        },
+        {
+          "id": "c_back",
+          "text": "Retreat to the salon.",
+          "intent": "leave",
+          "next": "terrace.leave",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "terrace.voss",
+      "speaker": "edrin_voss",
+      "text": "Trade liaison, yes? Orth. Tell me — do freighters still lie on paper, or have we automated the dishonesty?",
+      "effects": [
+        { "op": "set_flag", "flag": "spoke_voss", "value": true },
+        { "op": "objective", "id": "identify_voss", "status": "complete", "label": "Identify Lord Edrin Voss" },
+        { "op": "rel", "char": "edrin_voss", "familiarity": 1 }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Analysis", "text": "He's testing for competence and nerve. Answer both.", "weight": 1.3 }
+      ],
+      "choices": [
+        {
+          "id": "c_clever",
+          "text": "We've automated the paperwork. The lying still needs artisans.",
+          "intent": "wit",
+          "next": "terrace.voss_pleased",
+          "effects": [{ "op": "rel", "char": "edrin_voss", "respect": 2 }]
+        },
+        {
+          "id": "c_safe",
+          "text": "I only reconcile what I'm given, my lord.",
+          "intent": "cover",
+          "next": "terrace.voss_dismiss",
+          "effects": [{ "op": "rel", "char": "edrin_voss", "respect": -1 }]
+        }
+      ]
+    },
+    {
+      "id": "terrace.voss_pleased",
+      "speaker": "edrin_voss",
+      "text": "Artisans. Delightful. Stay interesting, Orth — porcelain cracks when it's boring.",
+      "effects": [{ "op": "memory", "id": "mem_voss_line", "summary": "Voss likes interesting people; hates boredom.", "tags": ["voss"] }],
+      "next": null
+    },
+    {
+      "id": "terrace.voss_dismiss",
+      "speaker": "edrin_voss",
+      "text": "Then you are furniture. Furniture may leave.",
+      "effects": [{ "op": "heat", "amount": 3 }],
+      "next": null
+    },
+    {
+      "id": "terrace.sera",
+      "speaker": "sera_kade",
+      "text": "Cassian Orth. What a carefully chosen surname. Don't worry — I'm only here for the canapés. And whatever you're here for.",
+      "effects": [
+        { "op": "set_flag", "flag": "met_sera", "value": true },
+        { "op": "rel", "char": "sera_kade", "suspicion": 2 },
+        { "op": "heat", "amount": 8 }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Tradecraft", "text": "Rival. Charming knife. Do not bleed in public.", "weight": 2 },
+        { "faculty": "Improvisation", "text": "Smile. Deny. Relocate.", "weight": 1 }
+      ],
+      "choices": [
+        {
+          "id": "c_deflect_sera",
+          "text": "Canapés, then. I hear the study has better lighting.",
+          "intent": "misdirect",
+          "next": null,
+          "effects": [{ "op": "rel", "char": "sera_kade", "respect": 1 }]
+        },
+        {
+          "id": "c_bluff",
+          "text": "I'm here for policy small-talk. Terrifying, I know.",
+          "intent": "cover",
+          "next": null,
+          "effects": [{ "op": "heat", "amount": -2 }]
+        }
+      ]
+    },
+    {
+      "id": "terrace.leave",
+      "speaker": "narrator",
+      "text": "You leave the night air to people who collect it.",
+      "effects": [{ "op": "location", "id": "salon" }],
+      "next": null
+    }
+  ]
+}

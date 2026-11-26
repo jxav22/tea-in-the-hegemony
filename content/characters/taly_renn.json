@@ -1,0 +1,9 @@
+{
+  "id": "taly_renn",
+  "display_name": "Taly Renn",
+  "role": "Friend of Maris",
+  "silhouette_notes": "Perceptive; clocks awkwardness instantly.",
+  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
+  "motivations": ["Protect Maris", "See clearly"],
+  "portrait_key": "taly_renn"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "pim_orel",
+  "display_name": "Pim Orel",
+  "role": "Acquaintance",
+  "silhouette_notes": "Well-connected disaster; says the quiet part loud.",
+  "default_rel": { "trust": 1, "respect": 0, "familiarity": 2, "suspicion": 0, "affection": 1, "comfort": 1, "perceived_authenticity": 2 },
+  "motivations": ["Be included", "Gossip as oxygen"],
+  "portrait_key": "pim_orel"
+}

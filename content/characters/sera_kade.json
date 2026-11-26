@@ -1,0 +1,9 @@
+{
+  "id": "sera_kade",
+  "display_name": "Sera Kade",
+  "role": "Rival operative",
+  "silhouette_notes": "Charming knife; same reception, competing brief.",
+  "default_rel": { "trust": -1, "respect": 1, "familiarity": 0, "suspicion": 2, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
+  "motivations": ["Beat Cassian to the fragment", "Stay charming"],
+  "portrait_key": "sera_kade"
+}

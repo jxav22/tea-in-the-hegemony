@@ -1,0 +1,90 @@
+{
+  "id": "reception_foyer",
+  "start": "foyer.arrive",
+  "nodes": [
+    {
+      "id": "foyer.arrive",
+      "speaker": "narrator",
+      "text": "The foyer smells like citrus polish and old money. A string quartet is losing an argument with champagne laughter. Your badge says Orth. Your pulse says Vale.",
+      "tags": ["location", "foyer"],
+      "effects": [{ "op": "set_flag", "flag": "seen_foyer", "value": true }],
+      "faculty_interjections": [
+        { "faculty": "Analysis", "text": "Exits: three. Cameras: decorative. Threat: social.", "weight": 1 },
+        { "faculty": "Improvisation", "text": "Walk like you belong. Belonging is mostly posture.", "weight": 1.2 }
+      ],
+      "choices": [
+        {
+          "id": "c_salon",
+          "text": "Angle toward the salon.",
+          "intent": "explore",
+          "next": "foyer.to_salon",
+          "effects": []
+        },
+        {
+          "id": "c_cloak",
+          "text": "Check the cloakroom — badges get hungry.",
+          "intent": "tradecraft",
+          "next": "foyer.to_cloak",
+          "effects": []
+        },
+        {
+          "id": "c_pim",
+          "text": "Pim Orel is waving. Against your better judgment.",
+          "intent": "social",
+          "next": "foyer.pim",
+          "effects": [{ "op": "rel", "char": "pim_orel", "familiarity": 1 }]
+        }
+      ]
+    },
+    {
+      "id": "foyer.to_salon",
+      "speaker": "narrator",
+      "text": "You cut through the crowd. The salon doors are open; politics is already mid-sentence.",
+      "effects": [{ "op": "location", "id": "salon" }],
+      "next": null
+    },
+    {
+      "id": "foyer.to_cloak",
+      "speaker": "narrator",
+      "text": "Coats hang like alibis. Clerk Moth's desk lamp is a tiny sun of bureaucracy.",
+      "effects": [{ "op": "location", "id": "cloakroom" }],
+      "next": null
+    },
+    {
+      "id": "foyer.pim",
+      "speaker": "pim_orel",
+      "text": "Orth! You look like a man who knows freight schedules and bad decisions. Have you met Maris yet? She's in the salon pretending not to inventory the room.",
+      "tags": ["npc", "pim"],
+      "effects": [
+        { "op": "set_flag", "flag": "pim_mentioned_maris", "value": true },
+        { "op": "memory", "id": "mem_pim_tip", "summary": "Pim said Maris is in the salon.", "tags": ["tip", "maris"] }
+      ],
+      "faculty_interjections": [
+        { "faculty": "Empathy", "text": "He's loud because he's lonely. Useful either way.", "weight": 1 },
+        { "faculty": "Tradecraft", "text": "He just painted a target. Thank him. Move.", "weight": 1.4 }
+      ],
+      "choices": [
+        {
+          "id": "c_thanks",
+          "text": "Thanks, Pim. Don't start a rumour about me.",
+          "intent": "wry",
+          "next": "foyer.pim_end",
+          "effects": [{ "op": "rel", "char": "pim_orel", "affection": 1 }]
+        },
+        {
+          "id": "c_deflect",
+          "text": "I'm here for trade chatter, not sightseeing.",
+          "intent": "cover",
+          "next": "foyer.pim_end",
+          "effects": [{ "op": "rel", "char": "pim_orel", "trust": -1 }]
+        }
+      ]
+    },
+    {
+      "id": "foyer.pim_end",
+      "speaker": "pim_orel",
+      "text": "Too late. I am the rumour. Go on — salon. Try not to look like you're on a mission.",
+      "next": null
+    }
+  ]
+}
