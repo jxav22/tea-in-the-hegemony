@@ -1,23 +1,41 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "tea://schemas/mission",
-  "title": "MissionStub",
+  "title": "Mission",
   "type": "object",
   "required": ["id"],
   "properties": {
     "id": { "type": "string" },
     "title": { "type": "string" },
+    "chapter_id": { "type": "string" },
+    "status": { "type": "string" },
+    "meta": { "type": "object" },
+    "evidence_ids": { "type": "array", "items": { "type": "string" } },
     "objectives": {
       "type": "array",
       "items": {
         "type": "object",
+        "required": ["id"],
         "properties": {
           "id": { "type": "string" },
-          "status": { "type": "string" },
-          "label": { "type": "string" }
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "notes_player": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["hidden", "active", "optional", "complete", "failed", "abandoned"]
+          },
+          "label": { "type": "string" },
+          "category": { "type": "string" },
+          "required": { "type": "boolean" },
+          "priority": { "type": "integer" },
+          "complete_when": { "type": "array" },
+          "fail_when": { "type": "array" },
+          "reveals_when": { "type": "array" },
+          "related_evidence": { "type": "array", "items": { "type": "string" } },
+          "related_characters": { "type": "array", "items": { "type": "string" } }
         }
       }
-    },
-    "evidence_ids": { "type": "array", "items": { "type": "string" } }
+    }
   }
 }

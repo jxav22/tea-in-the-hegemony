@@ -179,10 +179,30 @@ static func _push_evidence_inventory(systems: SystemsBridge, gs: Node) -> void:
 		var frag := systems.evidence.get_fragment(fid)
 		if frag == null:
 			continue
-		gs.add_inventory_item(StringName(fid), {
+		var meta := {
 			"kind": "evidence",
 			"title": frag.title,
+			"summary": frag.summary,
+			"claims": frag.claims.duplicate(true),
+			"contradicts": frag.contradicts.duplicate(),
 			"verified": frag.verified,
 			"beat": frag.obtained_at_beat,
+			"obtained_at_beat": frag.obtained_at_beat,
 			"verification_notes": frag.verification_notes,
-		})
+			"source": frag.source,
+			"location": frag.location,
+			"tags": frag.tags.duplicate(),
+		}
+		var updated := false
+		for i in range(gs.inventory.size()):
+			var entry: Variant = gs.inventory[i]
+			if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("id", "")) == fid:
+				var merged: Dictionary = (entry as Dictionary).duplicate(true)
+				for k in meta.keys():
+					merged[k] = meta[k]
+				merged["id"] = fid
+				gs.inventory[i] = merged
+				updated = true
+				break
+		if not updated:
+			gs.add_inventory_item(StringName(fid), meta)
