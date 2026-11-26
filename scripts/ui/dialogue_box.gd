@@ -43,6 +43,10 @@ func show_line(speaker_id: String, speaker_display: String, text: String, expres
 	visible = true
 	_awaiting_advance = false
 	continue_cue.visible = false
+	if _cue_tween:
+		_cue_tween.kill()
+		_cue_tween = null
+	continue_cue.modulate.a = 1.0
 	speaker_label.text = speaker_display
 	accent.color = HegemonyPalette.JADE if speaker_id != "cassian_vale" else HegemonyPalette.BRASS
 	var tex := PortraitBank.load_texture(PortraitBank.portrait_path(speaker_id, expression))

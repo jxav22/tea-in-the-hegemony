@@ -203,7 +203,7 @@ Mission file uses `obj.*` ids; GameState seeds Core ids (`contact_maris`, …). 
 
 ## Agent D — Presentation
 
-**Branch:** `cursor/presentation-ui-df75`  
+**Branches:** `cursor/presentation-ui-df75` (merged) · polish `cursor/presentation-polish-df75` (PR #6)  
 **Owns:** `scenes/ui/`, `assets/`, `themes/`, `shaders/` (compat), `scripts/ui/`, `tools/generate_placeholders.py`
 
 ### How to run UI
