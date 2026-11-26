@@ -181,7 +181,7 @@ func _build_nav() -> void:
 	var dossier := Button.new()
 	dossier.text = "Dossier"
 	dossier.custom_minimum_size = Vector2(88, 40)
-	dossier.pressed.connect(func (): _ui.open_profile("maris_quell"))
+	dossier.pressed.connect(_open_next_dossier)
 	_nav_bar.add_child(dossier)
 	var note := Button.new()
 	note.text = "Notebook"
@@ -198,6 +198,19 @@ func _build_nav() -> void:
 	menu.custom_minimum_size = Vector2(72, 40)
 	menu.pressed.connect(_show_title)
 	_nav_bar.add_child(menu)
+
+
+var _dossier_index: int = 0
+
+
+func _open_next_dossier() -> void:
+	var ids := _ui.list_dossier_ids()
+	if ids.is_empty():
+		_ui.open_profile("maris_quell")
+		return
+	_dossier_index = _dossier_index % ids.size()
+	_ui.open_profile(ids[_dossier_index])
+	_dossier_index += 1
 
 
 func _headless_smoke() -> void:

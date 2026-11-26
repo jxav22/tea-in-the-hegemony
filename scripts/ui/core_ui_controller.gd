@@ -1,14 +1,17 @@
 class_name CoreUIController
 extends RefCounted
-## Binds GameHUD to Core autoloads without rewriting DialogueRunner.
+## Binds GameHUD to shipped Core APIs (DialogueRunner, GameState, CharacterRegistry,
+## RelationshipQuery, CoverAPI) without rewriting the dialogue engine.
 
 var hud: GameHUD
+var registry := CharacterRegistry.new()
 var _pending_choices: Array = []
 var _awaiting_advance: bool = false
 
 
 func bind(hud_ref: GameHUD) -> void:
 	hud = hud_ref
+	registry.reload()
 	hud.choice_made.connect(_on_choice_made)
 	hud.advance_line.connect(_on_advance)
 	hud.save_slot.connect(_on_save)
@@ -17,6 +20,7 @@ func bind(hud_ref: GameHUD) -> void:
 	hud.restart_chapter.connect(_on_restart)
 	_connect_core()
 	refresh_objectives()
+	refresh_cover()
 	refresh_save_summaries()
 	sync_background(String(GameState.current_location))
 
@@ -36,6 +40,8 @@ func _connect_core() -> void:
 		SceneRouter.location_changed.connect(_on_location_changed)
 	if not GameState.objective_changed.is_connected(_on_objective_changed):
 		GameState.objective_changed.connect(_on_objective_changed)
+	if not GameState.cover_changed.is_connected(_on_cover_changed):
+		GameState.cover_changed.connect(_on_cover_changed)
 
 
 func _on_node_presented(node: Dictionary) -> void:
@@ -47,15 +53,16 @@ func _on_node_presented(node: Dictionary) -> void:
 	var expression := str(node.get("expression", "neutral"))
 	if expression.is_empty():
 		expression = "neutral"
-	hud.present_line(speaker_id, display if not display.is_empty() else "—", text, expression)
+	var portrait_id := _portrait_id_for(speaker_id)
+	hud.present_line(portrait_id, display if not display.is_empty() else "—", text, expression)
 	refresh_objectives()
+	refresh_cover()
 
 
 func _on_choices_available(choices: Array) -> void:
 	_pending_choices = choices.duplicate(true)
 	if choices.is_empty():
 		_awaiting_advance = true
-		# Continue cue lives on DialogueBox; advance_line → DialogueRunner.advance()
 		return
 	_awaiting_advance = false
 	hud.present_choices(choices)
@@ -65,6 +72,7 @@ func _on_dialogue_ended(_graph_id: StringName, _reason: String) -> void:
 	hud.choice_list.hide_choices()
 	hud.hide_faculty()
 	refresh_objectives()
+	refresh_cover()
 
 
 func _on_faculty(faculty: StringName, text: String, _weight: float, _node_id: StringName) -> void:
@@ -80,10 +88,15 @@ func _on_faculty_cleared() -> void:
 func _on_location_changed(location_id: StringName, _previous: StringName) -> void:
 	sync_background(String(location_id))
 	refresh_objectives()
+	refresh_cover()
 
 
 func _on_objective_changed(_objective_id: StringName, _status: String) -> void:
 	refresh_objectives()
+
+
+func _on_cover_changed(_state: Dictionary) -> void:
+	refresh_cover()
 
 
 func _on_choice_made(choice_id: String) -> void:
@@ -106,14 +119,15 @@ func _on_advance() -> void:
 
 
 func _on_save(slot: int) -> void:
-	# UI uses 0-based; SaveService uses 1-based
 	SaveService.save_game(slot + 1)
 	refresh_save_summaries()
 
 
 func _on_load(slot: int) -> void:
 	if SaveService.load_game(slot + 1):
+		registry.reload()
 		refresh_objectives()
+		refresh_cover()
 		refresh_save_summaries()
 		sync_background(String(GameState.current_location))
 		var loc := String(GameState.current_location)
@@ -131,7 +145,9 @@ func _on_delete(slot: int) -> void:
 
 func _on_restart() -> void:
 	GameState.reset_to_new_game()
+	registry.reload()
 	refresh_objectives()
+	refresh_cover()
 	sync_background("briefing")
 	DialogueRunner.start("briefing")
 
@@ -146,6 +162,16 @@ func refresh_objectives() -> void:
 			"status": str(o.get("status", "active")),
 		})
 	hud.set_objectives(items)
+
+
+func refresh_cover() -> void:
+	if hud == null or hud.mission_panel == null:
+		return
+	var heat := CoverAPI.heat()
+	var blown := CoverAPI.is_blown()
+	var name := CoverAPI.cover_name()
+	var mission_ok := CoverAPI.mission_complete_enough()
+	hud.mission_panel.set_cover_status(name, heat, blown, mission_ok)
 
 
 func refresh_save_summaries() -> void:
@@ -169,15 +195,15 @@ func open_notebook_from_state() -> void:
 		if typeof(entry) != TYPE_DICTIONARY:
 			continue
 		var e: Dictionary = entry
+		var fid := str(e.get("id", ""))
 		fragments.append({
-			"id": str(e.get("id", "")),
+			"id": fid,
 			"title": str(e.get("title", e.get("id", "fragment"))),
 			"summary": str(e.get("summary", e.get("label", ""))),
 			"claims": e.get("claims", []),
 			"contradicts": e.get("contradicts", []),
-			"verified": bool(e.get("verified", false)),
+			"verified": CoverAPI.has_evidence(StringName(fid)) or bool(e.get("verified", false)),
 		})
-	# Memories as soft intel
 	for m in GameState.memories:
 		if typeof(m) != TYPE_DICTIONARY:
 			continue
@@ -190,33 +216,60 @@ func open_notebook_from_state() -> void:
 			"contradicts": [],
 			"verified": true,
 		})
+	var seen: Dictionary = {}
+	for f in fragments:
+		seen[str(f.get("id", ""))] = true
+	for m in RelationshipQuery.memories_tagged("heat"):
+		if typeof(m) != TYPE_DICTIONARY:
+			continue
+		var hm: Dictionary = m
+		var hid := str(hm.get("id", ""))
+		if seen.has(hid):
+			continue
+		seen[hid] = true
+		fragments.append({
+			"id": hid,
+			"title": "Cover stress",
+			"summary": str(hm.get("summary", "")),
+			"claims": [],
+			"contradicts": [],
+			"verified": true,
+		})
 	hud.open_notebook(fragments)
 
 
 func open_profile(char_id: String) -> void:
-	var def := ContentIndex.load_character(char_id)
-	var rel := GameState.ensure_relationship(StringName(char_id))
+	var sid := StringName(char_id)
+	var def := registry.get_character(sid)
+	var rel := RelationshipQuery.snapshot(sid)
+	var affinity := RelationshipQuery.score_affinity(sid)
+	var hostile := RelationshipQuery.is_hostile(sid)
 	var flags: Array = []
 	if FlagStore.get_flag(StringName("met_%s" % char_id), false):
 		flags.append("Met in person")
+	if hostile:
+		flags.append("Reading: hostile / high suspicion")
+	flags.append("Affinity composite: %.1f" % affinity)
 	for key in FlagStore.to_dict().keys():
 		var ks := str(key)
 		if ks.begins_with(char_id) or ks.find(char_id) >= 0:
-			flags.append(ks)
-	var mems: Array = []
-	for m in GameState.memories:
-		if typeof(m) == TYPE_DICTIONARY:
-			var tags: Array = m.get("tags", [])
-			if char_id in tags or tags.is_empty():
+			if ks not in flags:
+				flags.append(ks)
+	var mems: Array = RelationshipQuery.memories_tagged(char_id)
+	if mems.is_empty():
+		for m in GameState.memories:
+			if typeof(m) == TYPE_DICTIONARY:
 				mems.append(m)
+	var portrait_key := str(def.get("portrait_key", char_id))
 	hud.open_profile({
-		"id": char_id,
-		"display_name": str(def.get("display_name", display_speaker(char_id))),
+		"id": portrait_key,
+		"display_name": registry.display_name(sid),
 		"role": str(def.get("role", "")),
-		"expression": "neutral",
+		"expression": "suspicious" if hostile else "neutral",
 		"rels": rel,
 		"knowledge_flags": flags,
 		"memories": mems,
+		"affinity": affinity,
 	})
 
 
@@ -229,14 +282,26 @@ func sync_background(location_id: String) -> void:
 	hud.set_background(loc)
 
 
-static func display_speaker(id: String) -> String:
-	var def := ContentIndex.load_character(id)
-	if not def.is_empty():
-		return str(def.get("display_name", id))
+func display_speaker(id: String) -> String:
+	if id.is_empty() or id == "narrator":
+		return ""
+	var name := registry.display_name(StringName(id))
+	if name != id:
+		return name
 	match id:
-		"narrator", "":
-			return ""
 		"cassian_vale", "cassian_orth":
 			return "Cassian Vale"
 		_:
 			return id.replace("_", " ").capitalize()
+
+
+func _portrait_id_for(speaker_id: String) -> String:
+	if speaker_id.is_empty() or speaker_id == "narrator":
+		return "cassian_vale"
+	var def := registry.get_character(StringName(speaker_id))
+	var key := str(def.get("portrait_key", speaker_id))
+	return key if not key.is_empty() else speaker_id
+
+
+func list_dossier_ids() -> PackedStringArray:
+	return registry.all_ids()

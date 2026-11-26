@@ -148,8 +148,11 @@ Boot flow: TitleScreen → New Game starts `DialogueRunner` briefing → GameHUD
 ### Wiring (does not rewrite dialogue engine)
 
 - `scripts/ui/core_ui_controller.gd` listens to `DialogueRunner`, `FacultyBus`, `SceneRouter`, `GameState`
+- Uses shipped helpers: `CharacterRegistry`, `RelationshipQuery`, `CoverAPI` (heat / blown / evidence / affinity)
 - `scenes/main/boot.gd` restyled to host `GameHUD` + title; legacy stub labels hidden; headless smoke preserved
+- `scenes/main/dialogue_overlay.tscn` remains as Core stub — **GameHUD supersedes it** for play; overlay kept for thin embeds
 - Save/load slots map UI 0–4 → `SaveService` 1–5
+- Rebased onto `main` @ `81934cc` (PR #3)
 
 ### Asset replacement
 

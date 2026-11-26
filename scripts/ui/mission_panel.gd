@@ -5,17 +5,35 @@ class_name MissionPanel
 @onready var title: Label = %Title
 @onready var list: VBoxContainer = %List
 @onready var stamp: TextureRect = %Stamp
+@onready var cover_label: Label = %CoverLabel
 
 var _collapsed: bool = false
+var _objectives_cache: Array = []
 
 
 func _ready() -> void:
 	title.text = "Brief"
 	if stamp:
 		stamp.texture = PortraitBank.load_texture("res://assets/ui/mission_stamp.png")
+	if cover_label:
+		cover_label.text = "Cover: —"
+
+
+func set_cover_status(cover_name: String, heat: int, blown: bool, mission_ok: bool) -> void:
+	if cover_label == null:
+		return
+	var heat_col := HegemonyPalette.JADE
+	if heat >= 50:
+		heat_col = HegemonyPalette.AMBER
+	if heat >= 80 or blown:
+		heat_col = HegemonyPalette.VERMILLION
+	cover_label.add_theme_color_override("font_color", heat_col)
+	var flag := "BLOWN" if blown else ("brief met" if mission_ok else "active")
+	cover_label.text = "%s · heat %d · %s" % [cover_name, heat, flag]
 
 
 func set_objectives(objectives: Array) -> void:
+	_objectives_cache = objectives.duplicate(true)
 	for child in list.get_children():
 		child.queue_free()
 	for o in objectives:

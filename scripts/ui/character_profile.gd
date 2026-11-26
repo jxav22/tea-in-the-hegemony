@@ -27,7 +27,10 @@ func open_profile(data: Dictionary) -> void:
 	var id := str(data.get("id", data.get("character_id", "")))
 	var display := str(data.get("display_name", id))
 	name_label.text = display
-	role_label.text = str(data.get("role", "Unknown"))
+	var role := str(data.get("role", "Unknown"))
+	if data.has("affinity"):
+		role = "%s · affinity %.1f" % [role, float(data.get("affinity", 0.0))]
+	role_label.text = role
 	var expr := str(data.get("expression", "neutral"))
 	portrait.texture = PortraitBank.load_texture(PortraitBank.portrait_path(id, expr))
 
