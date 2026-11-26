@@ -39,6 +39,8 @@ static func apply(effect: Dictionary) -> void:
 			FlagStore.set_flag(&"chapter_complete", true)
 			if effect.has("ending") or effect.has("id"):
 				FlagStore.set_flag(&"ending_id", str(effect.get("ending", effect.get("id", ""))))
+			elif GameState.systems != null:
+				GameState.systems.sync_path_flags(true)
 			return
 		"goto":
 			return
@@ -48,6 +50,13 @@ static func apply(effect: Dictionary) -> void:
 			if GameState.systems != null and GameState.systems.mission != null:
 				GameState.systems.mission.evaluate_all(str(effect.get("beat", "")))
 				GameStateBinder.push_to_game_state(GameState.systems, GameState)
+				# Entering debrief / reception end → sync path flags for ending router.
+				var flag_name := str(effect.get("flag", ""))
+				if flag_name in ["reception_ending", "start_debrief", "debrief_ready"] \
+					or (flag_name == "ending_id" and str(effect.get("value", "")) == ""):
+					GameState.systems.sync_path_flags(false)
+				if flag_name == "reception_ending" and bool(effect.get("value", true)):
+					GameState.systems.sync_path_flags(true)
 		"add_flag":
 			FlagStore.add_flag(StringName(str(effect.get("flag", ""))), int(effect.get("amount", effect.get("value", 1))))
 		"toggle_flag":

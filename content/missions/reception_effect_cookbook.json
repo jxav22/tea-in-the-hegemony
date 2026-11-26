@@ -102,6 +102,19 @@
         {"op": "rel", "char": "clerk_moth", "suspicion": 15, "respect": -5}
       ]
     },
+    "salon.cover_escalate_chain": {
+      "note": "slip contradiction + heat; auto-blow at ≥80; syncs heat_high/cover_blown",
+      "effects": [
+        {"op": "cover", "action": "assert", "key": "employer", "value": "Ministry Trade Liaison Office", "beat": "salon.pim", "witness": "pim_orel"},
+        {"op": "cover", "action": "escalate", "delta": 18, "reason": "pim_probe", "slip": {"key": "employer", "value": "private consultancy", "witness": "pim_orel", "heat": 14}}
+      ]
+    },
+    "cloakroom.cover_repair": {
+      "note": "cools heat; does not un-blow unless force_unblow",
+      "effects": [
+        {"op": "cover", "action": "repair", "delta": -12, "reason": "compose_self", "beat": "cloakroom.compose"}
+      ]
+    },
     "terrace.sera_blow": {
       "effects": [
         {"op": "set_flag", "flag": "sera_confronted", "value": true},
@@ -115,11 +128,17 @@
         {"op": "objective", "action": "evaluate", "beat": "debrief.close"},
         {"op": "objective", "action": "close_mission", "status": "debrief"}
       ],
-      "presentation": "systems.present_debrief('debrief.close')"
+      "presentation": "systems.present_debrief('debrief.close')",
+      "path_flags": "PathFlagSync → ending_id, got_fragment, helped_taly, abandoned_taly, genuine_with_maris, skipped_impress, sera_has_fragment, heat_high, cover_blown"
     }
   },
   "knowledge_op": {
     "shape": {"op": "knowledge", "char": "maris_quell", "flag": "identified_voss", "value": true},
     "alt_on_rel": {"op": "rel", "char": "maris_quell", "trust": 0, "knowledge": "identified_voss"}
+  },
+  "path_flag_sync": {
+    "api": "GameState.systems.sync_path_flags(force_ending=false) / present_debrief()",
+    "triggers": ["set_flag reception_ending", "present_debrief", "end without explicit ending_id"],
+    "see": "HANDOFF.md Agent C — Path flags"
   }
 }

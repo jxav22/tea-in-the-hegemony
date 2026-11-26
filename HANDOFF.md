@@ -166,7 +166,7 @@ See `docs/narrative-design.md`. Entry: `DialogueRunner.start("briefing")` → `b
 
 ## Agent C — Systems
 
-**Branch:** `cursor/social-espionage-systems-b2e0`  
+**Branch:** `cursor/systems-harden-cover-memory-b2e0` (prior: `cursor/systems-balance-followup-b2e0`, `cursor/social-espionage-systems-b2e0`)  
 **Paths:** `scripts/social/`, `scripts/espionage/`, `content/missions/`, `content/evidence/`
 
 ### What landed
@@ -188,8 +188,8 @@ Data-driven multi-dimension relationships, per-character memories, cover identit
 | `rel` | `{"op":"rel","char":"maris_quell","trust":1,"suspicion":-1}` (+ optional `knowledge`) |
 | `memory` | `{"op":"memory","id":"...","summary":"...","tags":["maris"]}` — `char` optional (inferred from tags/id); also Core flat `GameState.memories` |
 | `item` | Inventory pickup; mapped ids like `shipping_discrepancy` → `frag.shipping_delta` evidence obtain |
-| `cover` | `{"op":"cover","action":"assert\|slip\|adjust_heat\|repair\|blow",...}` |
-| `heat` | Core shorthand → `cover.adjust_heat` |
+| `cover` | `{"op":"cover","action":"assert\|slip\|adjust_heat\|repair\|blow\|escalate",...}` |
+| `heat` | Core shorthand → `cover.adjust_heat` (auto-syncs `heat_high` / `cover_blown` flags) |
 | `evidence` | `{"op":"evidence","action":"obtain\|verify\|dispute","id":"frag.shipping_delta"}` |
 | `objective` | Core `{id,status,label}` **or** Systems `{action,id}` (`activate\|complete\|fail\|reveal\|evaluate\|start_mission`) |
 | `knowledge` | `{"op":"knowledge","char":"maris_quell","flag":"identified_voss","value":true}` |
@@ -215,8 +215,40 @@ Mission file uses `obj.*` ids; GameState seeds Core ids (`contact_maris`, …). 
 
 - **Professional without romance:** `path.pro_extract` / `path.pro_cold` → `clean_professional` (lukewarm affection OK; genuine memories not required)
 - **Human without full intel:** `path.human_first` → `human_first` (genuine connection; fragment can fail)
-- Narrative memories without `char` infer speaker via tags/id (`mem_maris_*`, tags `maris`/`moth`/…)
+- Narrative memories without `char` infer speaker via tags/id (`mem_maris_*`, tags `maris`/`moth`/…); topic tags `intel`/`cipher` → `cassian_vale` mission log
 - Cover assert/slip hardened (empty key/value, blown no-ops, inconsistency dedupe, repair cools only when not ignoring blown)
+
+### Path flags (Narrative debrief router)
+
+Debrief (`content/dialogue/debrief.json`) routes on FlagStore keys. Systems syncs these via `PathFlagSync` / `GameState.systems.sync_path_flags()` / `present_debrief()`.
+
+| Flag | Meaning / set when |
+|------|--------------------|
+| `ending_id` | `cover_burned` \| `sera_wins` \| `balanced` \| `professional_win` \| `human_cost` \| `connection` \| `mixed` |
+| `got_fragment` | `frag.shipping_delta` obtained or inventory `shipping_discrepancy` |
+| `helped_taly` | memory `mem_helped_taly` (or Narrative set_flag) |
+| `abandoned_taly` | memory `mem_abandoned_taly` |
+| `genuine_with_maris` | genuine connection memories/tags / report.genuine_connection |
+| `skipped_impress` | memory `mem_skipped_impress` |
+| `sera_has_fragment` | memory `mem_sera_stole` |
+| `heat_high` | cover heat ≥ 55 |
+| `cover_strained` | heat ≥ 30 and not blown |
+| `cover_compromised` / `cover_blown` | blown or heat ≥ 80 |
+| `cover_held` | heat < 30 and not blown |
+| `reception_ending` | debrief sync / mission close |
+
+**Mission report → ending_id map:** `blown`→`cover_burned`; `balanced`→`balanced`; `clean_professional`/`professional_costly`→`professional_win`; `human_first`→`human_cost`; else heuristics on flags above → `connection` / `mixed`.
+
+### Cover slip → repair → blown chain
+
+```
+assert(fact) ──contradict──► inconsistency (+heat) ──≥80──► blow → cover_blown + ending_id=cover_burned
+     │                              ▲
+     └── slip(same key, new value) ─┘  (slip_contradiction, extra heat)
+heat / escalate ──≥80──► blow
+repair(delta<0) cools heat; does **not** un-blow unless force_unblow=true
+CoverAPI.escalate / CoverAPI.repair helpers available for UI/tests
+```
 
 ## Agent D — Presentation
 
