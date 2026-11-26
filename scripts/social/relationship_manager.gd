@@ -103,11 +103,11 @@ func add_memory(character_id: String, memory_data: Dictionary) -> MemoryEntry:
 
 ## DialogueRunner effect op "memory".
 ## {"op":"memory","char":"maris_quell","id":"noticed_shoes","summary":"...","salience":2,"tags":["awkward"],"beat":"foyer.meet"}
+## Narrative often omits char — inferred from tags / id prefixes.
 func apply_memory_effect(effect: Dictionary) -> MemoryEntry:
 	var char_id := str(effect.get("char", effect.get("character", "")))
 	if char_id == "":
-		push_warning("memory effect missing char")
-		return null
+		char_id = infer_memory_character(effect)
 	var data := {
 		"id": str(effect.get("id", "")),
 		"summary": str(effect.get("summary", "")),
@@ -120,8 +120,51 @@ func apply_memory_effect(effect: Dictionary) -> MemoryEntry:
 	return add_memory(char_id, data)
 
 
+## Infer character for char-less narrative memory effects.
+static func infer_memory_character(effect: Dictionary) -> String:
+	var tags: Array = effect.get("tags", [])
+	var mid := str(effect.get("id", "")).to_lower()
+	var tag_map := {
+		"maris": "maris_quell",
+		"moth": "clerk_moth",
+		"wren": "wren_halden",
+		"taly": "taly_renn",
+		"sera": "sera_kade",
+		"pim": "pim_orel",
+		"voss": "edrin_voss",
+	}
+	for t in tags:
+		var ts := str(t).to_lower()
+		if tag_map.has(ts):
+			return str(tag_map[ts])
+		for key in tag_map.keys():
+			if ts.contains(str(key)):
+				return str(tag_map[key])
+	for key in tag_map.keys():
+		if mid.contains(str(key)):
+			return str(tag_map[key])
+	# Player/mission log default — still lands in flat GameState.memories via binder.
+	return "cassian_vale"
+
+
 func has_memory(character_id: String, memory_id: String) -> bool:
+	if character_id == "" or character_id == "*":
+		return has_memory_anywhere(memory_id)
 	return ensure(character_id).has_memory(memory_id)
+
+
+func has_memory_anywhere(memory_id: String) -> bool:
+	for char_id in _rels.keys():
+		if (_rels[char_id] as RelationshipState).has_memory(memory_id):
+			return true
+	return false
+
+
+func has_memory_with_tag_anywhere(tag: String) -> bool:
+	for char_id in _rels.keys():
+		if memories_with_tag(str(char_id), tag).size() > 0:
+			return true
+	return false
 
 
 func memories_with_tag(character_id: String, tag: String) -> Array[MemoryEntry]:
@@ -132,17 +175,27 @@ func memories_with_tag(character_id: String, tag: String) -> Array[MemoryEntry]:
 func check_condition(cond: Dictionary) -> bool:
 	var op := str(cond.get("op", "eq"))
 	var char_id := str(cond.get("char", cond.get("character", "")))
-	if char_id == "":
-		return false
 
 	if cond.has("memory"):
-		var has := has_memory(char_id, str(cond["memory"]))
+		var mem_id := str(cond["memory"])
+		var has: bool
+		if char_id == "" or char_id == "*":
+			has = has_memory_anywhere(mem_id)
+		else:
+			has = has_memory(char_id, mem_id)
 		return has if op != "neq" and op != "not" else not has
 
 	if cond.has("memory_tag"):
-		var tagged := memories_with_tag(char_id, str(cond["memory_tag"]))
-		var has_tag := tagged.size() > 0
+		var tag := str(cond["memory_tag"])
+		var has_tag: bool
+		if char_id == "" or char_id == "*":
+			has_tag = has_memory_with_tag_anywhere(tag)
+		else:
+			has_tag = memories_with_tag(char_id, tag).size() > 0
 		return has_tag if op != "neq" and op != "not" else not has_tag
+
+	if char_id == "":
+		return false
 
 	if cond.has("knowledge"):
 		var has_k := has_knowledge(char_id, str(cond["knowledge"]))
