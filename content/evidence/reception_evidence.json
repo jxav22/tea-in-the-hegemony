@@ -1,0 +1,155 @@
+{
+  "mission_id": "mission.reception",
+  "fragments": [
+    {
+      "id": "frag.shipping_delta",
+      "title": "Shipping Schedule Discrepancy",
+      "summary": "A ledger page showing Corridor East tonnage that does not match the courtesy schedule circulated to Ministry liaisons.",
+      "source": "study_annex.ledger",
+      "location": "study_annex",
+      "mission_id": "mission.reception",
+      "tags": ["primary", "shipping", "voss_orbit"],
+      "claims": [
+        {
+          "id": "claim.tonnage_mismatch",
+          "text": "Declared tonnage for the 14th differs from liaison schedule by 2,400 units.",
+          "about": "corridor_east",
+          "confidence": 0.7
+        },
+        {
+          "id": "claim.voss_signoff",
+          "text": "Initials consistent with Edrin Voss appear on the correction margin.",
+          "about": "edrin_voss",
+          "confidence": 0.55
+        }
+      ],
+      "contradicts": ["frag.pim_rumour"],
+      "supports": ["frag.guest_cipher"],
+      "verified": false,
+      "obtained": false,
+      "classified": true
+    },
+    {
+      "id": "frag.guest_cipher",
+      "title": "Guest List Cipher Scratch",
+      "summary": "Pencil marks on a spare seating chart mapping three guests to shipping codes — including a slot aligned with Voss's table.",
+      "source": "cloakroom.chart",
+      "location": "cloakroom",
+      "mission_id": "mission.reception",
+      "tags": ["corroboration", "cipher", "voss"],
+      "claims": [
+        {
+          "id": "claim.cipher_voss_slot",
+          "text": "Table 3 cipher cluster matches Voss seating and a shipping lane code.",
+          "about": "edrin_voss",
+          "confidence": 0.6
+        },
+        {
+          "id": "claim.cipher_sera",
+          "text": "A second cluster may tag an unlisted operative — possibly Sera Kade.",
+          "about": "sera_kade",
+          "confidence": 0.35
+        }
+      ],
+      "contradicts": [],
+      "supports": ["frag.shipping_delta", "frag.voss_confirm"],
+      "verified": false,
+      "obtained": false,
+      "classified": true
+    },
+    {
+      "id": "frag.pim_rumour",
+      "title": "Pim's Loud Theory",
+      "summary": "Pim Orel insists the tonnage 'error' is a catering joke and Voss merely collects signatures for sport.",
+      "source": "pim_orel",
+      "location": "salon",
+      "mission_id": "mission.reception",
+      "tags": ["rumour", "unreliable", "social"],
+      "claims": [
+        {
+          "id": "claim.pim_joke",
+          "text": "The discrepancy is theatrical — no real goods moved.",
+          "about": "corridor_east",
+          "confidence": 0.25
+        },
+        {
+          "id": "claim.pim_voss_harmless",
+          "text": "Voss signs everything; it means nothing.",
+          "about": "edrin_voss",
+          "confidence": 0.2
+        }
+      ],
+      "contradicts": ["frag.shipping_delta", "claim.tonnage_mismatch"],
+      "supports": [],
+      "verified": false,
+      "obtained": false,
+      "classified": false
+    },
+    {
+      "id": "frag.voss_confirm",
+      "title": "Voss Identification",
+      "summary": "Corroborated identification of Lord Edrin Voss — appearance, retinue, and political orbit.",
+      "source": "observation",
+      "location": "salon",
+      "mission_id": "mission.reception",
+      "tags": ["identity", "voss"],
+      "claims": [
+        {
+          "id": "claim.voss_identity",
+          "text": "The host circulating porcelain introductions is Lord Edrin Voss.",
+          "about": "edrin_voss",
+          "confidence": 0.9
+        }
+      ],
+      "contradicts": [],
+      "supports": ["frag.guest_cipher"],
+      "verified": false,
+      "obtained": false,
+      "classified": false
+    },
+    {
+      "id": "frag.sera_brush",
+      "title": "Sera's Competing Brief",
+      "summary": "A half-smile and a question too precise: Sera Kade is fishing the same pond.",
+      "source": "sera_kade",
+      "location": "terrace",
+      "mission_id": "mission.reception",
+      "tags": ["rival", "warning"],
+      "claims": [
+        {
+          "id": "claim.sera_competition",
+          "text": "Another operative seeks the shipping discrepancy tonight.",
+          "about": "sera_kade",
+          "confidence": 0.65
+        }
+      ],
+      "contradicts": [],
+      "supports": [],
+      "verified": false,
+      "obtained": false,
+      "classified": true
+    },
+    {
+      "id": "frag.maris_aside",
+      "title": "Maris's Policy Aside",
+      "summary": "Maris mentions Observatory Circle pressure on corridor reporting — not proof, but a motive-shaped shadow.",
+      "source": "maris_quell",
+      "location": "terrace",
+      "mission_id": "mission.reception",
+      "tags": ["social", "motive", "soft_intel"],
+      "claims": [
+        {
+          "id": "claim.maris_pressure",
+          "text": "Observatory Circle is leaner on corridor opacity this season.",
+          "about": "observatory_circle",
+          "confidence": 0.5
+        }
+      ],
+      "contradicts": [],
+      "supports": ["frag.shipping_delta"],
+      "verified": false,
+      "obtained": false,
+      "classified": false
+    }
+  ]
+}

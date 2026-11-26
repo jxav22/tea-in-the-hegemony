@@ -1,0 +1,125 @@
+{
+  "description": "Copy-paste DialogueRunner effect / condition snippets for The Reception. Agent C Systems contract.",
+  "flags_used": [
+    "briefed",
+    "met_maris",
+    "identified_voss",
+    "reception_ending",
+    "fragment_destroyed",
+    "entered_study_annex",
+    "sera_confronted"
+  ],
+  "memory_ids": {
+    "maris_quell": [
+      "noticed_hesitation",
+      "noticed_shoes",
+      "shared_something_real",
+      "felt_used",
+      "laughed_at_dry_joke",
+      "saw_cover_slip",
+      "helped_without_asking"
+    ],
+    "taly_renn": [
+      "clocked_awkwardness",
+      "cover_slip_employer",
+      "defused_with_humour"
+    ],
+    "wren_halden": [
+      "prioritized_fragment",
+      "prioritized_person",
+      "admitted_nerves"
+    ]
+  },
+  "beats": {
+    "briefing.prioritize_mission": {
+      "effects": [
+        {"op": "rel", "char": "wren_halden", "respect": 2},
+        {"op": "memory", "char": "wren_halden", "id": "prioritized_fragment", "summary": "Cassian chose the brief over the soft skills lecture.", "salience": 2, "tags": ["professional"], "beat": "briefing.prioritize_mission"},
+        {"op": "objective", "action": "start_mission"}
+      ]
+    },
+    "foyer.meet_maris": {
+      "effects": [
+        {"op": "set_flag", "flag": "met_maris", "value": true},
+        {"op": "rel", "char": "maris_quell", "familiarity": 8, "comfort": 4},
+        {"op": "cover", "action": "assert", "key": "name", "value": "Cassian Orth", "beat": "foyer.meet_maris", "witness": "maris_quell"},
+        {"op": "objective", "action": "evaluate", "beat": "foyer.meet_maris"}
+      ]
+    },
+    "terrace.real_talk": {
+      "conditions": [
+        {"flag": "met_maris", "op": "eq", "value": true},
+        {"dim": "comfort", "char": "maris_quell", "op": "gte", "value": 10}
+      ],
+      "effects": [
+        {"op": "rel", "char": "maris_quell", "trust": 10, "affection": 12, "comfort": 8, "perceived_authenticity": 15, "suspicion": -5},
+        {"op": "memory", "char": "maris_quell", "id": "shared_something_real", "summary": "He said something that wasn't logistics.", "salience": 4, "tags": ["honest", "personal"], "beat": "terrace.real_talk"},
+        {"op": "objective", "action": "evaluate", "beat": "terrace.real_talk"}
+      ]
+    },
+    "salon.identify_voss": {
+      "effects": [
+        {"op": "set_flag", "flag": "identified_voss", "value": true},
+        {"op": "evidence", "action": "obtain", "id": "frag.voss_confirm", "beat": "salon.identify_voss"},
+        {"op": "knowledge", "char": "maris_quell", "flag": "identified_voss", "value": true},
+        {"op": "objective", "action": "evaluate", "beat": "salon.identify_voss"}
+      ]
+    },
+    "study.obtain_fragment": {
+      "effects": [
+        {"op": "evidence", "action": "obtain", "id": "frag.shipping_delta", "beat": "study.obtain_fragment"},
+        {"op": "set_flag", "flag": "entered_study_annex", "value": true},
+        {"op": "cover", "action": "adjust_heat", "delta": 8, "reason": "study_annex"},
+        {"op": "objective", "action": "evaluate", "beat": "study.obtain_fragment"}
+      ]
+    },
+    "study.instrumental_maris": {
+      "effects": [
+        {"op": "rel", "char": "maris_quell", "trust": 3, "affection": -6, "suspicion": 8, "respect": -2},
+        {"op": "memory", "char": "maris_quell", "id": "felt_used", "summary": "He needed the annex more than the conversation.", "salience": 3, "tags": ["used", "mission"], "beat": "study.instrumental_maris"}
+      ]
+    },
+    "cloakroom.verify_cipher": {
+      "conditions": [
+        {"fragment": "frag.shipping_delta"}
+      ],
+      "effects": [
+        {"op": "evidence", "action": "obtain", "id": "frag.guest_cipher", "beat": "cloakroom.verify_cipher"},
+        {"op": "evidence", "action": "verify", "id": "frag.shipping_delta", "notes": "Cross-checked guest cipher", "beat": "cloakroom.verify_cipher"},
+        {"op": "objective", "action": "evaluate", "beat": "cloakroom.verify_cipher"}
+      ]
+    },
+    "salon.pim_contradiction": {
+      "effects": [
+        {"op": "evidence", "action": "obtain", "id": "frag.pim_rumour", "beat": "salon.pim_contradiction"},
+        {"op": "evidence", "action": "dispute", "id": "frag.pim_rumour", "against": "frag.shipping_delta"},
+        {"op": "cover", "action": "slip", "key": "employer", "value": "private consultancy", "beat": "salon.pim_contradiction", "witness": "pim_orel", "heat": 14, "suspicion": 10}
+      ]
+    },
+    "foyer.clerk_badge": {
+      "effects": [
+        {"op": "cover", "action": "adjust_heat", "delta": 18, "reason": "clerk_moth_badge"},
+        {"op": "rel", "char": "clerk_moth", "suspicion": 15, "respect": -5}
+      ]
+    },
+    "terrace.sera_blow": {
+      "effects": [
+        {"op": "set_flag", "flag": "sera_confronted", "value": true},
+        {"op": "cover", "action": "blow", "reason": "sera_confrontation"},
+        {"op": "objective", "action": "evaluate", "beat": "terrace.sera_blow"}
+      ]
+    },
+    "debrief.close": {
+      "effects": [
+        {"op": "set_flag", "flag": "reception_ending", "value": true},
+        {"op": "objective", "action": "evaluate", "beat": "debrief.close"},
+        {"op": "objective", "action": "close_mission", "status": "debrief"}
+      ],
+      "presentation": "systems.present_debrief('debrief.close')"
+    }
+  },
+  "knowledge_op": {
+    "shape": {"op": "knowledge", "char": "maris_quell", "flag": "identified_voss", "value": true},
+    "alt_on_rel": {"op": "rel", "char": "maris_quell", "trust": 0, "knowledge": "identified_voss"}
+  }
+}
