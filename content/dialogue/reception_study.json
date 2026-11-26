@@ -470,7 +470,7 @@
       "effects": [
         {
           "op": "location",
-          "id": "study_annex"
+          "id": "study"
         }
       ],
       "choices": [
