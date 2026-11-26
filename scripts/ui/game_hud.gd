@@ -82,34 +82,42 @@ func set_background(location_id: String) -> void:
 
 
 func present_line(speaker_id: String, speaker_display: String, text: String, expression: String = "neutral") -> void:
-	choice_list.hide_choices()
-	dialogue_box.show_line(speaker_id, speaker_display, text, expression)
+	if choice_list != null:
+		choice_list.hide_choices()
+	if dialogue_box != null:
+		dialogue_box.show_line(speaker_id, speaker_display, text, expression)
 
 
 func present_choices(choices: Array) -> void:
-	choice_list.present(choices)
+	if choice_list != null:
+		choice_list.present(choices)
 
 
 func present_faculty(faculty: String, text: String) -> void:
 	if settings and not settings.show_faculty_panels:
 		return
-	faculty_panel.show_interjection(faculty, text, settings.reduce_motion if settings else false)
+	if faculty_panel != null:
+		faculty_panel.show_interjection(faculty, text, settings.reduce_motion if settings else false)
 
 
 func hide_faculty() -> void:
-	faculty_panel.hide_panel(settings.reduce_motion if settings else false)
+	if faculty_panel != null:
+		faculty_panel.hide_panel(settings.reduce_motion if settings else false)
 
 
 func set_objectives(objectives: Array) -> void:
-	mission_panel.set_objectives(objectives)
+	if mission_panel != null:
+		mission_panel.set_objectives(objectives)
 
 
 func open_notebook(fragments: Array) -> void:
-	notebook.open_with(fragments)
+	if notebook != null:
+		notebook.open_with(fragments)
 
 
 func open_profile(data: Dictionary) -> void:
-	profile.open_profile(data)
+	if profile != null:
+		profile.open_profile(data)
 
 
 func set_save_summaries(summaries: Array) -> void:

@@ -13,10 +13,39 @@ static func apply_all(effects: Array) -> void:
 
 static func apply(effect: Dictionary) -> void:
 	var op: String = str(effect.get("op", ""))
+	# Narrative aliases → Core ops (Agent E integration)
+	match op:
+		"add_memory":
+			op = "memory"
+		"add_heat":
+			op = "heat"
+		"set_location":
+			op = "location"
+		"unset_flag":
+			FlagStore.set_flag(StringName(str(effect.get("flag", ""))), false)
+			return
+		"complete_objective", "fail_objective", "set_objective":
+			var status: String = "complete" if op == "complete_objective" else ("failed" if op == "fail_objective" else str(effect.get("status", "active")))
+			GameState.set_objective(
+				StringName(str(effect.get("id", effect.get("objective", "")))),
+				status,
+				str(effect.get("label", ""))
+			)
+			return
+		"add_evidence":
+			GameState.add_inventory_item(StringName(str(effect.get("id", effect.get("evidence", "")))), effect.get("meta", {}) as Dictionary)
+			return
+		"end":
+			FlagStore.set_flag(&"chapter_complete", true)
+			if effect.has("ending") or effect.has("id"):
+				FlagStore.set_flag(&"ending_id", str(effect.get("ending", effect.get("id", ""))))
+			return
+		"goto":
+			return
 	match op:
 		"set_flag":
 			FlagStore.set_flag(StringName(str(effect.get("flag", ""))), effect.get("value", true))
-			if GameState.systems != null:
+			if GameState.systems != null and GameState.systems.mission != null:
 				GameState.systems.mission.evaluate_all(str(effect.get("beat", "")))
 				GameStateBinder.push_to_game_state(GameState.systems, GameState)
 		"add_flag":

@@ -242,4 +242,30 @@ Regenerate: `python3 tools/generate_placeholders.py` (Pillow).
 
 ## Agent E — QA
 
-_(append)_
+**Branch:** `cursor/qa-validation-suite-6f2c` | **PR:** https://github.com/jxav22/tea-in-the-hegemony/pull/1  
+**Owns:** `tests/validation/`, `tools/validate_narrative.py`, `tools/simulate_strategies.py`, `tools/save_roundtrip.py`, `tools/run_qa_suite.sh`, `scripts/ci/*`  
+**Reports:** `/cursor/stores/self/internal/qa/`
+
+### Commands (evidence 2026-11-26T16:00Z)
+
+```bash
+GODOT=~/.local/bin/godot ./tools/run_tests.sh          # PASS — TEST PASS (4 suites) + boot smoke
+QA_SKIP_GODOT=1 python3 -m unittest tests.validation.test_validators -v  # 6/6
+python3 tools/validate_narrative.py --json            # PASS — 88 nodes, 0 errors
+python3 tools/simulate_strategies.py --json           # PASS — 5 unique sigs; 7/7 ending probes
+python3 tools/save_roundtrip.py --json
+bash tools/run_qa_suite.sh
+```
+
+### Ending probes (all PASS)
+
+`cover_burned`, `sera_wins`, `balanced`, `professional_win`, `human_cost`, `connection`, `mixed`
+
+### Integration fixes in this PR
+
+- Narrative effect aliases in `EffectExecutor` (`add_memory`→`memory`, `set_location`→`location`, …)
+- Typed GDScript fix in `evidence_manager.gd` (Systems compile break)
+- Narrative-safe boot smoke + Core test_runner choice driving
+- GameHUD null-safety for headless
+- Validators prefer `content/dialogue/reception/`; ending_priority-aware finale sim
+

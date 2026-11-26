@@ -58,35 +58,64 @@ func _test_dialogue_flow() -> PackedStringArray:
 	if not DialogueRunner.start("briefing"):
 		fails.append("start briefing")
 		return fails
-	if not DialogueRunner.choose("c_understood"):
-		fails.append("choose understood")
-	if not DialogueRunner.choose("c_mission"):
-		fails.append("choose mission")
-	var guard: int = 0
-	while DialogueRunner.is_active and guard < 6:
-		DialogueRunner.advance()
-		guard += 1
-	if FlagStore.get_flag(&"briefed", false) != true:
-		fails.append("briefed flag not set")
-	if FlagStore.get_flag(&"priority_mission", false) != true:
+	# Prefer first visible choice — works for Core stubs (c_understood) and
+	# Narrative reception/briefing.json (briefing.intro.ready / .dread).
+	if not _drive_until_flag(&"briefed", 24):
+		# Core stub path sets briefed via later nodes; Narrative sets at briefing.exit.
+		fails.append("briefed flag not set after briefing drive")
+	# Core-only flag may be absent when Narrative pack shadows briefing.json — soft check.
+	var has_priority: bool = FlagStore.get_flag(&"priority_mission", false) == true
+	var used_narrative_briefing: bool = DialogueLoader.load_by_id("briefing").get("source", "").find("reception/") >= 0
+	if not used_narrative_briefing and not has_priority:
 		fails.append("priority_mission not set")
+	# Location graph still uses Core stub ids at content/dialogue/reception_salon.json
 	if not DialogueRunner.start("reception_salon"):
 		fails.append("start salon")
 	else:
-		DialogueRunner.choose("c_approach")
-		DialogueRunner.choose("c_honest")
-		guard = 0
-		while DialogueRunner.is_active and guard < 8:
+		_drive_choices(["c_approach", "c_honest"], 8)
+		if FlagStore.get_flag(&"met_maris", false) != true:
+			fails.append("met_maris not set")
+	if fails.is_empty():
+		print("[test] dialogue flow ok")
+	else:
+		print("[test] dialogue flow had failures")
+	return fails
+
+
+func _drive_choices(preferred_ids: Array, max_steps: int) -> void:
+	var guard: int = 0
+	while DialogueRunner.is_active and guard < max_steps:
+		var chose: bool = false
+		for cid: Variant in preferred_ids:
+			if DialogueRunner.choose(str(cid)):
+				chose = true
+				break
+		if not chose:
 			var choices: Array = DialogueRunner.get_visible_choices()
 			if choices.is_empty():
 				DialogueRunner.advance()
 			else:
 				DialogueRunner.choose_index(0)
-			guard += 1
-		if FlagStore.get_flag(&"met_maris", false) != true:
-			fails.append("met_maris not set")
-	print("[test] dialogue flow ok")
-	return fails
+		guard += 1
+
+
+func _drive_until_flag(flag: StringName, max_steps: int) -> bool:
+	var guard: int = 0
+	while DialogueRunner.is_active and guard < max_steps:
+		if FlagStore.get_flag(flag, false) == true:
+			return true
+		var choices: Array = DialogueRunner.get_visible_choices()
+		if choices.is_empty():
+			DialogueRunner.advance()
+		else:
+			DialogueRunner.choose_index(0)
+		guard += 1
+	# Drain remaining linear nodes
+	var extra: int = 0
+	while DialogueRunner.is_active and extra < 8:
+		DialogueRunner.advance()
+		extra += 1
+	return FlagStore.get_flag(flag, false) == true
 
 
 func _test_save() -> PackedStringArray:

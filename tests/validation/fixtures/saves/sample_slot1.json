@@ -1,0 +1,32 @@
+{
+  "save_version": 1,
+  "chapter_id": "the_reception",
+  "flags": {"briefed": true, "met_maris": true},
+  "rels": {
+    "maris_quell": {
+      "trust": 2,
+      "familiarity": 1,
+      "suspicion": 0,
+      "respect": 1,
+      "affection": 2,
+      "comfort": 1,
+      "perceived_authenticity": 2
+    }
+  },
+  "memories": [
+    {
+      "id": "maris_tease",
+      "summary": "Maris caught you staring.",
+      "salience": 0.8,
+      "tags": ["personal"]
+    }
+  ],
+  "inventory": ["guest_badge"],
+  "cover_state": "intact",
+  "objectives": {
+    "contact_maris": "complete",
+    "id_voss": "active",
+    "obtain_fragment": "failed",
+    "maintain_cover": "active"
+  }
+}
