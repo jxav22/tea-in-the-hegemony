@@ -179,7 +179,7 @@
     {
       "id": "impress.sera_parry",
       "speaker": "sera_kade",
-      "text": "Collecting people \u2014 careful. Some of us collect counterexamples. Enjoy the salon, Orth. Try not to audit it out loud.",
+      "text": "Counterexamples, then. Enjoy the salon. Audit it somewhere I can't hear.",
       "tags": [
         "salon",
         "sera_kade"
@@ -205,7 +205,7 @@
       "choices": [
         {
           "id": "impress.sera.next",
-          "text": "Quietly, then.",
+          "text": "Elsewhere.",
           "intent": "cool",
           "next": null,
           "effects": [
@@ -763,7 +763,7 @@
     {
       "id": "salon.impress_hook",
       "speaker": "taly_renn",
-      "text": "Taly's back. The champagne is a lie with bubbles. Orth \u2014 Voss is circulating. Impress him if you must. Or don't. I have a toast to survive that isn't about your career.",
+      "text": "Taly's back. Whatever's in the flutes is lying. Orth \u2014 Voss is circulating. Impress him if you must. Or don't. I have a toast to survive that isn't your audition.",
       "tags": [
         "salon",
         "impress"
@@ -855,7 +855,7 @@
     {
       "id": "salon.intro_awkward",
       "speaker": "maris_quell",
-      "text": "Orth. I've read the short memoranda. You treat adjectives like contraband. I'm spending tonight trying to keep Voss from laundering a dock schedule into policy before Observatory can publish. If you're here for canap\u00e9s, there are better windows.",
+      "text": "Orth. Short memoranda. Adjectives like contraband. Tonight I'm keeping Voss from laundering a dock schedule into policy before Observatory can publish. If you're here for the food, other windows exist.",
       "tags": [
         "salon",
         "maris_quell",
@@ -902,7 +902,7 @@
         },
         {
           "id": "salon.intro.fluster",
-          "text": "I'm not here for canap\u00e9s. I'm also not sure how to say that without sounding like an agenda.",
+          "text": "I'm not here for the food. I'm also bad at saying that without sounding like an agenda.",
           "intent": "human",
           "next": "salon.intro_human_response",
           "effects": [

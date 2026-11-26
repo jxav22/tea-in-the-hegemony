@@ -2,97 +2,76 @@
 
 ## Scope
 
-One dense chapter: briefing → foyer → salon (Maris) → impress/politics → study/cover → moral fork → ending → debrief. Cast and faculties per sprint contract.
+One dense chapter: briefing → foyer → salon (Maris) → impress/politics → study/cover → sacrifice → race → ending → debrief.
 
-## Voice rules
+Boot graphs (preferred): `content/dialogue/reception/<id>.json` — `briefing`, `reception_{foyer,salon,terrace,study,cloakroom}`, `debrief`.
 
-- **Cassian**: overanalytical, fallible, human — not a joke-only goof.
-- **Maris**: dry, ambitious, observational. Not an affection meter; dimensions (`trust`, `respect`, `comfort`, `perceived_authenticity`, etc.) move independently.
-- **Wren**: clinical romantic advice as comedy; intel > Cassian's dignity.
-- **Taly**: clocks awkwardness; protective of Maris.
-- **Sera**: charming rival; competes for the same fragment.
-- **Pim**: useful disaster; loud loyalty.
-- **Moth**: procedural zealot; badge math as horror-comedy.
-- **Voss**: soft voice, hard power; porcelain metaphor.
+## Voice
 
-Faculties disagree in panels; player may ignore them. Tone: melancholy cool + awkward comedy.
+| Character | Note |
+|-----------|------|
+| Cassian | Overanalytical, fallible; cover Orth |
+| Maris | Observatory policy; opacity fight vs Voss; **not** an affection meter |
+| Wren | Clinical handler; intel over dignity; dual-column debrief |
+| Taly | Protective gate; clocks operators |
+| Sera | Rival; charming, finished |
+| Pim | Loud loyalty; useful disaster |
+| Moth | Procedural zealot |
+| Voss | Soft power; porcelain |
 
-## Beat spine
+Faculties disagree in panels; ignorable. Tone: melancholy cool + specific awkward comedy (no listicle gags).
 
-| Beat | Pack | Purpose |
-|------|------|---------|
-| Briefing | `briefing.json` | Absurd clinical romance protocol + objectives |
-| Foyer | `foyer.json` | Moth badge check; optional Pim escort |
-| Awkward intro | `salon_intro.json` | Meet Maris/Taly; protocol vs human vs agenda |
-| Genuine talk | `salon_genuine.json` | Ninety seconds unsupervised; Maris as person |
-| Impress | `impress_backfire.json` | Show-off paths backfire (Sera/Voss); restraint pays |
-| Political | `political.json` | Overhear or Pim-distract → Friday dock window + cipher hint |
-| Study / cover | `study_cover.json` | Extract fragment; Sera inconsistency; Moth confrontation |
-| Sacrifice | `sacrifice.json` | Help Taly / abandon / split with Maris |
-| Race | `fragment_race.json` | Delay can cost physical fragment; soft extract survives |
-| Finale | `finale.json` | Ending by flags |
-| Debrief | `debrief.json` | Professional vs interpersonal rubrics |
+## Maris (independent actor)
 
-## Ending variants
+Her night is a **dock-opacity fight**: keep Voss from laundering a schedule into policy before Observatory publishes. Underestimation until after the toast is strategy. Ninety seconds with Orth is a test (careful / useful / operator) — not a date audition. Endings treat her as risk assessment, colleague, or publisher — never a romance unlock.
 
-| ID | Rough trigger | Feel |
-|----|---------------|------|
-| `cover_burned` | `cover_compromised` | Hot extract; Moth ink |
-| `sera_wins` | Delay + physical fragment lost | Rival postcard energy |
-| `balanced` | Fragment held + helped Taly | Both ledgers breathe |
-| `professional_win` | Fragment + abandoned Taly + cover ok | Cold success |
-| `human_cost` | Helped Taly, no fragment | Maris keeps the data |
-| `connection` | Genuine + skipped impress | Hypothesis, not promise |
-| `mixed` | Fallback | Median spy weather |
+## Beat spine (live files)
 
-Priority (first match): burned → sera_wins → balanced → professional_win → human_cost → connection → mixed.
+| Beat | Graph | Purpose |
+|------|-------|---------|
+| Briefing | `briefing` | Objectives + clinical manners (no flowchart smell) |
+| Foyer | `reception_foyer` | Moth; optional Pim |
+| Salon | `reception_salon` | Intro / genuine / impress backfire or restraint |
+| Terrace | `reception_terrace` | Overhear, sacrifice, race, endings |
+| Study | `reception_study` | Extract; Sera; Moth |
+| Cloakroom | `reception_cloakroom` | Moth serial / Maris corridor |
+| Debrief | `debrief` | Seven ending-specific dual columns |
 
-## Content schema (assumptions)
+## Endings
 
-Matches sprint dialogue/character contracts. Core had not shipped loader APIs when this landed; narrative assumes:
+| ID | Trigger (approx.) | Operational feel | Interpersonal feel |
+|----|-------------------|------------------|--------------------|
+| `cover_burned` | `cover_compromised` / Moth ink | Badge retired; annex watched | Maris closes risk assessment |
+| `sera_wins` | Delay + lost physical fragment | Cipher hers; window late | Decent minute, lost race |
+| `balanced` | `got_fragment` + `helped_taly` | Window spoilable | Split problem without dumping person |
+| `professional_win` | Fragment + abandoned Taly | Green board | Filed as optimized noise |
+| `human_cost` | Helped Taly, no fragment | Empty pocket | Evidence kept, not softness |
+| `connection` | Genuine + skipped impress | Uneven ops | Calendar scraps on her terms |
+| `mixed` | Fallback | Half-wins | Incomplete assessment |
 
-- Merge all `dialogue_files` nodes by `id`.
-- Resolve `choices[].next` / `node.next`; evaluate `conditions` on choices (hide failing).
-- Effects: `set_flag`, `set_location`, `rel`, `add_memory`.
-- `faculty_interjections` are optional panels; not blocking.
-- System choices (race/finale routers) may be auto-selected by engine.
+Priority: burned → sera_wins → balanced → professional_win → human_cost → connection → mixed.  
+Debrief stamps `debrief_prof_grade` / `debrief_inter_grade` per path.
 
-If Core renames keys, map 1:1; do not rewrite prose for renames without a migration note in `HANDOFF.md`.
+## Engine
 
-## Playtest paths (manual)
+- Loader: `reception/<id>.json` then flat `dialogue/<id>.json`
+- Effects: `set_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `location`, `beat`
+- HUD twins: `got_fragment`, `met_maris`
+- Chapter: `the_reception.json` (alias `reception.json`)
+- Entry: `DialogueRunner.start("briefing")`
 
-1. **Cold pro**: protocol smile → funding opener recover → impress intel → listen Voss → hard extract → Moth memo bluff → abandon Taly → `professional_win`.
-2. **Human**: fluster intro → genuine honesty → skip impress → Pim distract → soft extract → Sera bargain → help Taly → `balanced` or `sera_wins` if hard extract.
-3. **Connection**: human intro → genuine → skip impress → … any mid path … land `connection` if flags match (or `mixed`).
-4. **Burned**: joke at Moth early → hard extract → aggression at Moth → `cover_burned`.
-5. **Debrief**: always contrast `debrief_prof_grade` vs `debrief_inter_grade`.
+## Playtest
 
-Validate JSON with QA tools when available; until then: every `next` id exists across packs; every `speaker` has a character file (or `narrator`).
+1. **Cold pro** — work opener → impress intel → hard extract → abandon Taly → `professional_win` debrief  
+2. **Split** — genuine work → skip impress → soft extract → split sacrifice → `balanced`  
+3. **Human** — genuine honesty → help Taly after hard extract → `sera_wins` or `human_cost`  
+4. **Connection** — genuine + skip impress → `connection` debrief (fallout-meeting ninety seconds)  
+5. **Burned** — Moth aggression / ink → `cover_burned`  
 
-## Engine wiring (post-Core merge)
+Validate: `python3 tools/validate_narrative.py --repo .` (when present); every `next` in-graph; Core effect ops only.
 
-- Preferred paths: `content/dialogue/reception/<graph_id>.json`
-- Start: New Game → `briefing` → navigate hub rooms → Talk (`reception_<loc>`) → Debrief
-- Effects allowlist: `set_flag`, `rel`, `memory`, `heat`, `objective`, `item`, `location`, `beat`
-- Chapter: `content/chapters/the_reception.json` (alias `reception.json`)
+## Pass history
 
-## Debrief (polish pass)
-
-Debrief routes on `ending_id` (and twin flags) into seven distinct Wren rubrics:
-
-| Ending | Prof grade | Inter grade |
-|--------|------------|-------------|
-| cover_burned | burned | liability |
-| sera_wins | lost_race | decent_last |
-| balanced | good | partner_shaped |
-| professional_win | excellent | cold |
-| human_cost | poor | decent |
-| connection | uneven | human_shaped |
-| mixed | mixed | incomplete |
-
-Maris is scored as an independent actor (Observatory agenda, risk assessment, hypothesis) — never as an affection meter.
-
-## Critical pass (`cursor/reception-critical-pass-c9ed`)
-
-Killed listicle romance-protocol comedy and TEU gag. Maris beats now orbit her opacity fight / toast strategy. Choices that only quipped into the same node were replaced with ally/work/retreat stakes or trimmed exits. Sacrifice and ending lines sharpened; cosmetic continues de-quipped.
-
+- Polish (#7): distinct debrief rubrics; Maris agency; joke cuts  
+- Critical (#10): kill listicle/TEU comedy; cosmetic choices; opacity-fight Maris  
+- Final (`cursor/reception-final-prose-c9ed`): debrief operational specificity; residual quip cleanup; docs sync  

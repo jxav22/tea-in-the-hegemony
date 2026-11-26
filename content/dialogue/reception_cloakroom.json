@@ -297,7 +297,7 @@
     {
       "id": "cloak.moth_pim",
       "speaker": "pim_orel",
-      "text": "I vouch! He is Orth, he is dull in the correct way, and the ferns love him. Clerk Moth \u2014 if you eject him, eject me, and then who will explain canap\u00e9s to Voss?",
+      "text": "I vouch! He is Orth, dull in the correct way, and the ferns tolerate him. Clerk Moth \u2014 eject him and you eject me, and then who distracts Voss when the trays go wrong?",
       "effects": [
         {
           "op": "set_flag",
@@ -417,7 +417,7 @@
       "choices": [
         {
           "id": "cloak.next_study",
-          "text": "Stupid errand. Then I find you \u2014 if you still want the hypothesis.",
+          "text": "Stupid errand. Then I find you \u2014 if you still want the conversation.",
           "intent": "honest",
           "next": null,
           "effects": [
@@ -468,7 +468,7 @@
     {
       "id": "cloak.maris_more",
       "speaker": "maris_quell",
-      "text": "Voss collects people. Observatory collects outcomes. I'm refusing both hobbies tonight. If you're Orth, fine. If you notice corridors \u2014 rarer. My opacity fight doesn't need a date. Don't make me regret the hypothesis.",
+      "text": "Voss collects people. Observatory collects outcomes. I'm refusing both hobbies tonight. If you're Orth, fine. If you notice corridors \u2014 rarer. My opacity fight doesn't need an escort. Don't make me regret leaving the door ajar.",
       "effects": [
         {
           "op": "set_flag",
