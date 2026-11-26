@@ -1,0 +1,92 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/title_screen.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/salon_bg.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/logo_mark.png" id="3"]
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Bg" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Wash" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.043, 0.071, 0.125, 0.55)
+
+[node name="Center" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -220.0
+offset_right = 280.0
+offset_bottom = 220.0
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Logo" type="TextureRect" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Center"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 44
+text = "Tea in the Hegemony"
+
+[node name="Tag" type="Label" parent="Center"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.769, 0.647, 0.455, 1)
+theme_override_font_sizes/font_size = 16
+text = "The Reception"
+
+[node name="Blurb" type="Label" parent="Center"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.784, 0.722, 0.588, 1)
+autowrap_mode = 3
+text = "A capable spy. A catastrophic overanalysis of romance. One upper-class evening that will not stay professional."
+
+[node name="StartBtn" type="Button" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Enter the reception"
+
+[node name="ContinueBtn" type="Button" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Resume operation"
+
+[node name="PrefsBtn" type="Button" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Preferences"
