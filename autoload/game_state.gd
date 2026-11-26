@@ -204,7 +204,8 @@ func _seed_defaults() -> void:
 	ensure_relationship(&"sera_kade")
 	ensure_relationship(&"pim_orel")
 	ensure_relationship(&"clerk_moth")
-	set_objective(&"contact_maris", "active", "Make contact with Maris Quell")
-	set_objective(&"identify_voss", "active", "Identify Lord Edrin Voss")
-	set_objective(&"obtain_fragment", "active", "Obtain the shipping discrepancy fragment")
-	set_objective(&"maintain_cover", "active", "Maintain cover as Cassian Orth")
+	# Ids align with Agent B chapter manifest (obj_*).
+	set_objective(&"obj_contact_maris", "active", "Contact Maris Quell")
+	set_objective(&"obj_identify_voss", "active", "Identify Voss's east-dock interest")
+	set_objective(&"obj_cipher_fragment", "active", "Obtain guest-list cipher fragment")
+	set_objective(&"obj_maintain_cover", "active", "Maintain cover as Cassian Orth")

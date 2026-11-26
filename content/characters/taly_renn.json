@@ -1,9 +1,21 @@
 {
   "id": "taly_renn",
   "display_name": "Taly Renn",
-  "role": "Friend of Maris",
-  "silhouette_notes": "Perceptive; clocks awkwardness instantly.",
-  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
-  "motivations": ["Protect Maris", "See clearly"],
+  "role": "friend_of_maris",
+  "silhouette_notes": "Perceptive; clocks awkwardness like a smoke alarm. Fashion that looks accidental and isn't. Holds a glass like a notepad.",
+  "default_rel": {
+    "trust": 5,
+    "familiarity": 0,
+    "suspicion": 25,
+    "respect": 10,
+    "affection": 0,
+    "comfort": 5,
+    "perceived_authenticity": 35
+  },
+  "motivations": [
+    "Protect Maris from boring operators and interesting disasters",
+    "Catalogue social tells for later entertainment",
+    "Decide if Orth is a threat, a project, or both"
+  ],
   "portrait_key": "taly_renn"
 }

@@ -79,8 +79,10 @@ func _add_menu_btn(label: String, cb: Callable) -> void:
 func _start_new() -> void:
 	GameState.reset_to_new_game()
 	_menu.visible = false
-	_status.text = "Briefing"
-	DialogueRunner.start("briefing")
+	_status.text = "The Reception"
+	# Prefer merged Agent B chapter; fall back to stub briefing pack.
+	if not DialogueRunner.start_reception():
+		DialogueRunner.start("briefing")
 	_refresh_hud()
 
 
@@ -91,11 +93,17 @@ func _goto_hub() -> void:
 
 func _start_location_dialogue() -> void:
 	_menu.visible = false
-	var loc: String = String(GameState.current_location)
-	var graph: String = "reception_%s" % loc
-	if not DialogueRunner.start(graph):
-		_status.text = "No dialogue for %s" % loc
-		_show_menu()
+	var loc: StringName = GameState.current_location
+	var mapping: Dictionary = SceneRouter.dialogue_for(loc)
+	var start_node: String = str(mapping.get("start_node", ""))
+	# Prefer jumping into the merged chapter at the room's start node.
+	if DialogueRunner.start_reception(start_node if not start_node.is_empty() else ""):
+		return
+	var graph: String = str(mapping.get("graph_id", "foyer"))
+	if not DialogueRunner.start(graph, start_node):
+		if not DialogueRunner.start("reception_%s" % String(loc)):
+			_status.text = "No dialogue for %s" % String(loc)
+			_show_menu()
 
 
 func _on_dialogue_started(graph_id: StringName) -> void:
@@ -170,15 +178,18 @@ func _build_nav() -> void:
 	for c: Node in _nav.get_children():
 		c.queue_free()
 	var loc: StringName = GameState.current_location
+	var talk: Button = Button.new()
+	talk.text = "Talk here"
+	talk.pressed.connect(_start_location_dialogue)
+	_nav.add_child(talk)
 	for adj: String in SceneRouter.adjacent_for(loc):
 		var b: Button = Button.new()
 		var info: Dictionary = SceneRouter.get_location(StringName(adj))
 		b.text = "Go: %s" % str(info.get("display_name", adj))
 		var target: String = adj
 		b.pressed.connect(func() -> void:
-			GameState.set_location(StringName(target))
-			SceneRouter.current_location = StringName(target)
-			DialogueRunner.start("reception_%s" % target)
+			SceneRouter.set_location(StringName(target), false)
+			_start_location_dialogue()
 		)
 		_nav.add_child(b)
 	var hub: Button = Button.new()
@@ -235,16 +246,21 @@ func _display_speaker(id: String) -> String:
 func _headless_smoke() -> void:
 	print("[smoke] headless start")
 	GameState.reset_to_new_game()
-	assert(DialogueRunner.start("briefing"))
-	assert(DialogueRunner.choose("c_understood"))
-	assert(DialogueRunner.choose("c_mission"))
-	# briefing.exit may end dialogue via location effect
-	var guard: int = 0
-	while DialogueRunner.is_active and guard < 8:
-		DialogueRunner.advance()
-		guard += 1
+	var started: bool = DialogueRunner.start_reception()
+	if not started:
+		started = DialogueRunner.start("briefing")
+	assert(started)
+	# Drive a few choices generically (works for stub or Agent B ids).
+	var steps: int = 0
+	while DialogueRunner.is_active and steps < 12:
+		var choices: Array = DialogueRunner.get_visible_choices()
+		if choices.is_empty():
+			if not DialogueRunner.advance():
+				break
+		else:
+			DialogueRunner.choose_index(0)
+		steps += 1
 	assert(SaveService.save_game(1))
 	assert(SaveService.load_game(1))
-	assert(FlagStore.get_flag(&"briefed", false) == true)
-	print("[smoke] OK — briefing + save/load")
+	print("[smoke] OK — reception chapter steps=%d + save/load" % steps)
 	get_tree().quit(0)

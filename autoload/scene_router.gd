@@ -12,31 +12,49 @@ const LOCATIONS: Dictionary = {
 		"display_name": "Foyer",
 		"scene": "res://scenes/locations/foyer.tscn",
 		"description": "Marble, coats, and first impressions.",
+		"dialogue": "foyer",
+		"start_node": "foyer.arrival",
 	},
 	"salon": {
 		"id": "salon",
 		"display_name": "Salon",
 		"scene": "res://scenes/locations/salon.tscn",
 		"description": "Conversation as bloodsport, served with champagne.",
+		"dialogue": "salon_intro",
+		"start_node": "salon.enter",
 	},
 	"terrace": {
 		"id": "terrace",
 		"display_name": "Terrace",
 		"scene": "res://scenes/locations/terrace.tscn",
 		"description": "Night air and overheard policy.",
+		"dialogue": "political",
+		"start_node": "political.hook",
 	},
 	"study": {
 		"id": "study",
 		"display_name": "Study Annex",
 		"scene": "res://scenes/locations/study.tscn",
 		"description": "Books, ledgers, and unlocked drawers that shouldn't be.",
+		"dialogue": "study_cover",
+		"start_node": "study.approach",
 	},
 	"cloakroom": {
 		"id": "cloakroom",
 		"display_name": "Cloakroom",
 		"scene": "res://scenes/locations/cloakroom.tscn",
 		"description": "Pockets, badges, and Clerk Moth's jurisdiction.",
+		"dialogue": "reception_cloakroom",
+		"start_node": "",
 	},
+}
+
+## Narrative aliases from Agent B chapter manifest.
+const LOCATION_ALIASES: Dictionary = {
+	"study_annex": "study",
+	"safehouse_briefing": "foyer",
+	"safehouse_debrief": "foyer",
+	"voss_house_foyer": "foyer",
 }
 
 const BOOT_SCENE: String = "res://scenes/main/boot.tscn"
@@ -54,12 +72,30 @@ func get_location_ids() -> PackedStringArray:
 	return ids
 
 
+func normalize_location_id(location_id: StringName) -> StringName:
+	var raw: String = String(location_id)
+	if LOCATION_ALIASES.has(raw):
+		return StringName(str(LOCATION_ALIASES[raw]))
+	return location_id
+
+
 func get_location(location_id: StringName) -> Dictionary:
-	return LOCATIONS.get(String(location_id), {}) as Dictionary
+	var normalized: StringName = normalize_location_id(location_id)
+	return LOCATIONS.get(String(normalized), {}) as Dictionary
+
+
+func dialogue_for(location_id: StringName) -> Dictionary:
+	## Returns {graph_id, start_node} for location talk buttons.
+	var info: Dictionary = get_location(location_id)
+	return {
+		"graph_id": str(info.get("dialogue", "foyer")),
+		"start_node": str(info.get("start_node", "")),
+	}
 
 
 func set_location(location_id: StringName, change_scene_file: bool = false) -> bool:
 	## Soft location update (dialogue effects). Optionally swap scenes.
+	location_id = normalize_location_id(location_id)
 	var info: Dictionary = get_location(location_id)
 	if info.is_empty():
 		push_warning("SceneRouter: unknown location %s" % location_id)

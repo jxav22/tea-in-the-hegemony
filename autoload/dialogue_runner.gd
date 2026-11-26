@@ -15,8 +15,15 @@ var history: PackedStringArray = []
 
 
 func start(graph_id: String, start_override: String = "") -> bool:
+	## Special ids: "the_reception" / "reception" merge all Agent B packs.
+	if graph_id in ["the_reception", "reception", "reception_chapter"]:
+		return start_graph(ChapterGraph.load_reception(), start_override)
 	var graph: Dictionary = DialogueLoader.load_by_id(graph_id)
 	return start_graph(graph, start_override)
+
+
+func start_reception(start_override: String = "") -> bool:
+	return start("the_reception", start_override)
 
 
 func start_path(path: String, start_override: String = "") -> bool:
@@ -41,8 +48,19 @@ func goto_node(node_id: String) -> bool:
 		return false
 	var nodes: Dictionary = current_graph.get("nodes", {}) as Dictionary
 	if not nodes.has(node_id):
-		end_dialogue("missing_node:%s" % node_id)
-		return false
+		# Hot-swap: if a single-pack graph misses a cross-pack target, load chapter merge.
+		if str(current_graph.get("id", "")) != "the_reception":
+			var merged: Dictionary = ChapterGraph.load_reception()
+			var merged_nodes: Dictionary = merged.get("nodes", {}) as Dictionary
+			if merged_nodes.has(node_id):
+				current_graph = merged
+				nodes = merged_nodes
+			else:
+				end_dialogue("missing_node:%s" % node_id)
+				return false
+		else:
+			end_dialogue("missing_node:%s" % node_id)
+			return false
 	var node: Dictionary = (nodes[node_id] as Dictionary).duplicate(true)
 	# Skip nodes whose conditions fail (linear next-chain).
 	var guard: int = 0
@@ -70,15 +88,50 @@ func goto_node(node_id: String) -> bool:
 	FacultyBus.emit_interjections(node.get("faculty_interjections", []) as Array, current_node_id)
 	node_presented.emit(node)
 	var visible_choices: Array = _visible_choices(node)
+	# Agent B router nodes: choices whose text starts with "[" are system routes.
+	if _is_router_node(visible_choices):
+		var picked: Dictionary = _pick_router_choice(visible_choices)
+		if not picked.is_empty():
+			# Defer so listeners see the node before the jump.
+			call_deferred("_auto_choose", str(picked.get("id", "")))
+			choices_available.emit([])
+			return true
 	if not visible_choices.is_empty():
 		choices_available.emit(visible_choices)
-	elif node.get("next", null) != null and str(node.get("next")) != "":
-		# Auto-continue nodes with next and no choices are still presented;
-		# UI/callers invoke advance() or choose implicitly.
-		choices_available.emit([])
 	else:
 		choices_available.emit([])
 	return true
+
+
+func _auto_choose(choice_id: String) -> void:
+	if is_active and not choice_id.is_empty():
+		choose(choice_id)
+
+
+func _is_router_node(choices: Array) -> bool:
+	if choices.is_empty():
+		return false
+	for ch: Variant in choices:
+		var text: String = str((ch as Dictionary).get("text", "")).strip_edges()
+		if not text.begins_with("["):
+			return false
+	return true
+
+
+func _pick_router_choice(choices: Array) -> Dictionary:
+	## Prefer chapter ending_priority order when ids match; else first visible.
+	var chapter: Dictionary = ContentIndex.load_chapter("the_reception")
+	var priority: Array = chapter.get("ending_priority", []) as Array
+	if not priority.is_empty():
+		for end_id: Variant in priority:
+			var want: String = str(end_id)
+			for ch: Variant in choices:
+				var choice: Dictionary = ch as Dictionary
+				var next_id: String = str(choice.get("next", ""))
+				var cid: String = str(choice.get("id", ""))
+				if next_id == want or cid.ends_with(want) or want in next_id:
+					return choice
+	return choices[0] as Dictionary if not choices.is_empty() else {}
 
 
 func advance() -> bool:

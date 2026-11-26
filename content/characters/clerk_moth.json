@@ -1,9 +1,21 @@
 {
   "id": "clerk_moth",
   "display_name": "Clerk Moth",
-  "role": "Bureaucrat",
-  "silhouette_notes": "Procedural zealot; badge violations are war crimes.",
-  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
-  "motivations": ["Procedure", "Keys as scripture"],
+  "role": "bureaucrat",
+  "silhouette_notes": "Procedural zealot. Badge lanyard like a holy relic. Treats guest-list typos as acts of war. Name may or may not be a surname.",
+  "default_rel": {
+    "trust": 0,
+    "familiarity": 0,
+    "suspicion": 20,
+    "respect": 0,
+    "affection": 0,
+    "comfort": 0,
+    "perceived_authenticity": 15
+  },
+  "motivations": [
+    "Enforce reception protocol to the letter and then some",
+    "Catch badge, alias, and seating inconsistencies",
+    "Prove that paperwork is the real security apparatus"
+  ],
   "portrait_key": "clerk_moth"
 }

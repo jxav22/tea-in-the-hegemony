@@ -42,13 +42,26 @@ static func apply_character_defaults(char_id: StringName) -> void:
 
 static func bootstrap_chapter(chapter_id: StringName = &"reception") -> void:
 	var chapter: Dictionary = load_chapter(String(chapter_id))
-	GameState.set_chapter(chapter_id)
-	for cid: Variant in chapter.get("characters", []) as Array:
+	GameState.set_chapter(StringName(str(chapter.get("id", chapter_id))))
+	var cast: Array = chapter.get("characters", chapter.get("characters_present", [])) as Array
+	for cid: Variant in cast:
 		apply_character_defaults(StringName(str(cid)))
+	var flags_init: Dictionary = chapter.get("flags_initialized", {}) as Dictionary
+	for fk: Variant in flags_init.keys():
+		FlagStore.set_flag(StringName(str(fk)), flags_init[fk])
 	for obj: Variant in chapter.get("objectives", []) as Array:
-		if typeof(obj) == TYPE_DICTIONARY:
-			var d: Dictionary = obj as Dictionary
-			GameState.set_objective(StringName(str(d.get("id", ""))), "active", str(d.get("label", "")))
+		if typeof(obj) != TYPE_DICTIONARY:
+			continue
+		var d: Dictionary = obj as Dictionary
+		var oid: StringName = StringName(str(d.get("id", "")))
+		var label: String = str(d.get("label", oid))
+		var status: String = "active"
+		# Agent B uses flag_done / flag_fail markers.
+		if d.has("flag_done") and bool(FlagStore.get_flag(StringName(str(d["flag_done"])), false)):
+			status = "complete"
+		if d.has("flag_fail") and bool(FlagStore.get_flag(StringName(str(d["flag_fail"])), false)):
+			status = "failed"
+		GameState.set_objective(oid, status, label)
 
 
 static func _list_json_basenames(dir_path: String) -> PackedStringArray:

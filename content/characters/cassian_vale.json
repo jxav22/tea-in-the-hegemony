@@ -1,9 +1,22 @@
 {
   "id": "cassian_vale",
   "display_name": "Cassian Vale",
-  "role": "Protagonist (cover: Cassian Orth)",
-  "silhouette_notes": "Darker skin, dark hair, dark eyes; fit, not glamorous.",
-  "default_rel": {},
-  "motivations": ["Mission", "Not becoming a joke", "Possibly connection"],
+  "cover_name": "Cassian Orth",
+  "role": "protagonist",
+  "silhouette_notes": "Darker skin, dark hair, dark eyes; fit without glamour. Trade-liaison posture rehearsed until it almost looks natural. Shoes slightly too earnest.",
+  "default_rel": {
+    "trust": 0,
+    "familiarity": 0,
+    "suspicion": 0,
+    "respect": 0,
+    "affection": 0,
+    "comfort": 0,
+    "perceived_authenticity": 50
+  },
+  "motivations": [
+    "Complete the Reception brief without burning cover",
+    "Contact Maris Quell without treating her as a keycard",
+    "Prove he can be a person in a room, not a flowchart"
+  ],
   "portrait_key": "cassian_vale"
 }

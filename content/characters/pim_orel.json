@@ -1,9 +1,21 @@
 {
   "id": "pim_orel",
   "display_name": "Pim Orel",
-  "role": "Acquaintance",
-  "silhouette_notes": "Well-connected disaster; says the quiet part loud.",
-  "default_rel": { "trust": 1, "respect": 0, "familiarity": 2, "suspicion": 0, "affection": 1, "comfort": 1, "perceived_authenticity": 2 },
-  "motivations": ["Be included", "Gossip as oxygen"],
+  "role": "acquaintance",
+  "silhouette_notes": "Well-connected disaster. Loose tie, looser filter. Says the quiet part loud and then asks if anyone wants canapés.",
+  "default_rel": {
+    "trust": 25,
+    "familiarity": 40,
+    "suspicion": 5,
+    "respect": 10,
+    "affection": 20,
+    "comfort": 45,
+    "perceived_authenticity": 70
+  },
+  "motivations": [
+    "Be useful by accident",
+    "Survive the evening without being escorted out again",
+    "Introduce people who should never meet"
+  ],
   "portrait_key": "pim_orel"
 }

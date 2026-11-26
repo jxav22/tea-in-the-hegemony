@@ -1,9 +1,21 @@
 {
   "id": "wren_halden",
   "display_name": "Wren Halden",
-  "role": "Handler",
-  "silhouette_notes": "Clinical posture, soft voice, eyes that inventory exits.",
-  "default_rel": { "trust": 2, "respect": 3, "familiarity": 4, "suspicion": 0, "affection": 0, "comfort": 1, "perceived_authenticity": 2 },
-  "motivations": ["Mission success", "Keep Cassian intact enough to work"],
+  "role": "handler",
+  "silhouette_notes": "Clinic coat energy without the coat. Clipboard posture. Eyes that inventory your dignity and file it under expendable.",
+  "default_rel": {
+    "trust": 60,
+    "familiarity": 70,
+    "suspicion": 5,
+    "respect": 45,
+    "affection": 15,
+    "comfort": 30,
+    "perceived_authenticity": 80
+  },
+  "motivations": [
+    "Extract the shipping-schedule discrepancy and guest-list cipher",
+    "Keep Cassian's cover intact longer than his self-regard",
+    "Deliver romantic advice with the bedside manner of a coroner"
+  ],
   "portrait_key": "wren_halden"
 }

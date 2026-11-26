@@ -12,6 +12,11 @@ static func apply_all(effects: Array) -> void:
 
 static func apply(effect: Dictionary) -> void:
 	var op: String = str(effect.get("op", ""))
+	# Aliases used by Agent B narrative packs.
+	if op == "add_memory":
+		op = "memory"
+	if op == "set_location":
+		op = "location"
 	match op:
 		"set_flag":
 			FlagStore.set_flag(StringName(str(effect.get("flag", ""))), effect.get("value", true))
@@ -37,6 +42,9 @@ static func apply(effect: Dictionary) -> void:
 				"salience": int(effect.get("salience", 1)),
 				"tags": effect.get("tags", []),
 			}
+			if effect.has("created_at_beat"):
+				# Allow string beat labels from narrative packs.
+				mem["created_at_beat"] = effect["created_at_beat"]
 			if mem["id"] == "":
 				mem["id"] = "mem_auto_%d" % GameState.memories.size()
 			GameState.add_memory(mem)
@@ -54,7 +62,8 @@ static func apply(effect: Dictionary) -> void:
 			GameState.advance_beat()
 		"location":
 			# Soft set — keeps dialogue UI on boot; UI may change scenes later.
-			SceneRouter.set_location(StringName(str(effect.get("id", effect.get("location", "foyer")))), false)
+			var loc_raw: String = str(effect.get("id", effect.get("location", effect.get("value", "foyer"))))
+			SceneRouter.set_location(SceneRouter.normalize_location_id(StringName(loc_raw)), false)
 		"":
 			pass
 		_:

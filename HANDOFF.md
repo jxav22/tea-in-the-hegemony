@@ -102,19 +102,20 @@ Chapter manifests: `content/chapters/the_reception.json` preferred, else `recept
 
 ```
 $ ./.bin/godot --headless --path . res://tests/core/test_runner.tscn
-[test] loader graphs=7
+[test] loader graphs=19
 [test] flags ok
-[test] dialogue flow ok
+[test] chapter merge nodes=77
+[test] dialogue flow ok steps=4
 [test] save/load ok
-TEST PASS (4 suites)
+TEST PASS (5 suites)
 
 $ ./.bin/godot --headless --path . res://scenes/main/boot.tscn
 [smoke] headless start
-[smoke] OK — briefing + save/load
+[smoke] OK — reception chapter steps=12 + save/load
 ```
 
 Godot binary: 4.3.stable.official (`.bin/godot`, gitignored).  
-Verified UTC: 2026-11-26T15:48Z (Pacific/Auckland: Fri 27 Nov 2026, 04:48 NZDT).
+Verified UTC: 2026-11-26T15:53Z (Pacific/Auckland: Fri 27 Nov 2026, 04:53 NZDT).
 
 ## Notes for concurrent agents
 
@@ -122,9 +123,19 @@ Verified UTC: 2026-11-26T15:48Z (Pacific/Auckland: Fri 27 Nov 2026, 04:48 NZDT).
 2. Prefer additive commits; never force-push `main`.
 3. Append your section under `## Agent B/C/D/E` below — do not rewrite Core sections without coordinating.
 
+## Agent A — Content integration (follow-up)
+
+- Merged Agent B packs via `ChapterGraph.load_reception()` / `DialogueRunner.start_reception()`.
+- Effect aliases: `add_memory`→`memory`, `set_location`→`location`; location alias `study_annex`→`study`.
+- Router nodes (choices whose text starts with `[`) auto-pick using visible conditions + `ending_priority`.
+- Pulled `content/dialogue/reception/*`, `content/chapters/the_reception.json`, characters, `docs/narrative-design.md`.
+- Flat stub graphs under `content/dialogue/*.json` remain as fallback.
+- **C/D branches:** none on remote yet at integration time — APIs ready (`CoverAPI`, `RelationshipQuery`, `DialogueOverlay`).
+- **E:** open PR #1 (QA suite) — do not block Core; rebase onto main.
+
 ## Agent B — Narrative
 
-_(append)_
+Content lives under `content/dialogue/reception/` + `docs/narrative-design.md` (integrated onto Core follow-up branch). Prefer merging narrative PR #2 into main after rebase onto current main.
 
 ## Agent C — Systems
 
