@@ -1,0 +1,56 @@
+[
+  {
+    "id": "cassian_vale",
+    "display_name": "Cassian Vale",
+    "role": "protagonist",
+    "silhouette_notes": "dark hair, cover suit",
+    "default_rel": {},
+    "motivations": ["mission", "connection"],
+    "portrait_key": "cassian"
+  },
+  {
+    "id": "maris_quell",
+    "display_name": "Maris Quell",
+    "role": "the_woman",
+    "silhouette_notes": "business-casual, observant",
+    "default_rel": {"trust": 0, "familiarity": 0, "suspicion": 1, "respect": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0},
+    "motivations": ["policy", "curiosity"],
+    "portrait_key": "maris"
+  },
+  {
+    "id": "wren_halden",
+    "display_name": "Wren Halden",
+    "role": "handler",
+    "silhouette_notes": "clinical earpiece energy",
+    "default_rel": {"trust": 2, "respect": 1},
+    "motivations": ["intel"],
+    "portrait_key": "wren"
+  },
+  {
+    "id": "edrin_voss",
+    "display_name": "Lord Edrin Voss",
+    "role": "host",
+    "silhouette_notes": "porcelain collector",
+    "default_rel": {"suspicion": 1, "respect": 0},
+    "motivations": ["influence"],
+    "portrait_key": "voss"
+  },
+  {
+    "id": "sera_kade",
+    "display_name": "Sera Kade",
+    "role": "rival",
+    "silhouette_notes": "charming knife",
+    "default_rel": {"suspicion": 2},
+    "motivations": ["compete"],
+    "portrait_key": "sera"
+  },
+  {
+    "id": "pim_orel",
+    "display_name": "Pim Orel",
+    "role": "acquaintance",
+    "silhouette_notes": "well-connected disaster",
+    "default_rel": {"familiarity": 1},
+    "motivations": ["chaos", "gossip"],
+    "portrait_key": "pim"
+  }
+]

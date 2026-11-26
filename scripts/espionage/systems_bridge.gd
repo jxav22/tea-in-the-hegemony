@@ -86,7 +86,7 @@ func apply_effect(effect: Dictionary) -> Dictionary:
 			return {"ok": false, "error": "unknown_op", "op": op}
 	effect_applied.emit(op, result)
 	# Re-evaluate mission rules after any mutating op.
-	if op in ["rel", "relationship", "memory", "evidence", "cover", "set_flag", "knowledge"]:
+	if mission != null and op in ["rel", "relationship", "memory", "evidence", "cover", "set_flag", "knowledge"]:
 		mission.evaluate_all(str(effect.get("beat", "")))
 	return result
 

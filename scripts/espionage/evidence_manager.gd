@@ -197,10 +197,10 @@ func check_condition(cond: Dictionary) -> bool:
 	var op := str(cond.get("op", "eq"))
 	if cond.has("fragment") or cond.has("id"):
 		var fid := str(cond.get("fragment", cond.get("id", "")))
-		var want_verified := bool(cond.get("verified", false)) if cond.has("verified") else null
 		var obtained := is_obtained(fid)
-		if typeof(want_verified) == TYPE_BOOL:
-			var ok := obtained and (is_verified(fid) == want_verified)
+		if cond.has("verified"):
+			var want_verified: bool = bool(cond.get("verified", false))
+			var ok: bool = obtained and (is_verified(fid) == want_verified)
 			return ok if op != "neq" and op != "not" else not ok
 		if cond.get("status", "") == "verified":
 			var v := is_verified(fid)

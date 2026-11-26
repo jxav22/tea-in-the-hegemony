@@ -226,8 +226,15 @@ func _headless_smoke() -> void:
 	print("[smoke] headless start")
 	GameState.reset_to_new_game()
 	assert(DialogueRunner.start("briefing"))
-	assert(DialogueRunner.choose("c_understood"))
-	assert(DialogueRunner.choose("c_mission"))
+	var smoke_guard: int = 0
+	while DialogueRunner.is_active and smoke_guard < 24:
+		var smoke_choices: Array = DialogueRunner.get_visible_choices()
+		if smoke_choices.is_empty():
+			DialogueRunner.advance()
+		else:
+			DialogueRunner.choose_index(0)
+		smoke_guard += 1
+	assert(FlagStore.get_flag(&"briefed", false) == true)
 	var guard: int = 0
 	while DialogueRunner.is_active and guard < 8:
 		DialogueRunner.advance()
