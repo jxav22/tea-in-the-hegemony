@@ -1,0 +1,160 @@
+{
+  "id": "reception.sacrifice",
+  "chapter_id": "the_reception",
+  "nodes": [
+    {
+      "id": "sacrifice.hook",
+      "speaker": "narrator",
+      "text": "Near the terrace stair: Taly, pale under party lighting. A ministry fixer has her cornered over a mis-attributed remark — the kind that ends careers if it hardens into minutes.",
+      "tags": ["sacrifice", "moral"],
+      "conditions": [],
+      "effects": [
+        {"op": "set_flag", "flag": "taly_in_trouble", "value": true},
+        {"op": "set_location", "location": "terrace"}
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.help",
+          "text": "Intervene. Burn time, maybe heat, maybe the clean exit with the fragment.",
+          "intent": "idealism",
+          "next": "sacrifice.help_taly",
+          "effects": [
+            {"op": "set_flag", "flag": "helped_taly", "value": true},
+            {"op": "set_flag", "flag": "mission_delayed", "value": true}
+          ]
+        },
+        {
+          "id": "sacrifice.mission",
+          "text": "Keep moving. Fragment first. People survive gossip.",
+          "intent": "mission",
+          "next": "sacrifice.abandon",
+          "effects": [
+            {"op": "set_flag", "flag": "abandoned_taly", "value": true},
+            {"op": "rel", "char": "taly_renn", "trust": -3},
+            {"op": "rel", "char": "maris_quell", "respect": -2},
+            {"op": "rel", "char": "maris_quell", "affection": -1}
+          ]
+        },
+        {
+          "id": "sacrifice.half",
+          "text": "Signal Maris — she can extract Taly while you still move.",
+          "intent": "split",
+          "next": "sacrifice.split",
+          "effects": [
+            {"op": "set_flag", "flag": "signaled_maris_help", "value": true},
+            {"op": "rel", "char": "maris_quell", "trust": 1}
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {"faculty": "Idealism", "text": "This is the test Wren hoped you'd fail professionally and pass as a person.", "weight": 2},
+        {"faculty": "Tradecraft", "text": "Intervention is visible. Visibility is heat. Heat eats exits.", "weight": 2},
+        {"faculty": "Empathy", "text": "Taly clocked you all night. She still deserves a corridor.", "weight": 2},
+        {"faculty": "Insecurity", "text": "If Maris sees you walk away, you become another operator. Accurate. Fatal.", "weight": 1},
+        {"faculty": "Analysis", "text": "Split option: share risk, share credit, share failure modes.", "weight": 1}
+      ]
+    },
+    {
+      "id": "sacrifice.help_taly",
+      "speaker": "cassian_vale",
+      "text": "The remark was mine — misheard, misfiled. I was explaining freight variance and used an ugly metaphor. Log it against Orth, not Renn.",
+      "tags": ["sacrifice"],
+      "conditions": [],
+      "effects": [
+        {"op": "set_flag", "flag": "took_blame_for_taly", "value": true},
+        {"op": "rel", "char": "taly_renn", "trust": 3},
+        {"op": "rel", "char": "taly_renn", "respect": 2},
+        {"op": "rel", "char": "maris_quell", "trust": 2},
+        {"op": "rel", "char": "maris_quell", "affection": 2},
+        {"op": "rel", "char": "clerk_moth", "suspicion": 1}
+      ],
+      "choices": [],
+      "next": "sacrifice.help_aftermath",
+      "faculty_interjections": [
+        {"faculty": "Composure", "text": "Deliver blame like a memo. Bored, precise, done.", "weight": 1}
+      ]
+    },
+    {
+      "id": "sacrifice.help_aftermath",
+      "speaker": "taly_renn",
+      "text": "You just volunteered for paperwork hell. Either you're decent or playing a long game so elaborate I almost respect it. Maris — your liaison has dimensions.",
+      "tags": ["sacrifice", "taly_renn"],
+      "conditions": [],
+      "effects": [
+        {"op": "add_memory", "id": "mem_helped_taly", "summary": "You took blame to shield Taly from a fixer.", "salience": 6, "tags": ["taly", "sacrifice"], "created_at_beat": "sacrifice"},
+        {"op": "set_flag", "flag": "sera_gained_time", "value": true}
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.help.next",
+          "text": "Dimensions are accidental. I should go be late for something important.",
+          "intent": "humble",
+          "next": "finale.router",
+          "effects": [
+            {"op": "set_flag", "flag": "fragment_risk", "value": true}
+          ]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {"faculty": "Tradecraft", "text": "Sera just got a free minute. Assume she used it.", "weight": 2},
+        {"faculty": "Idealism", "text": "Worth it. Argue with Wren later.", "weight": 1}
+      ]
+    },
+    {
+      "id": "sacrifice.abandon",
+      "speaker": "narrator",
+      "text": "You pass like a professional weather system. Behind you, the fixer's voice sharpens. Ahead, the fragment path stays clear — clearer than your stomach.",
+      "tags": ["sacrifice"],
+      "conditions": [],
+      "effects": [
+        {"op": "add_memory", "id": "mem_abandoned_taly", "summary": "You prioritized the mission over helping Taly.", "salience": 6, "tags": ["taly", "cost"], "created_at_beat": "sacrifice"},
+        {"op": "set_flag", "flag": "mission_path_clear", "value": true}
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.abandon.next",
+          "text": "Keep walking. Finish the job.",
+          "intent": "mission",
+          "next": "finale.router",
+          "effects": []
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {"faculty": "Insecurity", "text": "Maris saw. Or will hear. Same damage.", "weight": 1},
+        {"faculty": "Tradecraft", "text": "Clean path. Cold win available.", "weight": 1}
+      ]
+    },
+    {
+      "id": "sacrifice.split",
+      "speaker": "maris_quell",
+      "text": "I see it. Go. I'll take Taly — and later you'll explain why you trusted me with the human part of your evening.",
+      "tags": ["sacrifice", "maris_quell"],
+      "conditions": [],
+      "effects": [
+        {"op": "set_flag", "flag": "helped_taly", "value": true},
+        {"op": "set_flag", "flag": "maris_handled_taly", "value": true},
+        {"op": "rel", "char": "maris_quell", "respect": 2},
+        {"op": "rel", "char": "maris_quell", "trust": 2},
+        {"op": "rel", "char": "taly_renn", "trust": 2},
+        {"op": "add_memory", "id": "mem_split_help", "summary": "You signaled Maris to extract Taly while you continued the mission.", "salience": 5, "tags": ["maris", "taly"], "created_at_beat": "sacrifice"}
+      ],
+      "choices": [
+        {
+          "id": "sacrifice.split.next",
+          "text": "Because the human part was never optional.",
+          "intent": "warm",
+          "next": "finale.router",
+          "effects": [{"op": "rel", "char": "maris_quell", "affection": 2}]
+        }
+      ],
+      "next": null,
+      "faculty_interjections": [
+        {"faculty": "Empathy", "text": "Partnership without dumping. Rare.", "weight": 1},
+        {"faculty": "Analysis", "text": "Mission path mostly intact. Social ledger improved.", "weight": 1}
+      ]
+    }
+  ]
+}
