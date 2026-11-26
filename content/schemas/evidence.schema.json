@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tea://schemas/evidence",
+  "title": "EvidenceFragment",
+  "type": "object",
+  "required": ["id"],
+  "properties": {
+    "id": { "type": "string" },
+    "claims": { "type": "array", "items": { "type": "string" } },
+    "contradicts": { "type": "array", "items": { "type": "string" } },
+    "verified": { "type": "boolean" }
+  }
+}

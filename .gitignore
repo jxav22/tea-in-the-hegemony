@@ -1,0 +1,32 @@
+# Godot 4
+.godot/
+*.translation
+export.cfg
+.import/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local Godot binary (download for CI/verify)
+.bin/
+*.x86_64
+Godot_*
+
+# Exports
+builds/
+*.pck
+*.zip
+!content/**/*.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/

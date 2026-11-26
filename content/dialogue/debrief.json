@@ -1,0 +1,65 @@
+{
+  "id": "debrief",
+  "start": "debrief.start",
+  "nodes": [
+    {
+      "id": "debrief.start",
+      "speaker": "wren_halden",
+      "text": "Report. Prefer facts. Tolerate feelings if they affected the facts.",
+      "tags": ["debrief"],
+      "choices": [
+        {
+          "id": "c_success",
+          "text": "Fragment secured. Cover holding. Maris is… complicated.",
+          "intent": "balanced",
+          "next": "debrief.success",
+          "conditions": [{ "flag": "got_fragment", "op": "eq", "value": true }],
+          "effects": []
+        },
+        {
+          "id": "c_partial",
+          "text": "Contact made. Intel incomplete. I didn't blow it — mostly.",
+          "intent": "partial",
+          "next": "debrief.partial",
+          "effects": []
+        },
+        {
+          "id": "c_human",
+          "text": "I prioritised the person over the drawer.",
+          "intent": "human",
+          "next": "debrief.human",
+          "conditions": [{ "flag": "met_maris", "op": "eq", "value": true }],
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "debrief.success",
+      "speaker": "wren_halden",
+      "text": "Complicated is fine. Verified discrepancy is better. You get to keep both the shoes and the dignity tonight. Dismissed.",
+      "effects": [
+        { "op": "set_flag", "flag": "ending_mission_success", "value": true },
+        { "op": "objective", "id": "maintain_cover", "status": "complete" }
+      ],
+      "next": null
+    },
+    {
+      "id": "debrief.partial",
+      "speaker": "wren_halden",
+      "text": "Mostly is a word handlers hate and humans need. We'll work the gaps. Don't get attached to gaps.",
+      "effects": [{ "op": "set_flag", "flag": "ending_partial", "value": true }],
+      "next": null
+    },
+    {
+      "id": "debrief.human",
+      "speaker": "wren_halden",
+      "text": "Then the drawer waits. People don't. Clinical note: that was either wisdom or a career-limiting crush. Sleep on which.",
+      "effects": [{ "op": "set_flag", "flag": "ending_human", "value": true }],
+      "faculty_interjections": [
+        { "faculty": "Idealism", "text": "Wisdom.", "weight": 1 },
+        { "faculty": "Tradecraft", "text": "Crush. Document it. Move on.", "weight": 1 }
+      ],
+      "next": null
+    }
+  ]
+}

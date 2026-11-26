@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tea://schemas/memory",
+  "title": "Memory",
+  "type": "object",
+  "required": ["id", "summary"],
+  "properties": {
+    "id": { "type": "string" },
+    "summary": { "type": "string" },
+    "salience": { "type": "integer" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "created_at_beat": { "type": "integer" }
+  }
+}

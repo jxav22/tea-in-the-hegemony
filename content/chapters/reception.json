@@ -1,0 +1,13 @@
+{
+  "id": "reception",
+  "title": "The Reception",
+  "start_dialogue": "briefing",
+  "locations": ["foyer", "salon", "terrace", "study", "cloakroom"],
+  "characters": ["maris_quell", "wren_halden", "edrin_voss", "taly_renn", "sera_kade", "pim_orel", "clerk_moth"],
+  "objectives": [
+    { "id": "contact_maris", "label": "Make contact with Maris Quell" },
+    { "id": "identify_voss", "label": "Identify Lord Edrin Voss" },
+    { "id": "obtain_fragment", "label": "Obtain the shipping discrepancy fragment" },
+    { "id": "maintain_cover", "label": "Maintain cover as Cassian Orth" }
+  ]
+}

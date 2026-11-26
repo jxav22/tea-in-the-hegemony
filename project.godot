@@ -1,0 +1,39 @@
+; Engine configuration file.
+; Tea in the Hegemony — Core Engine (Agent A)
+
+config_version=5
+
+[application]
+
+config/name="Tea in the Hegemony"
+config/description="Narrative social-espionage RPG — The Reception chapter"
+config/version="0.1.0"
+run/main_scene="res://scenes/main/boot.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+FlagStore="*res://autoload/flag_store.gd"
+SaveService="*res://autoload/save_service.gd"
+GameState="*res://autoload/game_state.gd"
+FacultyBus="*res://autoload/faculty_bus.gd"
+SceneRouter="*res://autoload/scene_router.gd"
+DialogueRunner="*res://autoload/dialogue_runner.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+
+[internationalization]
+
+locale/fallback="en"

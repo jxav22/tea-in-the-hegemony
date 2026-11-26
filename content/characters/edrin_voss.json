@@ -1,0 +1,9 @@
+{
+  "id": "edrin_voss",
+  "display_name": "Lord Edrin Voss",
+  "role": "Host",
+  "silhouette_notes": "Politically influential; collects people like porcelain.",
+  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
+  "motivations": ["Influence", "Interesting guests"],
+  "portrait_key": "edrin_voss"
+}

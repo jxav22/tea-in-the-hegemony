@@ -1,0 +1,9 @@
+{
+  "id": "maris_quell",
+  "display_name": "Maris Quell",
+  "role": "Policy advisor, Observatory Circle",
+  "silhouette_notes": "Upper-class business-casual; observant; dry humour in the jawline.",
+  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
+  "motivations": ["Observatory Circle influence", "Understand who is playing whom"],
+  "portrait_key": "maris_quell"
+}

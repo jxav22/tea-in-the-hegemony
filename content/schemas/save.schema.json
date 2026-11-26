@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tea://schemas/save",
+  "title": "SaveGame",
+  "type": "object",
+  "required": ["save_version", "chapter_id", "flags", "rels", "memories", "inventory", "cover_state", "objectives"],
+  "properties": {
+    "save_version": { "type": "integer" },
+    "chapter_id": { "type": "string" },
+    "current_location": { "type": "string" },
+    "flags": { "type": "object" },
+    "rels": { "type": "object" },
+    "memories": { "type": "array" },
+    "inventory": { "type": "array" },
+    "cover_state": { "type": "object" },
+    "objectives": { "type": "object" },
+    "beat_index": { "type": "integer" },
+    "timestamp": { "type": "string" }
+  }
+}

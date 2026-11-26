@@ -1,0 +1,9 @@
+{
+  "id": "clerk_moth",
+  "display_name": "Clerk Moth",
+  "role": "Bureaucrat",
+  "silhouette_notes": "Procedural zealot; badge violations are war crimes.",
+  "default_rel": { "trust": 0, "respect": 0, "familiarity": 0, "suspicion": 1, "affection": 0, "comfort": 0, "perceived_authenticity": 0 },
+  "motivations": ["Procedure", "Keys as scripture"],
+  "portrait_key": "clerk_moth"
+}

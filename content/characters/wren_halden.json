@@ -1,0 +1,9 @@
+{
+  "id": "wren_halden",
+  "display_name": "Wren Halden",
+  "role": "Handler",
+  "silhouette_notes": "Clinical posture, soft voice, eyes that inventory exits.",
+  "default_rel": { "trust": 2, "respect": 3, "familiarity": 4, "suspicion": 0, "affection": 0, "comfort": 1, "perceived_authenticity": 2 },
+  "motivations": ["Mission success", "Keep Cassian intact enough to work"],
+  "portrait_key": "wren_halden"
+}
