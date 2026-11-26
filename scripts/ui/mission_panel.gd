@@ -36,13 +36,16 @@ func set_objectives(objectives: Array) -> void:
 	_objectives_cache = objectives.duplicate(true)
 	for child in list.get_children():
 		child.queue_free()
+	var shown := 0
 	for o in objectives:
 		if typeof(o) != TYPE_DICTIONARY:
+			continue
+		var status := str(o.get("status", "active")).to_lower()
+		if status == "hidden":
 			continue
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		var mark := Label.new()
-		var status := str(o.get("status", "active")).to_lower()
 		match status:
 			"done", "complete", "completed":
 				mark.text = "▣"
@@ -50,8 +53,6 @@ func set_objectives(objectives: Array) -> void:
 			"failed", "blown":
 				mark.text = "✕"
 				mark.add_theme_color_override("font_color", HegemonyPalette.VERMILLION)
-			"hidden":
-				continue
 			_:
 				mark.text = "□"
 				mark.add_theme_color_override("font_color", HegemonyPalette.BRASS)
@@ -60,11 +61,20 @@ func set_objectives(objectives: Array) -> void:
 		lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lab.add_theme_font_size_override("font_size", 14)
+		lab.add_theme_color_override("font_color", HegemonyPalette.IVORY)
 		if status in ["done", "complete", "completed"]:
 			lab.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
 		row.add_child(mark)
 		row.add_child(lab)
 		list.add_child(row)
+		shown += 1
+	if shown == 0:
+		var empty := Label.new()
+		empty.text = "No active brief — wait for handlers."
+		empty.add_theme_color_override("font_color", HegemonyPalette.DIM_TEXT)
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		list.add_child(empty)
+	title.text = "Brief · %d" % shown
 
 
 func toggle_collapse() -> void:

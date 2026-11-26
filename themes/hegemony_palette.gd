@@ -41,7 +41,44 @@ static func intent_color(intent: String) -> Color:
 
 
 static func intent_label(intent: String) -> String:
-	var i := intent.strip_edges()
+	var i := intent.strip_edges().to_lower()
 	if i.is_empty():
 		return "unclear"
-	return i.to_lower()
+	return i
+
+
+static func intent_gloss(intent: String) -> String:
+	## Short tone hint — never outcome spoilers.
+	match intent_label(intent):
+		"professional", "formal", "cover":
+			return "steady · stay in character"
+		"warm", "charm", "affection", "kind":
+			return "open · risk sincerity"
+		"probe", "investigate", "intel", "curious":
+			return "curious · press gently"
+		"deflect", "evade", "joke", "humour", "humor":
+			return "deflect · change the subject"
+		"risk", "aggressive", "confront", "lie":
+			return "sharp · heat may rise"
+		_:
+			return "tone unclear"
+
+
+static func faculty_color(faculty: String) -> Color:
+	match faculty.strip_edges().to_lower():
+		"analysis":
+			return JADE
+		"tradecraft":
+			return BRASS
+		"composure":
+			return TEAL_MIST
+		"empathy":
+			return Color("b89b7a")
+		"improvisation":
+			return AMBER
+		"idealism":
+			return Color("7a9a8c")
+		"insecurity":
+			return VERMILLION
+		_:
+			return AMBER

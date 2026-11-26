@@ -43,18 +43,27 @@ func _build_presentation() -> void:
 	_hud = GameHUDScene.instantiate() as GameHUD
 	add_child(_hud)
 
+	# Title above GameHUD CanvasLayer (layer 20) so it isn't buried
+	var title_layer := CanvasLayer.new()
+	title_layer.name = "TitleLayer"
+	title_layer.layer = 30
+	add_child(title_layer)
 	_title = TitleScene.instantiate() as TitleScreen
-	add_child(_title)
+	title_layer.add_child(_title)
 	_title.start_requested.connect(_start_new)
 	_title.continue_requested.connect(_continue_game)
 	_title.preferences_requested.connect(func (): _hud.settings_menu.open())
 
-	# Lightweight nav + status under dialogue (still presentation-owned)
+	# Nav/status above room art but under modal overlays
+	var overlay_layer := CanvasLayer.new()
+	overlay_layer.name = "PresOverlayLayer"
+	overlay_layer.layer = 22
+	add_child(overlay_layer)
 	var overlay := Control.new()
 	overlay.name = "PresentationOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(overlay)
+	overlay_layer.add_child(overlay)
 
 	_status = Label.new()
 	_status.name = "PresStatus"
@@ -97,14 +106,14 @@ func _show_title() -> void:
 	_nav_bar.visible = false
 	_status.text = "Ready"
 	_ui.refresh_objectives()
-	_ui.sync_background("salon")
+	_ui.sync_background("salon", false)
 
 
 func _start_new() -> void:
 	_title.visible = false
 	GameState.reset_to_new_game()
 	_status.text = "Briefing"
-	_ui.sync_background("briefing")
+	_ui.sync_background("briefing", false)
 	_ui.refresh_objectives()
 	DialogueRunner.start("briefing")
 

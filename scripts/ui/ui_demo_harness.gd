@@ -39,15 +39,18 @@ func _ready() -> void:
 func _advance() -> void:
 	match _step:
 		0:
+			hud.set_background("briefing", false)
 			hud.present_faculty("Insecurity", "She will notice your shoes.")
+			hud.present_faculty("Analysis", "Shoes are irrelevant. Posture is a tell.")
 			hud.present_line("wren_halden", "Wren Halden", "Smile with your eyes, Cassian. Not your teeth. Teeth are for people who sleep.", "cold")
 		1:
 			hud.hide_faculty()
-			hud.set_background("foyer")
+			hud.set_background("foyer", true)
 			hud.present_line("wren_halden", "Wren Halden", "Maris Quill—Quell—is Observatory Circle. She collects awkward men like paperweights. Be collectible. Be useful.", "amused")
 		2:
-			hud.set_background("salon")
+			hud.set_background("salon", true)
 			hud.present_faculty("Tradecraft", "Do not invent logistics trivia you cannot defend.")
+			hud.present_faculty("Empathy", "She already clocked you. Soften.")
 			hud.present_line("maris_quell", "Maris Quell", "You're the new liaison. Orth. You look like someone who alphabetises his anxieties.", "amused")
 		3:
 			hud.hide_faculty()

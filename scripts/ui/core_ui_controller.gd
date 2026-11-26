@@ -273,13 +273,13 @@ func open_profile(char_id: String) -> void:
 	})
 
 
-func sync_background(location_id: String) -> void:
+func sync_background(location_id: String, animate: bool = true) -> void:
 	var loc := location_id
 	if loc == "study":
 		loc = "study_annex"
 	if loc.is_empty():
 		loc = "foyer"
-	hud.set_background(loc)
+	hud.set_background(loc, animate)
 
 
 func display_speaker(id: String) -> String:
