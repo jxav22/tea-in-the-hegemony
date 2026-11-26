@@ -78,10 +78,15 @@ static func build() -> Theme:
 	return theme
 
 
-static func _load_font(path: String, size: int) -> FontFile:
+static func _load_font(path: String, _size: int) -> Font:
+	# Exported/web builds remap .ttf → imported FontFile (.fontdata). Prefer ResourceLoader
+	# over load_dynamic_font(), which needs raw TTF bytes and yields tofu glyphs in PCK exports.
 	if not ResourceLoader.exists(path):
 		push_warning("Missing font: %s" % path)
 		return null
+	var loaded: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_REUSE)
+	if loaded is Font:
+		return loaded as Font
 	var font := FontFile.new()
 	var err := font.load_dynamic_font(path)
 	if err != OK:

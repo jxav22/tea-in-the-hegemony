@@ -18,12 +18,15 @@ fi
 
 OUT_DIR="${OUT_DIR:-$ROOT/builds/web}"
 ITCH_DIR="${ITCH_DIR:-$ROOT/builds/itch}"
+rm -rf "$OUT_DIR"
 mkdir -p "$OUT_DIR" "$ITCH_DIR"
 
 echo "== Exporting Web (single-threaded / Compatibility) =="
 "$GODOT" --headless --path "$ROOT" --export-release "Web" "$OUT_DIR/index.html"
 # Ensure Pages serves without Jekyll interference
 touch "$OUT_DIR/.nojekyll"
+# Drop any accidental .import sidecars if the editor touched the export dir
+find "$OUT_DIR" -name '*.import' -delete
 
 ZIP="$ITCH_DIR/tea-in-the-hegemony-web.zip"
 rm -f "$ZIP"
