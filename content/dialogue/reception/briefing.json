@@ -6,7 +6,7 @@
       "id": "briefing.intro",
       "speaker": "wren_halden",
       "text": "Sit. Don't rearrange the chair — it isn't a metaphor. Tonight you are Cassian Orth, Ministry Trade Liaison, logistics analyst, man who has opinions about freight margins and none about his own pulse.",
-      "tags": ["briefing"],
+      "tags": ["briefing", "entry", "start"],
       "conditions": [],
       "effects": [{"op": "set_flag", "flag": "briefing_started", "value": true}],
       "choices": [

@@ -6,9 +6,24 @@
       "id": "foyer.arrival",
       "speaker": "narrator",
       "text": "Voss House foyer: marble that remembers better shoes than yours, a string quartet committing tasteful violence in the corner, and a line of guests practicing their own names.",
-      "tags": ["foyer", "arrival"],
-      "conditions": [{"flag": "briefed", "op": "eq", "value": true}],
-      "effects": [{"op": "set_location", "location": "foyer"}],
+      "tags": [
+        "foyer",
+        "arrival"
+      ],
+      "conditions": [
+        {
+          "flag": "briefed",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "location",
+          "value": "foyer"
+        }
+      ],
       "choices": [
         {
           "id": "foyer.arrival.badge",
@@ -23,23 +38,46 @@
           "intent": "tradecraft",
           "next": "foyer.moth_check",
           "effects": [
-            {"op": "set_flag", "flag": "foyer_scanned", "value": true},
-            {"op": "rel", "char": "sera_kade", "suspicion": 1}
+            {
+              "op": "set_flag",
+              "flag": "foyer_scanned",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "sera_kade",
+              "suspicion": 1
+            }
           ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Tradecraft", "text": "Two cameras, one blind corner by the cloakroom. Noted.", "weight": 1},
-        {"faculty": "Insecurity", "text": "Your invitation is real. Your face is still auditioning.", "weight": 1},
-        {"faculty": "Composure", "text": "Lower third. Breathe as if freight margins soothe you.", "weight": 1}
+        {
+          "faculty": "Tradecraft",
+          "text": "Two cameras, one blind corner by the cloakroom. Noted.",
+          "weight": 1
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "Your invitation is real. Your face is still auditioning.",
+          "weight": 1
+        },
+        {
+          "faculty": "Composure",
+          "text": "Lower third. Breathe as if freight margins soothe you.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "foyer.moth_check",
       "speaker": "clerk_moth",
-      "text": "Badge. Invitation. Full legal name as printed — not as hoped. Discrepancies will be logged, escalated, and, if necessary, laminated.",
-      "tags": ["foyer", "clerk_moth"],
+      "text": "Badge. Invitation. Full legal name as printed \u2014 not as hoped. Discrepancies will be logged, escalated, and, if necessary, laminated.",
+      "tags": [
+        "foyer",
+        "clerk_moth"
+      ],
       "conditions": [],
       "effects": [],
       "choices": [
@@ -48,7 +86,13 @@
           "text": "Cassian Orth. Ministry Trade Liaison. Logistics.",
           "intent": "comply",
           "next": "foyer.moth_pass",
-          "effects": [{"op": "rel", "char": "clerk_moth", "respect": 1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "clerk_moth",
+              "respect": 1
+            }
+          ]
         },
         {
           "id": "foyer.moth.joke",
@@ -56,22 +100,41 @@
           "intent": "joke",
           "next": "foyer.moth_sideeye",
           "effects": [
-            {"op": "rel", "char": "clerk_moth", "suspicion": 2},
-            {"op": "set_flag", "flag": "moth_annoyed", "value": true}
+            {
+              "op": "rel",
+              "char": "clerk_moth",
+              "suspicion": 2
+            },
+            {
+              "op": "set_flag",
+              "flag": "moth_annoyed",
+              "value": true
+            }
           ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Improvisation", "text": "Do not joke. This human laminates joy.", "weight": 2},
-        {"faculty": "Analysis", "text": "Procedural zealot. Compliance is camouflage.", "weight": 1}
+        {
+          "faculty": "Improvisation",
+          "text": "Do not joke. This human laminates joy.",
+          "weight": 2
+        },
+        {
+          "faculty": "Analysis",
+          "text": "Procedural zealot. Compliance is camouflage.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "foyer.moth_sideeye",
       "speaker": "clerk_moth",
       "text": "Coat check is a separate jurisdiction. Your joke has been noted in pencil. Pencil can become ink.",
-      "tags": ["foyer", "comedy"],
+      "tags": [
+        "foyer",
+        "comedy"
+      ],
       "conditions": [],
       "effects": [],
       "choices": [
@@ -80,28 +143,52 @@
           "text": "Cassian Orth. As printed. Apologies for the pencil.",
           "intent": "recover",
           "next": "foyer.moth_pass",
-          "effects": [{"op": "rel", "char": "clerk_moth", "suspicion": -1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "clerk_moth",
+              "suspicion": -1
+            }
+          ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Composure", "text": "Smile lower-third. Apologize like a spreadsheet.", "weight": 1}
+        {
+          "faculty": "Composure",
+          "text": "Smile lower-third. Apologize like a spreadsheet.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "foyer.moth_pass",
       "speaker": "clerk_moth",
       "text": "Orth. Matches. Proceed. Do not rearrange the seating cards. They are not suggestions.",
-      "tags": ["foyer"],
+      "tags": [
+        "foyer"
+      ],
       "conditions": [],
-      "effects": [{"op": "set_flag", "flag": "entered_reception", "value": true}],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "entered_reception",
+          "value": true
+        }
+      ],
       "choices": [
         {
           "id": "foyer.pass.salon",
-          "text": "Head toward the salon — voices, glass, opportunity.",
+          "text": "Head toward the salon \u2014 voices, glass, opportunity.",
           "intent": "explore",
           "next": "salon.enter",
-          "effects": [{"op": "set_location", "location": "salon"}]
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "location",
+              "value": "salon"
+            }
+          ]
         },
         {
           "id": "foyer.pass.pim",
@@ -113,18 +200,33 @@
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Tradecraft", "text": "You're in. Clock starts now.", "weight": 1}
+        {
+          "faculty": "Tradecraft",
+          "text": "You're in. Clock starts now.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "foyer.pim",
       "speaker": "pim_orel",
-      "text": "Orth! You look like a man who has rehearsed his first sentence seventeen times and still hates it. Come on — Maris is in the salon pretending not to notice arrivals, which means she has noticed all of them.",
-      "tags": ["foyer", "pim_orel"],
+      "text": "Orth! You look like a man who has rehearsed his first sentence seventeen times and still hates it. Come on \u2014 Maris is in the salon pretending not to notice arrivals, which means she has noticed all of them.",
+      "tags": [
+        "foyer",
+        "pim_orel"
+      ],
       "conditions": [],
       "effects": [
-        {"op": "rel", "char": "pim_orel", "familiarity": 2},
-        {"op": "set_flag", "flag": "saw_pim", "value": true}
+        {
+          "op": "rel",
+          "char": "pim_orel",
+          "familiarity": 2
+        },
+        {
+          "op": "set_flag",
+          "flag": "saw_pim",
+          "value": true
+        }
       ],
       "choices": [
         {
@@ -132,20 +234,40 @@
           "text": "Lead on before I invent a seventeenth draft.",
           "intent": "accept",
           "next": "salon.enter",
-          "effects": [{"op": "set_flag", "flag": "pim_escort", "value": true}]
+          "effects": [
+            {
+              "op": "set_flag",
+              "flag": "pim_escort",
+              "value": true
+            }
+          ]
         },
         {
           "id": "foyer.pim.delay",
           "text": "Give me thirty seconds to become someone who arrives.",
           "intent": "stall",
           "next": "salon.enter",
-          "effects": [{"op": "rel", "char": "pim_orel", "comfort": 1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "pim_orel",
+              "comfort": 1
+            }
+          ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Insecurity", "text": "Seventeen is low. Be honest.", "weight": 1},
-        {"faculty": "Empathy", "text": "Pim is loud and somehow kind. Do not use him as furniture.", "weight": 1}
+        {
+          "faculty": "Insecurity",
+          "text": "Seventeen is low. Be honest.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "Pim is loud and somehow kind. Do not use him as furniture.",
+          "weight": 1
+        }
       ]
     }
   ]

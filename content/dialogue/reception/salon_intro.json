@@ -6,9 +6,18 @@
       "id": "salon.enter",
       "speaker": "narrator",
       "text": "The salon is a carefully engineered accident of proximity: policy, money, and people who can afford to look bored. Maris Quell stands near a tall window, glass half-full, expression half-elsewhere.",
-      "tags": ["salon", "arrival"],
+      "tags": [
+        "salon",
+        "arrival"
+      ],
       "conditions": [],
-      "effects": [{"op": "set_location", "location": "salon"}],
+      "effects": [
+        {
+          "op": "set_flag",
+          "flag": "location",
+          "value": "salon"
+        }
+      ],
       "choices": [
         {
           "id": "salon.enter.approach",
@@ -27,19 +36,39 @@
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Analysis", "text": "Window exit, two conversational clusters, one dead zone by the ferns. Ferns are always guilty.", "weight": 1},
-        {"faculty": "Insecurity", "text": "She has seen you. Or she is looking at the window. Or both. Both is worse.", "weight": 1}
+        {
+          "faculty": "Analysis",
+          "text": "Window exit, two conversational clusters, one dead zone by the ferns. Ferns are always guilty.",
+          "weight": 1
+        },
+        {
+          "faculty": "Insecurity",
+          "text": "She has seen you. Or she is looking at the window. Or both. Both is worse.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "salon.taly_intercept",
       "speaker": "taly_renn",
       "text": "Before you invent a weather opener: I'm Taly Renn. She's Maris. You're hovering like a man who has been briefed on hovering. Spit out a name and we'll decide if you're interesting.",
-      "tags": ["salon", "taly_renn", "comedy"],
+      "tags": [
+        "salon",
+        "taly_renn",
+        "comedy"
+      ],
       "conditions": [],
       "effects": [
-        {"op": "rel", "char": "taly_renn", "familiarity": 1},
-        {"op": "set_flag", "flag": "met_taly", "value": true}
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "familiarity": 1
+        },
+        {
+          "op": "set_flag",
+          "flag": "met_taly",
+          "value": true
+        }
       ],
       "choices": [
         {
@@ -47,7 +76,13 @@
           "text": "Cassian Orth. Trade liaison. I hover professionally.",
           "intent": "cover",
           "next": "salon.intro_awkward",
-          "effects": [{"op": "rel", "char": "taly_renn", "respect": 1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "respect": 1
+            }
+          ]
         },
         {
           "id": "salon.taly.honest",
@@ -55,26 +90,54 @@
           "intent": "vulnerable",
           "next": "salon.intro_awkward",
           "effects": [
-            {"op": "rel", "char": "taly_renn", "trust": 1},
-            {"op": "rel", "char": "maris_quell", "comfort": 1}
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "trust": 1
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
           ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Composure", "text": "She clocked the briefing. Do not confirm it with posture.", "weight": 1},
-        {"faculty": "Improvisation", "text": "Lean into the hover. Own the hover. Become the hover.", "weight": 1}
+        {
+          "faculty": "Composure",
+          "text": "She clocked the briefing. Do not confirm it with posture.",
+          "weight": 1
+        },
+        {
+          "faculty": "Improvisation",
+          "text": "Lean into the hover. Own the hover. Become the hover.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "salon.intro_awkward",
       "speaker": "maris_quell",
-      "text": "Cassian Orth. Ministry Trade. I've read two of your memoranda — the short ones. You write like someone who is afraid of adjectives.",
-      "tags": ["salon", "maris_quell", "awkward_intro"],
+      "text": "Cassian Orth. Ministry Trade. I've read two of your memoranda \u2014 the short ones. You write like someone who is afraid of adjectives.",
+      "tags": [
+        "salon",
+        "maris_quell",
+        "awkward_intro"
+      ],
       "conditions": [],
       "effects": [
-        {"op": "set_flag", "flag": "met_maris", "value": true},
-        {"op": "rel", "char": "maris_quell", "familiarity": 2}
+        {
+          "op": "set_flag",
+          "flag": "met_maris",
+          "value": true
+        },
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "familiarity": 2
+        }
       ],
       "choices": [
         {
@@ -83,9 +146,21 @@
           "intent": "protocol",
           "next": "salon.intro_protocol_response",
           "effects": [
-            {"op": "set_flag", "flag": "used_romance_protocol", "value": true},
-            {"op": "rel", "char": "maris_quell", "respect": 1},
-            {"op": "rel", "char": "maris_quell", "affection": 0}
+            {
+              "op": "set_flag",
+              "flag": "used_romance_protocol",
+              "value": true
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": 1
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "affection": 0
+            }
           ]
         },
         {
@@ -94,8 +169,16 @@
           "intent": "human",
           "next": "salon.intro_human_response",
           "effects": [
-            {"op": "rel", "char": "maris_quell", "comfort": 2},
-            {"op": "rel", "char": "maris_quell", "perceived_authenticity": 5}
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 2
+            },
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "perceived_authenticity": 5
+            }
           ]
         },
         {
@@ -104,49 +187,108 @@
           "intent": "intel_bait",
           "next": "salon.intro_work_response",
           "effects": [
-            {"op": "rel", "char": "maris_quell", "suspicion": 1},
-            {"op": "rel", "char": "taly_renn", "suspicion": 1}
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "suspicion": 1
+            },
+            {
+              "op": "rel",
+              "char": "taly_renn",
+              "suspicion": 1
+            }
           ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Insecurity", "text": "She read your memos. She knows you are allergic to beauty.", "weight": 1},
-        {"faculty": "Empathy", "text": "That was almost a compliment. Reciprocate without a spreadsheet.", "weight": 2},
-        {"faculty": "Tradecraft", "text": "Funding question is on-script. Also obvious. Calibrate.", "weight": 1},
-        {"faculty": "Idealism", "text": "She led with your work, not your cover charm. Meet her there as a person.", "weight": 1}
+        {
+          "faculty": "Insecurity",
+          "text": "She read your memos. She knows you are allergic to beauty.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "That was almost a compliment. Reciprocate without a spreadsheet.",
+          "weight": 2
+        },
+        {
+          "faculty": "Tradecraft",
+          "text": "Funding question is on-script. Also obvious. Calibrate.",
+          "weight": 1
+        },
+        {
+          "faculty": "Idealism",
+          "text": "She led with your work, not your cover charm. Meet her there as a person.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "salon.intro_protocol_response",
       "speaker": "maris_quell",
       "text": "Verbs that ship. You sound like a briefing note that learned to stand upright. Taly, he's house-trained.",
-      "tags": ["salon", "comedy"],
+      "tags": [
+        "salon",
+        "comedy"
+      ],
       "conditions": [],
-      "effects": [{"op": "rel", "char": "taly_renn", "familiarity": 1}],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "taly_renn",
+          "familiarity": 1
+        }
+      ],
       "choices": [
         {
           "id": "salon.protocol.next",
           "text": "I'll take house-trained over decorative.",
           "intent": "recover",
           "next": "salon.genuine_offer",
-          "effects": [{"op": "rel", "char": "maris_quell", "respect": 1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "respect": 1
+            }
+          ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Composure", "text": "She noticed the protocol. Soften or she'll file you under 'handled.'", "weight": 1}
+        {
+          "faculty": "Composure",
+          "text": "She noticed the protocol. Soften or she'll file you under 'handled.'",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "salon.intro_human_response",
       "speaker": "maris_quell",
-      "text": "Good. Most people try to un-autopsy themselves in the next sentence. You left the body on the table. Refreshing — or suspicious. I'm collecting data.",
-      "tags": ["salon"],
+      "text": "Good. Most people try to un-autopsy themselves in the next sentence. You left the body on the table. Refreshing \u2014 or suspicious. I'm collecting data.",
+      "tags": [
+        "salon"
+      ],
       "conditions": [],
       "effects": [
-        {"op": "rel", "char": "maris_quell", "trust": 1},
-        {"op": "add_memory", "id": "mem_maris_autopsy", "summary": "Maris called your self-awareness refreshing or suspicious.", "salience": 3, "tags": ["maris", "intro"], "created_at_beat": "awkward_intro"}
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "trust": 1
+        },
+        {
+          "op": "add_memory",
+          "id": "mem_maris_autopsy",
+          "summary": "Maris called your self-awareness refreshing or suspicious.",
+          "salience": 3,
+          "tags": [
+            "maris",
+            "intro"
+          ],
+          "created_at_beat": "awkward_intro"
+        }
       ],
       "choices": [
         {
@@ -154,47 +296,86 @@
           "text": "Collect away. I'll try not to contaminate the sample.",
           "intent": "playful",
           "next": "salon.genuine_offer",
-          "effects": [{"op": "rel", "char": "maris_quell", "comfort": 1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
+          ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Analysis", "text": "She's running her own assessment. You are not the only spy in the metaphor.", "weight": 1}
+        {
+          "faculty": "Analysis",
+          "text": "She's running her own assessment. You are not the only spy in the metaphor.",
+          "weight": 1
+        }
       ]
     },
     {
       "id": "salon.intro_work_response",
       "speaker": "taly_renn",
       "text": "He went straight to funding. Maris, your admirers are getting efficient.",
-      "tags": ["salon", "comedy"],
+      "tags": [
+        "salon",
+        "comedy"
+      ],
       "conditions": [],
       "effects": [],
       "choices": [],
       "next": "salon.intro_work_maris",
       "faculty_interjections": [
-        {"faculty": "Tradecraft", "text": "Too fast. You smelled like an agenda.", "weight": 2}
+        {
+          "faculty": "Tradecraft",
+          "text": "Too fast. You smelled like an agenda.",
+          "weight": 2
+        }
       ]
     },
     {
       "id": "salon.intro_work_maris",
       "speaker": "maris_quell",
       "text": "Funding is looking like a conversation for people who have already survived small talk. We haven't. Try again without the briefcase.",
-      "tags": ["salon"],
+      "tags": [
+        "salon"
+      ],
       "conditions": [],
-      "effects": [{"op": "rel", "char": "maris_quell", "perceived_authenticity": -5}],
+      "effects": [
+        {
+          "op": "rel",
+          "char": "maris_quell",
+          "perceived_authenticity": -5
+        }
+      ],
       "choices": [
         {
           "id": "salon.work.retry",
           "text": "Fair. What's the least boring thing in this room that isn't politics?",
           "intent": "recover",
           "next": "salon.genuine_offer",
-          "effects": [{"op": "rel", "char": "maris_quell", "comfort": 1}]
+          "effects": [
+            {
+              "op": "rel",
+              "char": "maris_quell",
+              "comfort": 1
+            }
+          ]
         }
       ],
       "next": null,
       "faculty_interjections": [
-        {"faculty": "Insecurity", "text": "Briefcase energy. Lethal.", "weight": 1},
-        {"faculty": "Empathy", "text": "She asked for a person. Supply one.", "weight": 1}
+        {
+          "faculty": "Insecurity",
+          "text": "Briefcase energy. Lethal.",
+          "weight": 1
+        },
+        {
+          "faculty": "Empathy",
+          "text": "She asked for a person. Supply one.",
+          "weight": 1
+        }
       ]
     }
   ]

@@ -268,21 +268,14 @@
       "id": "debrief.close",
       "speaker": "wren_halden",
       "text": "Chapter closed enough. Orth remains useful until he doesn't. If Maris messages, you will tell me — not because romance is mission-critical, but because secrets are. Dismissed. Lower-third on the way out.",
-      "tags": ["debrief", "exit"],
+      "tags": ["debrief", "exit", "ending", "end"],
       "conditions": [],
       "effects": [
         {"op": "set_flag", "flag": "reception_debrief_complete", "value": true},
-        {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true}
+        {"op": "set_flag", "flag": "chapter_the_reception_done", "value": true},
+        {"op": "end", "ending": "reception_complete"}
       ],
-      "choices": [
-        {
-          "id": "debrief.exit",
-          "text": "Dismissed.",
-          "intent": "exit",
-          "next": null,
-          "effects": []
-        }
-      ],
+      "choices": [],
       "next": null,
       "faculty_interjections": [
         {"faculty": "Analysis", "text": "Reception complete. Endings diverge; save the flag set.", "weight": 1},

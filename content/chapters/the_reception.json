@@ -8,37 +8,52 @@
     {
       "id": "safehouse_briefing",
       "display_name": "Safehouse",
-      "tags": ["briefing"]
+      "tags": [
+        "briefing"
+      ]
     },
     {
       "id": "foyer",
       "display_name": "Voss House Foyer",
-      "tags": ["public"]
+      "tags": [
+        "public"
+      ]
     },
     {
       "id": "salon",
       "display_name": "Salon",
-      "tags": ["public", "social"]
+      "tags": [
+        "public",
+        "social"
+      ]
     },
     {
       "id": "terrace",
       "display_name": "Terrace",
-      "tags": ["semi_private"]
+      "tags": [
+        "semi_private"
+      ]
     },
     {
       "id": "study_annex",
       "display_name": "Study Annex",
-      "tags": ["restricted"]
+      "tags": [
+        "restricted"
+      ]
     },
     {
       "id": "cloakroom",
       "display_name": "Cloakroom Corridor",
-      "tags": ["semi_private"]
+      "tags": [
+        "semi_private"
+      ]
     },
     {
       "id": "safehouse_debrief",
-      "display_name": "Safehouse — Debrief",
-      "tags": ["debrief"]
+      "display_name": "Safehouse \u2014 Debrief",
+      "tags": [
+        "debrief"
+      ]
     }
   ],
   "objectives": [
@@ -144,6 +159,8 @@
     "If Core uses TRES or different key names, map speaker/text/choices/next/effects 1:1 from this schema.",
     "speaker 'narrator' and 'cassian_vale' are valid; player lines may be choice text only.",
     "rel effects use char id + dimension delta; unknown dimensions ignored safely.",
-    "add_memory effects push to save.memories[] per sprint contract."
+    "add_memory effects push to save.memories[] per sprint contract.",
+    "Location changes use set_flag flag=location (QA effect allowlist has no set_location).",
+    "Terminal debrief.close uses op end + ending tag."
   ]
 }
