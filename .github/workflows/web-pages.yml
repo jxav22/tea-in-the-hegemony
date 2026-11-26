@@ -1,0 +1,98 @@
+name: Web export + GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.3-stable"
+  GODOT_TAG: "4.3-stable"
+
+jobs:
+  export-web:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Godot binary + export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            .bin/godot
+            ~/.local/share/godot/export_templates/4.3.stable
+          key: godot-${{ env.GODOT_VERSION }}-web-templates-v1
+
+      - name: Install Godot 4.3 + web export templates
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p .bin "$HOME/.local/share/godot/export_templates/4.3.stable" /tmp/godot_dl
+          curl -L --fail --retry 4 -o /tmp/godot_dl/Godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_TAG}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -o /tmp/godot_dl/Godot.zip -d /tmp/godot_dl
+          GODOT_BIN="$(find /tmp/godot_dl -type f -name 'Godot_v*_linux.x86_64' | head -1)"
+          install -m 755 "$GODOT_BIN" .bin/godot
+          curl -L --fail --retry 4 -o /tmp/godot_dl/templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_TAG}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          rm -rf /tmp/godot_tpz && mkdir -p /tmp/godot_tpz
+          unzip -q -o /tmp/godot_dl/templates.tpz -d /tmp/godot_tpz
+          cp -a /tmp/godot_tpz/templates/. "$HOME/.local/share/godot/export_templates/4.3.stable/"
+          test -f "$HOME/.local/share/godot/export_templates/4.3.stable/web_nothreads_release.zip"
+          .bin/godot --version
+
+      - name: Ensure Godot binary executable
+        run: |
+          chmod +x .bin/godot
+          .bin/godot --version
+          test -f "$HOME/.local/share/godot/export_templates/4.3.stable/web_nothreads_release.zip"
+
+      - name: Import project (class cache)
+        run: |
+          .bin/godot --headless --path . --editor --quit-after 2 || true
+
+      - name: Export Web + itch ZIP
+        run: |
+          chmod +x tools/export_web.sh
+          ./tools/export_web.sh
+          test -f builds/web/index.html
+          test -f builds/web/index.wasm
+          test -f builds/itch/tea-in-the-hegemony-web.zip
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: builds/web
+
+      - name: Upload itch ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tea-in-the-hegemony-web-itch
+          path: builds/itch/tea-in-the-hegemony-web.zip
+          if-no-files-found: error
+
+  deploy-pages:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: export-web
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
