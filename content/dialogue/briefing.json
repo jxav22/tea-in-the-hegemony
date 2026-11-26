@@ -5,7 +5,7 @@
     {
       "id": "briefing.exit",
       "speaker": "wren_halden",
-      "text": "Badge says Orth. Invitation says foyer at nineteen. If Clerk Moth sniffs an inconsistency, smile with the lower third and cite logistics. If Sera Kade is there \u2014 she will be \u2014 do not race her in public. Race her in competence. Go be a person, Cassian. Preferably a quiet one.",
+      "text": "Badge says Orth. Foyer at nineteen. If Clerk Moth sniffs a serial mismatch, cite logistics and bore him into mercy. If Sera Kade is there \u2014 she will be \u2014 do not race her in public; race her in competence, quietly, like adults with knives. Go be a person, Cassian. Preferably a quiet one who remembers Maris Quell has her own brief.",
       "tags": [
         "briefing",
         "exit"
@@ -63,7 +63,7 @@
     {
       "id": "briefing.intro",
       "speaker": "wren_halden",
-      "text": "Sit. Don't rearrange the chair \u2014 it isn't a metaphor. Tonight you are Cassian Orth, Ministry Trade Liaison, logistics analyst, man who has opinions about freight margins and none about his own pulse.",
+      "text": "Sit. Don't rearrange the chair \u2014 it isn't a metaphor, and neither are you tonight. You are Cassian Orth: Ministry Trade Liaison, logistics analyst, man with opinions about freight margins and a pulse he treats like a scheduling conflict.",
       "tags": [
         "briefing",
         "entry",
@@ -184,7 +184,7 @@
     {
       "id": "briefing.romance_more",
       "speaker": "wren_halden",
-      "text": "Addendum: if conversation stalls, ask an open question about Observatory Circle funding, then listen as if the answer might change shipping lanes \u2014 because it might. If she laughs, do not inventory why. If she doesn't, do not escalate to jokes about tariffs. Tariffs are not charming. I checked.",
+      "text": "Addendum: if talk stalls, ask what Observatory Circle is fighting for this quarter \u2014 then listen as if the answer could reroute a convoy, because it might. If she laughs, do not autopsy the laugh. If she doesn't, do not escalate to tariff humour. I road-tested tariff humour on a mirror. The mirror filed a complaint.",
       "tags": [
         "briefing",
         "comedy"
@@ -205,14 +205,14 @@
       "choices": [
         {
           "id": "briefing.romance_more.ok",
-          "text": "No tariff jokes. That's... oddly specific.",
+          "text": "No tariff humour. The mirror story is worrying.",
           "intent": "ack",
           "next": "briefing.exit",
           "effects": []
         },
         {
           "id": "briefing.romance_more.probe",
-          "text": "You checked. On whom?",
+          "text": "You road-tested that on a mirror. Which of us was the mirror?",
           "intent": "probe",
           "next": "briefing.exit",
           "effects": [
@@ -241,7 +241,7 @@
     {
       "id": "briefing.romance_protocol",
       "speaker": "wren_halden",
-      "text": "Romantic protocol, clinical edition. One: smile with the lower third of your face only \u2014 full smiles read as sales. Two: if she mentions weather, do not correct the barometric pressure. Three: compliments should reference her work, not her collarbones. Four: if you feel a feeling, label it, file it, and continue speaking like a person who has been outdoors.",
+      "text": "Romantic protocol, clinical edition. One: smile with the lower third of your face only \u2014 full smiles read as product launches. Two: if she mentions weather, do not produce a barometric correction; you are not a lighthouse. Three: compliment her work, never her collarbones \u2014 collarbones are not policy. Four: if you feel a feeling, name it privately, file it, and keep speaking like someone who has touched grass this calendar year.",
       "tags": [
         "briefing",
         "comedy",

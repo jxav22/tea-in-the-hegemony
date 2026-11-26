@@ -5,7 +5,7 @@
     {
       "id": "foyer.arrival",
       "speaker": "narrator",
-      "text": "Voss House foyer: marble that remembers better shoes than yours, a string quartet committing tasteful violence in the corner, and a line of guests practicing their own names.",
+      "text": "Voss House foyer: marble that remembers better shoes than yours, a string quartet losing a polite argument with champagne laughter, guests practicing their own names like cover identities.",
       "tags": [
         "foyer",
         "arrival"
@@ -217,7 +217,7 @@
     {
       "id": "foyer.pim",
       "speaker": "pim_orel",
-      "text": "Orth! You look like a man who has rehearsed his first sentence seventeen times and still hates it. Come on \u2014 Maris is in the salon pretending not to notice arrivals, which means she has noticed all of them.",
+      "text": "Orth! You look like a man on draft seventeen of his first sentence and still losing. Come on \u2014 Maris is in the salon pretending not to inventory arrivals, which means she has inventoried all of them and is bored by half.",
       "tags": [
         "foyer",
         "pim_orel"

@@ -74,7 +74,7 @@
     {
       "id": "ending.balanced",
       "speaker": "narrator",
-      "text": "Fragment secured. Taly still has a career. Maris finds you after the toast, dry as ever: 'You managed both kinds of logistics. Don't get addicted.' It isn't praise. It might be a beginning.",
+      "text": "Fragment secured. Taly still has a career. After the toast Maris finds you, dry as ever: 'You managed both kinds of logistics. Don't get addicted \u2014 Observatory still has a fight that isn't your redemption arc.' It isn't praise. It might be a working relationship.",
       "tags": [
         "balanced",
         "end",
@@ -116,7 +116,7 @@
     {
       "id": "ending.connection",
       "speaker": "maris_quell",
-      "text": "You didn't perform for the room. You talked to me. Whatever else you came for \u2014 and I suspect there is an else \u2014 I'd take another ninety seconds sometime. Not a promise. A hypothesis.",
+      "text": "You didn't perform for the room. You talked to me \u2014 and I still have a dock fight that doesn't need an audience. Whatever else you came for, and I suspect there is an else, I'd take another ninety seconds. Not a promise. A hypothesis I am willing to test between meetings.",
       "tags": [
         "connection",
         "end",
@@ -222,7 +222,7 @@
     {
       "id": "ending.default_mixed",
       "speaker": "narrator",
-      "text": "The evening ends in mixed weather: some intel, some bruises, some looks you can't classify. You leave with enough to justify a debrief and not enough to justify pride.",
+      "text": "Mixed ledger: some intel, some bruises, some looks that refuse classification. Enough for a debrief. Not enough for a myth about yourself.",
       "tags": [
         "end",
         "ending",
@@ -307,7 +307,7 @@
     {
       "id": "ending.human_cost_maris",
       "speaker": "maris_quell",
-      "text": "Taly told me. You chose a person over a win. I don't know what you came here for \u2014 but I know what you did. That's data I'll keep.",
+      "text": "Taly told me. You chose a person over a win. I don't know your real brief \u2014 I know what you did under pressure. That's data I'll keep for Observatory reasons and for my own. Don't ask me to convert it into a feeling on demand.",
       "tags": [
         "end",
         "ending",
@@ -344,7 +344,7 @@
     {
       "id": "ending.professional_win",
       "speaker": "narrator",
-      "text": "You have the fragment. Cover holds. The toast tastes like victory and something metallic. Across the room Maris does not look at you \u2014 or looks once, files you under solved, and turns away.",
+      "text": "Fragment secured. Cover holds. The toast tastes like metal and victory. Across the room Maris does not look for you; she is mid-argument with someone about opacity, and you have made yourself irrelevant to it. File that under success if you can stand the filing.",
       "tags": [
         "end",
         "ending",
@@ -381,7 +381,7 @@
     {
       "id": "ending.sera_wins",
       "speaker": "sera_kade",
-      "text": "You were busy being good. I was busy being finished. Smile with the lower third for your handler \u2014 she'll need the practice.",
+      "text": "You were busy being good. I was busy being finished. Tell Wren I said the lower-third smile needs work \u2014 she can practice it while reading my postcard.",
       "tags": [
         "end",
         "ending",
@@ -423,7 +423,7 @@
     {
       "id": "finale.branch",
       "speaker": "narrator",
-      "text": "The room lifts glasses. Somewhere a cipher either sits in your pocket, Sera's, or nowhere useful.",
+      "text": "Glasses lift. Somewhere a cipher is in a pocket \u2014 yours, Sera's, or a drawer that will outlive all three of you.",
       "tags": [
         "finale"
       ],
@@ -557,7 +557,7 @@
     {
       "id": "finale.router",
       "speaker": "narrator",
-      "text": "The toast is three minutes out. Choices congeal into an ending.",
+      "text": "Three minutes to the toast. The evening stops being potential and becomes a record.",
       "tags": [
         "finale",
         "router"
@@ -809,7 +809,7 @@
     {
       "id": "political.pim_assist",
       "speaker": "pim_orel",
-      "text": "Lord Voss! Have you met my theory about canap\u00e9s as soft power? No? Wonderful \u2014 walk with me while I ruin both our reputations.",
+      "text": "Lord Voss! Have you heard my theory that canap\u00e9s are soft power with pastry? No? Excellent \u2014 walk with me while I ruin two reputations and one tray.",
       "tags": [
         "political",
         "pim_orel",
@@ -1388,7 +1388,7 @@
     {
       "id": "sacrifice.split",
       "speaker": "maris_quell",
-      "text": "I see it. Go. I'll take Taly \u2014 and later you'll explain why you trusted me with the human part of your evening.",
+      "text": "I see it. Go. I'll take Taly \u2014 not as your errand, as my friend. Later you'll explain why you trusted me with the human half of your evening instead of treating me like a dead drop with better posture.",
       "tags": [
         "sacrifice",
         "maris_quell"

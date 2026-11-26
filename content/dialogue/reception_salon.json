@@ -94,7 +94,7 @@
     {
       "id": "impress.backfire_intel",
       "speaker": "sera_kade",
-      "text": "Schedule variance? How specialized. I didn't realize trade liaisons moonlighted as dock auditors. Maris \u2014 is this the entertaining one, or the careful one?",
+      "text": "Schedule variance? Specialized. I didn't realize trade liaisons moonlighted as dock auditors. Maris \u2014 is this the entertaining one, or the careful one? Do say which; I'm updating my guest taxonomy.",
       "tags": [
         "salon",
         "sera_kade",
@@ -233,7 +233,7 @@
     {
       "id": "impress.skip_ok",
       "speaker": "maris_quell",
-      "text": "A man who can refuse a stupid window. Mark the calendar. Taly, don't look so disappointed \u2014 he'll embarrass himself later, surely.",
+      "text": "A man who can refuse a stupid window. Calendar that. Taly, spare me the face \u2014 he can still humiliate himself on his own schedule. I have a dock argument to win tonight that isn't about him.",
       "tags": [
         "salon",
         "comedy"
@@ -380,7 +380,7 @@
     {
       "id": "impress.weak_cover",
       "speaker": "maris_quell",
-      "text": "Margins, not manifests. Of course. The room will pretend that was smooth.",
+      "text": "Margins, not manifests. Of course. The room will pretend that was smooth. I won't. Recover or don't \u2014 I'm not your cover story.",
       "tags": [
         "salon"
       ],
@@ -417,7 +417,7 @@
     {
       "id": "salon.enter",
       "speaker": "narrator",
-      "text": "The salon is a carefully engineered accident of proximity: policy, money, and people who can afford to look bored. Maris Quell stands near a tall window, glass half-full, expression half-elsewhere.",
+      "text": "The salon is proximity engineered by people who call it chance: policy, money, and guests bored on purpose. Maris Quell stands by the tall window \u2014 not holding court, holding her own briefing in her head. Glass half-full. Expression half-elsewhere, on purpose.",
       "tags": [
         "salon",
         "arrival"
@@ -462,7 +462,7 @@
     {
       "id": "salon.genuine_deflect",
       "speaker": "maris_quell",
-      "text": "Logistics as moral philosophy. Cute armor. Keep it if you need it \u2014 just know I can see the hinges.",
+      "text": "Cute armor. Logistics as moral philosophy. Keep the hinges oiled if you need them \u2014 just know I can see where the plate meets the person.",
       "tags": [
         "salon"
       ],
@@ -501,7 +501,7 @@
     {
       "id": "salon.genuine_joke",
       "speaker": "maris_quell",
-      "text": "Something about container ships and emotional baggage. It died in committee. Some jokes deserve the dock.",
+      "text": "It involved TEUs and therapy. The punchline required a whiteboard. I murdered it for both our sakes.",
       "tags": [
         "salon",
         "comedy"
@@ -535,7 +535,7 @@
     {
       "id": "salon.genuine_offer",
       "speaker": "maris_quell",
-      "text": "Taly's going to fetch something that claims to be champagne. You have ninety seconds of unsupervised honesty. Use them poorly or well \u2014 I'm curious which.",
+      "text": "Taly's fetching something that claims to be champagne. Ninety seconds. I'm not auditioning a date \u2014 I'm deciding whether Orth is careful, interesting, or both. Use the seconds poorly or well. Curiosity is free; access isn't.",
       "tags": [
         "salon",
         "genuine"
@@ -562,7 +562,7 @@
       "choices": [
         {
           "id": "salon.genuine.honest",
-          "text": "I overprepared for this conversation and underprepared for being seen.",
+          "text": "I overprepared for this conversation and underprepared for being seen as a person.",
           "intent": "vulnerable",
           "next": "salon.genuine_seen",
           "effects": [
@@ -585,7 +585,7 @@
         },
         {
           "id": "salon.genuine.work_soft",
-          "text": "Your Observatory brief on port opacity \u2014 I disagreed with page four and respected page four.",
+          "text": "Your port-opacity brief \u2014 I disagreed with page four and respected why you wrote it.",
           "intent": "respectful_work",
           "next": "salon.genuine_work",
           "effects": [
@@ -608,7 +608,7 @@
         },
         {
           "id": "salon.genuine.deflect",
-          "text": "Honesty is a luxury good. I work in logistics.",
+          "text": "Honesty is expensive. Logistics taught me to invoice carefully.",
           "intent": "deflect",
           "next": "salon.genuine_deflect",
           "effects": [
@@ -652,7 +652,7 @@
     {
       "id": "salon.genuine_seen",
       "speaker": "maris_quell",
-      "text": "That's either the truth or a very expensive imitation. I'll allow both until evidence arrives. For what it's worth \u2014 I overprepared a joke about freight and abandoned it. You're welcome.",
+      "text": "Truth or expensive imitation \u2014 I'll allow both until the evidence arrives. For what it's worth, I nearly opened with a joke about container ships and emotional baggage. It died in my throat. Some jokes deserve the dry dock.",
       "tags": [
         "salon",
         "genuine",
@@ -679,7 +679,7 @@
       "choices": [
         {
           "id": "salon.seen.thanks",
-          "text": "Mercy noted. I'll try to deserve the ninety seconds.",
+          "text": "I'll try to deserve the ninety seconds \u2014 and your dock argument.",
           "intent": "warm",
           "next": "salon.impress_hook",
           "effects": [
@@ -692,7 +692,7 @@
         },
         {
           "id": "salon.seen.ask",
-          "text": "What was the joke?",
+          "text": "What was the murdered joke?",
           "intent": "curious",
           "next": "salon.genuine_joke",
           "effects": [
@@ -716,7 +716,7 @@
     {
       "id": "salon.genuine_work",
       "speaker": "maris_quell",
-      "text": "Page four was meant to annoy the right people. Congratulations \u2014 you're the right people. Disagreeing respectfully is rarer than agreement with flowers.",
+      "text": "Page four was bait for the right enemies. Congratulations \u2014 you're inconvenient in the useful way. Observatory needs people who can disagree without needing a medal. Flowers are cheaper than that, and less rare.",
       "tags": [
         "salon",
         "genuine"
@@ -766,7 +766,7 @@
     {
       "id": "salon.impress_hook",
       "speaker": "taly_renn",
-      "text": "I'm back. The champagne is a rumor with bubbles. Orth \u2014 Voss is circulating. If you're going to impress anyone, now's the stupid window.",
+      "text": "I'm back. The champagne is sparkling denial. Orth \u2014 Voss is circulating like a rumor with cufflinks. If you need to impress someone, now's the stupid window. If you don't, I'll respect the restraint and mock you later.",
       "tags": [
         "salon",
         "impress"
@@ -862,7 +862,7 @@
     {
       "id": "salon.intro_awkward",
       "speaker": "maris_quell",
-      "text": "Cassian Orth. Ministry Trade. I've read two of your memoranda \u2014 the short ones. You write like someone who is afraid of adjectives.",
+      "text": "Cassian Orth. Ministry Trade. I've read two of your memoranda \u2014 the short ones. You write like adjectives are a security risk. Observatory Circle's been arguing port opacity all month; your page on east-dock variance almost agreed with me, which means I distrust it.",
       "tags": [
         "salon",
         "maris_quell",
@@ -890,7 +890,7 @@
       "choices": [
         {
           "id": "salon.intro.protocol",
-          "text": "Adjectives inflate risk. I prefer verbs that ship.",
+          "text": "Adjectives inflate risk. I prefer verbs that ship \u2014 and east-dock variance that matches the public story.",
           "intent": "protocol",
           "next": "salon.intro_protocol_response",
           "effects": [
@@ -913,7 +913,7 @@
         },
         {
           "id": "salon.intro.fluster",
-          "text": "That... might be the kindest autopsy I've ever received.",
+          "text": "That might be the kindest autopsy I've had before drinks.",
           "intent": "human",
           "next": "salon.intro_human_response",
           "effects": [
@@ -931,7 +931,7 @@
         },
         {
           "id": "salon.intro.work",
-          "text": "How is Observatory Circle funding looking this quarter?",
+          "text": "Then we're already mid-argument. What's Observatory fighting Voss on, specifically?",
           "intent": "intel_bait",
           "next": "salon.intro_work_response",
           "effects": [
@@ -975,7 +975,7 @@
     {
       "id": "salon.intro_human_response",
       "speaker": "maris_quell",
-      "text": "Good. Most people try to un-autopsy themselves in the next sentence. You left the body on the table. Refreshing \u2014 or suspicious. I'm collecting data.",
+      "text": "Good. Most people rush to un-autopsy themselves. You left the body on the table. Refreshing, or a technique. I'm collecting data for me, not for your handler \u2014 assuming you have one, which would be indelicate to confirm.",
       "tags": [
         "salon"
       ],
@@ -1024,7 +1024,7 @@
     {
       "id": "salon.intro_protocol_response",
       "speaker": "maris_quell",
-      "text": "Verbs that ship. You sound like a briefing note that learned to stand upright. Taly, he's house-trained.",
+      "text": "Verbs that ship. You sound like a briefing that learned posture. Useful \u2014 and faintly alarming. Taly, note: house-trained, possibly housebroken.",
       "tags": [
         "salon",
         "comedy"
@@ -1064,7 +1064,7 @@
     {
       "id": "salon.intro_work_maris",
       "speaker": "maris_quell",
-      "text": "Funding is looking like a conversation for people who have already survived small talk. We haven't. Try again without the briefcase.",
+      "text": "Specifically? Voss wants the dock numbers quiet until after his toast. Observatory wants them loud enough to stop a bad schedule becoming law. That conversation needs trust, not a cold open. Try again without the briefcase energy.",
       "tags": [
         "salon"
       ],
@@ -1108,7 +1108,7 @@
     {
       "id": "salon.intro_work_response",
       "speaker": "taly_renn",
-      "text": "He went straight to funding. Maris, your admirers are getting efficient.",
+      "text": "He opened with the war. Efficient. Maris \u2014 want me to throw him back, or shall we see if he can do small talk without a dossier?",
       "tags": [
         "salon",
         "comedy"

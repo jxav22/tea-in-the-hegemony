@@ -5,7 +5,7 @@
     {
       "id": "study.enter",
       "speaker": "narrator",
-      "text": "Study annex: wood polish, low lamp, a desk that has never met a commoner.",
+      "text": "Study annex: lemon oil, low lamp, a desk that has never forgiven a commoner. Ledgers pretend to sleep.",
       "tags": [
         "location",
         "study"
@@ -462,7 +462,7 @@
     {
       "id": "study.approach",
       "speaker": "narrator",
-      "text": "Study annex: wood polish, low lamp, a desk that has never met a commoner. The guest-list folio sits like a dare.",
+      "text": "The guest-list folio sits like a dare. East-dock times peer through polite paper. Your pulse files a complaint in advance.",
       "tags": [
         "study"
       ],
@@ -530,7 +530,7 @@
     {
       "id": "study.extract",
       "speaker": "narrator",
-      "text": "The cipher fragment slides free \u2014 guest names that aren't names, dock times that don't match the public schedule. Your pulse files a complaint.",
+      "text": "The cipher comes free: guest names that aren't names, dock times that refuse the public schedule. Pocket it. Face bored. Become logistics.",
       "tags": [
         "study",
         "intel"
